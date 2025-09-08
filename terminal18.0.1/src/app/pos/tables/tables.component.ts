@@ -16,7 +16,7 @@ import { param } from 'jquery';
 export class Actor {
   constructor(
     public outletTableMapId: number,
-    public cover: number,
+    public cover: string,
     public outletFloorPlandId: number
   ) {}
 }
@@ -51,14 +51,14 @@ export class TablesComponent implements OnInit {
   tableSelect: any = [];
   outletSelect: any = [];
   api: string = '';
-  model = new Actor(0, 1, 0);
+  model = new Actor(0, '', 0);
   activeView: string = localStorage.getItem('pos3.view') ?? 'map';
   terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
   getTokenJson: any = [];
   zoom: number = parseInt(localStorage.getItem('pos3.zoom') || '100');
   getConfigJson: any = [];
   dataDailyStart: any = {};
-  public: string =  '';
+  public: string = '';
 
   private intervalId: any;
   currentTime: Date = new Date();
@@ -79,7 +79,6 @@ export class TablesComponent implements OnInit {
   }
 
   ngOnInit() {
-
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
@@ -101,14 +100,16 @@ export class TablesComponent implements OnInit {
     this.httpOutlet();
     this.httpGet();
     this.httpDailyStart();
+    this.httpDailyCheck();
     this.socketService
       .listen<string>('message-from-server')
       .subscribe((msg) => {
         this.httpGet();
+        this.httpDailyCheck();
       });
   }
   sendMessage() {
-    console.log('EMIT');
+    console.log('TABLE EMIT');
     this.socketService.emit('message-from-client', 'reload');
   }
   onZoomChange() {
@@ -116,17 +117,13 @@ export class TablesComponent implements OnInit {
     localStorage.setItem('pos3.zoom', this.zoom.toString());
   }
   handleData(data: string) {
-    if (this.model.cover == null) {
-      this.model.cover = 0;
-    }
-
-    let cover = this.model.cover.toString();
+    let cover = this.model.cover;
     if (data == 'b') {
       cover = cover.slice(0, -1);
     } else {
       cover = cover + data;
     }
-    this.model.cover = parseInt(cover || '0'); // fallback kalau cover kosong
+    this.model.cover = cover; // fallback kalau cover kosong
   }
 
   httpOutlet() {
@@ -143,6 +140,7 @@ export class TablesComponent implements OnInit {
     );
   }
   totalCart: number = 99;
+
   httpGet() {
     this.modalService.dismissAll();
     this.loading = true;
@@ -156,10 +154,28 @@ export class TablesComponent implements OnInit {
       })
       .subscribe(
         (data) => {
+          console.log(data);
           this.loading = false;
           this.items = data['items'];
           this.totalCart = data['cart'].length;
           this.statusMap = data['statusMap'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  totalOpenTable: number = 0;
+  httpDailyCheck() {
+    this.http
+      .get<any>(this.api + 'daily/checkItems', {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.totalOpenTable = data['items'].length;
         },
         (error) => {
           console.log(error);
@@ -179,58 +195,72 @@ export class TablesComponent implements OnInit {
   }
   currentTable: number = 0;
   item: any = [];
+  capacity: string = '';
   open(content: any, x: any, current: number, i: number) {
-    if (this.items[current]['maps'][i]['active'] == 1) {
-      if (x.cover <= 0 || x.cover == '') {
-        this.logService.logAction('Select Table ' + x.tableName);
-        this.tableSelect = x;
-        this.model.cover = x.capacity;
-        this.model.outletTableMapId = x.id;
-        this.model.outletFloorPlandId = x.outletFloorPlandId;
-
-        if (this.lock == false) {
-          this.modalService.open(content, { size: 'sm' });
-        } else {
-          alert('Daily Close Requirement!');
-        }
-      } else {
-        this.gotTo(x);
+    console.log(x);
+    let allow = true;
+    if (typeof x.lockBy !== 'undefined' && x.lockBy !== '') {
+      if (x.lockBy !== this.terminalId) {
+        alert('Table Locked by Terminal ' + x.lockBy);
+        allow = false;
       }
     }
 
-    //  console.log(x.id, x, current, i);
-    this.currentTable = x;
+    if (allow == true) {
+      this.capacity = '';
+      if (this.items[current]['maps'][i]['active'] == 1) {
+        if (x.cover <= 0 || x.cover == '') {
+          this.logService.logAction('Select Table ' + x.tableName);
+          this.tableSelect = x;
+          this.model.cover = '';
+          this.capacity = x.capacity;
+          this.model.outletTableMapId = x.id;
+          this.model.outletFloorPlandId = x.outletFloorPlandId;
 
-    for (let i = 0; i < this.items.length; i++) {
-      this.items[i]['maps'].forEach((row: any) => {
-        row['active'] = 0;
-      });
-    }
-
-    this.items[current]['maps'][i]['active'] = 1;
-    console.log(this.items[current]['maps'][i]);
-    this.item = this.items[current]['maps'][i];
-    this.item['indexed'] = {
-      current: current,
-      i: i,
-    };
-    this.http
-      .get<any>(this.api + 'tableMap/detail', {
-        headers: this.configService.headers(),
-        params: {
-          cartId: this.item.cardId,
-        },
-      })
-      .subscribe(
-        (data) => {
-          console.log(data);
-          this.item['detail'] = data['detail'];
-          this.item['cart'] = data['cart'];
-        },
-        (error) => {
-          console.log(error);
+          if (this.lock == false) {
+            this.modalService.open(content, { size: 'sm' });
+          } else {
+            alert('Daily Close Requirement!');
+          }
+        } else {
+          this.gotTo(x);
         }
-      );
+      }
+
+      //  console.log(x.id, x, current, i);
+      this.currentTable = x;
+
+      for (let i = 0; i < this.items.length; i++) {
+        this.items[i]['maps'].forEach((row: any) => {
+          row['active'] = 0;
+        });
+      }
+
+      this.items[current]['maps'][i]['active'] = 1;
+      console.log(this.items[current]['maps'][i]);
+      this.item = this.items[current]['maps'][i];
+      this.item['indexed'] = {
+        current: current,
+        i: i,
+      };
+      this.http
+        .get<any>(this.api + 'tableMap/detail', {
+          headers: this.configService.headers(),
+          params: {
+            cartId: this.item.cardId,
+          },
+        })
+        .subscribe(
+          (data) => {
+            console.log(data);
+            this.item['detail'] = data['detail'];
+            this.item['cart'] = data['cart'];
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    }
   }
 
   onRemoveCurrentTable() {
@@ -240,16 +270,38 @@ export class TablesComponent implements OnInit {
     ] = 0;
   }
   gotTo(x: any) {
-    if (x.tableMapStatusId == '12') {
-      this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
-      this.logService.logAction('Go to Menu', x.cardId);
-    } else if (x.tableMapStatusId == '18') {
-      this.router.navigate(['/payment'], { queryParams: { id: x.cardId } });
-      this.logService.logAction('Go to payment', x.cardId);
-    } else {
-      this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
-      this.logService.logAction('Go to Menu', x.cardId);
-    }
+    this.loading = true;
+    const url = this.api + 'menuItemPos/lockTable';
+    const body = {
+      cartId: x.cardId,
+      terminalId: this.terminalId,
+    };
+    console.log('gotTo', body);
+    localStorage.setItem('pos3.lockTableId', x.outletTableMapId);
+    this.http
+      .post<any>(url, body, { headers: this.configService.headers() })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.sendMessage()
+          this.loading = false;
+          if (x.tableMapStatusId == '12') {
+            this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
+            this.logService.logAction('Go to Menu', x.cardId);
+          } else if (x.tableMapStatusId == '18') {
+            this.router.navigate(['/payment'], {
+              queryParams: { id: x.cardId },
+            });
+            this.logService.logAction('Go to payment', x.cardId);
+          } else {
+            this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
+            this.logService.logAction('Go to Menu', x.cardId);
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   modal(content: any) {
@@ -275,6 +327,9 @@ export class TablesComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.model.cover == '' || this.model.cover == '0') {
+      this.model.cover = this.capacity;
+    }
     const outletId = this.configService.getConfigJson()['outlet']['id'];
 
     this.logService.logAction(

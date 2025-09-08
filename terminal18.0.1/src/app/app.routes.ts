@@ -30,6 +30,7 @@ import { TransferItemsGroupComponent } from './pos/menu/transfer-items-group/tra
 import { ReloginComponent } from './login/relogin/relogin.component';
 import { PrintQueueComponent } from './pos/print-queue/print-queue.component';
 import { FactoryComponent } from './login/factory/factory.component';
+import { MenuLockComponent } from './pos/menu/menu-lock/menu-lock.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -50,7 +51,8 @@ export const routes: Routes = [
     { path: 'menu/modifier', component: MenuModifierComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItems', component: TransferItemsComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItemsGroup', component: TransferItemsGroupComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
-
+ { path: 'menu/lock', component: MenuLockComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+ 
     { path: 'bill', component: BillComponent, canActivate: [authGuard, dailyStartGuard ,terminalGuard, loginGuard] },
     { path: 'bill/splitBill', component: SplitBillComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
 

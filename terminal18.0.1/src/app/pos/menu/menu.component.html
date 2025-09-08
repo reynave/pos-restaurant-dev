@@ -8,13 +8,14 @@
          <div class="order-panel  mb-2">
             <span *ngIf="table.overTime > 0" class="badge text-bg-danger">Overdue: {{table.overTime}} min</span>
             <div class="d-flex justify-content-between align-items-center">
-               <strong class="fw-bold mb-0"> Bill {{table.id}} | {{table.startDate | date:'HH:mm:ss'}} </strong>
+               <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? 'Order' : 'Bill'}} {{table.id}} | Cover:
+                  {{table.cover}} | {{table.startDate | date:'HH:mm:ss'}} </strong>
 
                <button *ngIf="table.overTime > 0" class="btn btn-danger btn-sm"><i
                      class="bi bi-exclamation-triangle"></i></button>
             </div>
             <div class="mb-2">Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
-            <div class="order-panel-fixHeight"> 
+            <div class="order-panel-fixHeight">
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
                      <tr>
@@ -53,7 +54,7 @@
                            </div>
                            <div class="lh-2">
                               <small class="font-monospace"> &#64;{{x.price | number}}</small>
-                              <small class="badge text-bg-success ms-2">KITCHEN</small>
+                              <small class="badge text-bg-primary ms-2">SO</small>
                               <small *ngIf="x.ta > 0 " class="badge text-bg-warning ms-2">TA </small>
                            </div>
 
@@ -225,7 +226,7 @@
 
                   </tbody>
 
-               </table> 
+               </table>
             </div>
          </div>
 
@@ -239,11 +240,11 @@
          </div>
 
          <div class="row g-1">
-            <div class="col-5 d-grid"> 
+            <div class="col-5 d-grid">
                <button class="btn btn-light  text-start"
                   (click)="checkBoxAllModifier == false ? checkBoxAllModifier = true : checkBoxAllModifier = false">
                   <i *ngIf="checkBoxAllModifier == false " class="bi bi-square"></i>
-                  <i *ngIf="checkBoxAllModifier == true " class="bi bi-check-square-fill"></i>  Modifier
+                  <i *ngIf="checkBoxAllModifier == true " class="bi bi-check-square-fill"></i> Modifier
                </button>
             </div>
             <div class="col-5 d-grid">
@@ -251,7 +252,7 @@
                <button class="btn btn-light  text-start"
                   (click)="checkBoxAllScTax == false ? checkBoxAllScTax = true : checkBoxAllScTax = false">
                   <i *ngIf="checkBoxAllScTax == false " class="bi bi-square"></i>
-                  <i *ngIf="checkBoxAllScTax == true " class="bi bi-check-square-fill"></i>  Sc & Tax
+                  <i *ngIf="checkBoxAllScTax == true " class="bi bi-check-square-fill"></i> Sc & Tax
                </button>
             </div>
             <div class="col-2 d-grid">
@@ -315,11 +316,11 @@
          <div class="tab-content px-2">
             <div *ngIf="activeTab === 'function'">
                <div class="row g-2">
-                  <div class="col-3 d-grid">
+                  <!-- <div class="col-3 d-grid">
                      <button type="button" [class]="cssClass" class="btn-danger" [disabled]="!isChecked"
                         (click)="onVoid()">
                         <i class="bi bi-x-lg"></i> VOID ITEM</button>
-                  </div>
+                  </div> -->
                   <div class="col-3 d-grid">
                      <button type="button" [class]="cssClass" class="btn-primary" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
@@ -377,6 +378,11 @@
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
                         MERGE LOG</button>
+                  </div>
+
+                  <div class="col-3 d-grid">
+                     <button type="button" [class]="cssClass" class="btn-danger" (click)="onVoidTransaction()">
+                        <i class="bi bi-x-lg"></i> VOID TRANSCTION</button>
                   </div>
                </div>
             </div>
@@ -436,8 +442,13 @@
                <div class="row g-1 mb-3">
                   <strong class="text-center">{{modifierDetail['name']}}</strong>
                   <div class="col-3 mb-1 d-grid" *ngFor="let a of modifierDetail['detail']">
-                     <a type="button" class="btn btn-light" (click)="addToItemModifier(a);">
+                     <!-- <a type="button" class="btn btn-light" (click)="addToItemModifier(a);">
                         {{a.descs}}
+                     </a> -->
+                     <a type="button" class="btn btn-{{a.checkBox == 1 ? 'primary' : 'light'}} text-start" (click)="a.checkBox == 0 ? a.checkBox = 1 : a.checkBox = 0">
+                        <i *ngIf="a.checkBox == 1" class="bi bi-check-square-fill"></i>
+                        <i *ngIf="a.checkBox == 0" class="bi bi-square"></i>
+                        {{a.descs}} {{a.checkBox}}
                      </a>
                   </div>
                </div>
@@ -866,7 +877,7 @@
             name="guestPrintingNote" placeholder="Add Guest Printing Note"></textarea>
       </div>
       <div class="mb-3 alert alert-warning" [ngClass]="{'alert-danger': printNoteError}" *ngIf="printNote != ''">
-         {{printNote}} 
+         {{printNote}}
       </div>
       <div class="d-grid">
          <button type="button" class="btn btn-lg btn-dark" [disabled]="printLoading" (click)="fnPrint()">Print</button>

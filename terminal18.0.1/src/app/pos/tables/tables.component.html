@@ -118,6 +118,12 @@
                            <strong class="table-name">
                               <span *ngIf="x.overdueMinute > 0 "> <i class="bi bi-exclamation-diamond"></i> </span>
                               {{x.tableName}} </strong>
+
+                             <div>
+                               <span *ngIf="x.lockBy">
+                                 <h4><i class="bi bi-lock-fill"></i> </h4>
+                              </span>
+                             </div>
                         </div>
 
                      </div>
@@ -185,6 +191,9 @@
             </div>
             <div class="p-2" *ngFor="let x of statusMap">
                <small><i [ngClass]="x.color" class="bi bi-square-fill"></i> {{x.name}} </small>
+            </div>
+            <div class="p-2">
+              <small>Total open table:   {{totalOpenTable}}</small>
             </div>
 
 
@@ -302,11 +311,9 @@
          <div class="mb-3">
             <div class="mb-1"><label for="cover">Please Input No. of Cover</label></div>
 
-            <input type="number" class="form-control form-control-lg" id="cover" required [(ngModel)]="model.cover"
-               name="cover" #cover="ngModel">
-            <div [hidden]="cover.valid || cover.pristine" class="text-danger">
-               Cover is required
-            </div>
+            <input type="number" class="form-control form-control-lg" id="cover" [(ngModel)]="model.cover"
+               name="cover" #cover="ngModel" [placeholder]="capacity" >
+           
          </div>
 
          <div class="mb-3">
@@ -315,11 +322,11 @@
 
          <div class="row g-1">
             <div class="col-6 d-grid">
-               <button type="button" class="btn btn-warning btn-lg" (click)="model.cover=0">CE</button>
+               <button type="button" class="btn btn-warning btn-lg" (click)="model.cover=''">CE</button>
             </div>
             <div class="col-6  d-grid">
                <button type="submit" class="btn btn-lg btn-dark"
-                  [disabled]="!actorForm.form.valid || model.cover < 1 ">Order Now</button>
+                  [disabled]="!actorForm.form.valid  ">Order Now</button>
             </div>
          </div>
 

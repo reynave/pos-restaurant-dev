@@ -20,6 +20,7 @@ import { TransferLogComponent } from './transfer-log/transfer-log.component';
 import { UserLoggerService } from '../../service/user-logger.service';
 import { MergerLogComponent } from './merger-log/merger-log.component';
 import { TablePrintQueueComponent } from '../print-queue/table-print-queue/table-print-queue.component';
+import { SocketService } from '../../service/socket.service';
 export class Actor {
   constructor(public newQty: number, public note: string) {}
 }
@@ -66,7 +67,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   totalAmountOrdered: number = 0;
 
   api: string = '';
-  server: string = ''; 
+  server: string = '';
   isChecked: boolean = false;
   model = new Actor(1, '');
 
@@ -96,14 +97,15 @@ export class MenuComponent implements OnInit, OnDestroy {
   table: any = [];
   screenWidth: number = window.innerWidth;
   checkBoxAll: boolean = false;
-  activeTab: string = 'function';
+  activeTab: string = 'menu';
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
     private activeRouter: ActivatedRoute,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    private socketService: SocketService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
@@ -132,8 +134,12 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.modifierDetail = this.modifiers[index];
   }
 
+  sendMessage() {
+    console.log('MENUT EMIT');
+    this.socketService.emit('message-from-client', 'reload');
+  }
+
   ngOnInit() {
-    
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
@@ -142,7 +148,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.modalService.dismissAll();
     if (this.id == undefined) {
       alert('ERROR, ngOnInit() id == undefined ');
-      this.router.navigate(['tables']);
+      this.router.navigate(['error']);
     } else {
       this.httpMenuLookUp(0);
       this.httpMenu();
@@ -151,6 +157,17 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpGetModifier();
       this.httpTables();
       this.httpDailyStart();
+    }
+  }
+
+  fnLock() {
+    if (
+      localStorage.getItem('pos3.lockTableId') != this.table.outletTableMapId
+    ) {
+      alert(
+        'This table is being used by another user. Please select another table.'
+      );
+      this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
     }
   }
 
@@ -168,7 +185,6 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.loading = false;
-
           if (data['item']['closeDateWarning'] > 0) {
             this.lock = false;
           }
@@ -286,6 +302,8 @@ export class MenuComponent implements OnInit, OnDestroy {
           this.totalCard = data['totalItem'];
           this.totalAmount = data['totalAmount'];
           this.table = data['table'][0];
+
+          this.fnLock();
         },
         (error) => {
           console.log(error);
@@ -471,7 +489,22 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   back() {
-    history.back();
+    this.logService.logAction('Clear Lock Table');
+    const body = { cartId: this.activeRouter.snapshot.queryParams['id'] };
+    this.http
+      .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          localStorage.removeItem('pos3.lockTableId');
+          this.sendMessage();
+          history.back();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   addToCart(menu: any) {
@@ -767,23 +800,28 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.loading = true;
     const body = {
       cartId: this.id,
+      tableSendOrder: this.table.sendOrder,
     };
-    const url = this.api + 'menuItemPos/sendOrder';
-    this.http
-      .post<any>(url, body, {
-        headers: this.configService.headers(),
-      })
-      .subscribe(
-        (data) => {
-          console.log(data);
-          this.logService.logAction('Send Order', this.id);
-          this.printQueue(data['sendOrder']);
-        },
-        (error) => {
-          console.log(error);
-          this.logService.logAction('ERROR Send Order', this.id);
-        }
-      );
+    if (this.cart.length == 0 && this.cartOrdered.length == 0) {
+      alert('Cart is empty');
+    } else {
+      const url = this.api + 'menuItemPos/sendOrder';
+      this.http
+        .post<any>(url, body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            console.log(data);
+            this.logService.logAction('Send Order', this.id);
+            this.printQueue(data['sendOrder']);
+          },
+          (error) => {
+            console.log(error);
+            this.logService.logAction('ERROR Send Order', this.id);
+          }
+        );
+    }
   }
 
   printQueue(sendOrder: string = '') {
@@ -799,7 +837,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         (data) => {
           console.log(data);
           this.reload();
-          history.back();
+          this.back();
           this.logService.logAction('printQueue', this.id);
         },
         (error) => {
@@ -810,11 +848,33 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   exitWithoutOrder() {
-    if (confirm('Are you sure exit without order?')) {
+    const body = {
+      cartId: this.id,
+    };
+    const url = this.api + 'menuItemPos/exitWithoutOrder';
+    this.http
+      .post<any>(url, body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.logService.logAction('Exit Without Order', this.id);
+          console.log(data);
+          this.back();
+        },
+        (error) => {
+          console.log(error);
+          this.logService.logAction('ERROR Exit Without Order', this.id);
+        }
+      );
+  }
+
+  onVoidTransaction() {
+    if (confirm('Are you sure  void this transaction ?')) {
       const body = {
         cartId: this.id,
       };
-      const url = this.api + 'menuItemPos/exitWithoutOrder';
+      const url = this.api + 'menuItemPos/voidTransacton';
       this.http
         .post<any>(url, body, {
           headers: this.configService.headers(),
@@ -823,7 +883,7 @@ export class MenuComponent implements OnInit, OnDestroy {
           (data) => {
             this.logService.logAction('Exit Without Order', this.id);
             console.log(data);
-            this.router.navigate(['tables']);
+            this.back();
           },
           (error) => {
             console.log(error);
@@ -848,7 +908,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         (data) => {
           console.log(data);
 
-          history.back();
+          this.back();
           setTimeout(() => {
             this.router.navigate(['payment'], { queryParams: { id: this.id } });
             this.logService.logAction('Update to payment', this.id);
@@ -898,11 +958,11 @@ export class MenuComponent implements OnInit, OnDestroy {
       );
   }
   printNote: string = '';
-printNoteError : boolean = false;
-printLoading : boolean = false;
+  printNoteError: boolean = false;
+  printLoading: boolean = false;
   fnPrint() {
     this.printNoteError = false;
-    this.printNote  = '';
+    this.printNote = '';
     this.printLoading = true;
     const body = {
       id: this.id,
@@ -921,13 +981,13 @@ printLoading : boolean = false;
         (data) => {
           console.log(data);
           this.printNote = 'Print Success';
-             this.printLoading = false;
+          this.printLoading = false;
         },
         (error) => {
           this.printNoteError = true;
-               this.printLoading = false;
+          this.printLoading = false;
           console.log(error);
-          this.printNote =  'ERROR '+error.error.detail;
+          this.printNote = 'ERROR ' + error.error.detail;
         }
       );
   }
@@ -1074,7 +1134,7 @@ printLoading : boolean = false;
           .subscribe(
             (data) => {
               console.log(data);
-              history.back();
+              this.back();
               this.logService.logAction(
                 'Merge to table :' + x.tableName,
                 this.id
