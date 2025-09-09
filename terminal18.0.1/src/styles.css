@@ -74,66 +74,6 @@ h1, h2, h3, h4, h5, h6 {
     font-style: normal;
 }
 
-.bg-overdue {
-    background: #e57373d4;
-    /* soft red */
-}
-
-.bg-avaliable {
-    background: #daecffd4;
-    /* teal, related to #ccd7e3 */
-}
-
-.bg-filled {
-    background: #8cc0f7d4;
-    /* soft yellow */
-}
-
-.bg-sendOrder {
-    background: #fff9c4d4;
-    /* blue, related to #ccd7e3 */
-}
-
-.bg-payment {
-    background: #4fff75d4;
-    /* amber */
-}
-
-.bg-paid {
-    background: #ccd7e3d4;
-    /* main color as requested */
-}
-
-
-.text-overdue {
-    color: #e30000;
-    /* soft red */
-}
-
-.text-avaliable {
-    color: #65affe;
-    /* teal, related to #ccd7e3 */
-}
-
-.text-filled {
-    color: #2086f2;
-    /* soft yellow */
-}
-
-.text-sendOrder {
-    color: #fde400;
-    /* blue, related to #ccd7e3 */
-}
-
-.text-payment {
-    color: #60f280;
-    /* amber */
-}
-
-.text-paid {
-    color: #5987b9;
-    /* main color as requested */
-}
 
 
 .bg-success {

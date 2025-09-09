@@ -43,6 +43,10 @@ export class BillComponent implements OnInit {
   isChecked: boolean = false;
   paided: any = [];
 
+  printNote: string = '';
+  printNoteError: boolean = false;
+  printLoading: boolean = false;
+  
   totalItem: number = 0;
   bill: any = [];
   grandTotal: number = 0;
@@ -86,7 +90,7 @@ export class BillComponent implements OnInit {
         (data) => {
           this.close = data['cart']['close'];
           this.groups = data['groups'];
-
+          this.cart = data['cart']
           // this.groups.forEach((el: any) => {
           //    this.httpBill(el.subgroup);
           //  });
@@ -179,9 +183,6 @@ export class BillComponent implements OnInit {
       );
   }
 
-  printNote: string = '';
-  printNoteError: boolean = false;
-  printLoading: boolean = false;
   fnPrint() {
     this.printResp = '';
     this.isPrinting = true;
@@ -200,8 +201,8 @@ export class BillComponent implements OnInit {
         port: config.printerPort,
       },
     };
- this.printNoteError = false;
-    this.printNote  = '';
+    this.printNoteError = false;
+    this.printNote = '';
     this.printLoading = true;
     console.log(body);
     this.printNote = 'Printing, please wait...';
@@ -223,7 +224,25 @@ export class BillComponent implements OnInit {
         }
       );
   }
-
+  printBill(){
+     const body = {
+      id: this.id,
+    };
+    this.http
+      .post<any>(this.api + 'bill/billUpdate', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.reload();
+          this.fnPrint();
+          console.log(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
   printCopyBill() {
     const body = {
       id: this.id,

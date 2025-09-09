@@ -32,20 +32,22 @@
          </div>
 
          <div style="min-height: 80vh;" class="align-content-center">
-
+ 
 
             @if(close == 0){
 
             <div class="text-center d-grid mx-5 mb-3">
-               <button type="button" class="btn btn-lg btn-success py-3" (click)="payment()">PAYMENT</button>
+               <button type="button" class="btn btn-lg btn-success py-3" [disabled]="cart.tableMapStatusId < 13" (click)="payment()">PAYMENT</button>
             </div>
 
             <div class="text-center d-grid mx-5 mb-3">
-               <button type="button" class="btn btn-lg  btn-warning py-3"  [disabled]="printLoading" (click)="splitBill()">SPLIT BILL</button>
+               <button type="button" class="btn btn-lg  btn-warning py-3" 
+                [disabled]="printLoading" (click)="splitBill()">SPLIT BILL</button>
             </div>
 
             <div class="text-center d-grid mx-5 mb-3">
-               <button type="button" class="btn btn-lg   btn-primary py-3"  [disabled]="printLoading" (click)="fnPrint()"> PRINT BILL</button>
+               <button type="button" class="btn btn-lg   btn-primary py-3"  
+               [disabled]="printLoading" (click)="printBill()"> PRINT BILL</button>
             </div>
 
             <div class="mb-3 alert alert-warning" [ngClass]="{'alert-danger': printNoteError}" *ngIf="printNote != ''">

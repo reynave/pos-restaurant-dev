@@ -327,6 +327,7 @@ export class TablesComponent implements OnInit {
   }
 
   onSubmit() {
+
     if (this.model.cover == '' || this.model.cover == '0') {
       this.model.cover = this.capacity;
     }
@@ -348,6 +349,7 @@ export class TablesComponent implements OnInit {
     const body = {
       model: this.model,
       outletId: outletId,
+      terminalId: this.terminalId,
       dailyCheckId: this.configService.getDailyCheck(),
     };
     this.http

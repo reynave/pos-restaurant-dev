@@ -56,7 +56,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   }
   back() {
     history.back();
-    if (this.path == 'menu') {
+    if (this.path == 'menu' || this.path == 'payment') {
       this.logService.logAction('Clear Lock Table');
       const body = { cartId: this.activeRouter.snapshot.queryParams['id'] };
       this.http

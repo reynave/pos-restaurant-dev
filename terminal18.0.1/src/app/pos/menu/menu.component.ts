@@ -47,6 +47,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   current: number = 0;
   checkboxAll: number = 0;
   disabled: boolean = true;
+  env: any = environment;
   items: any = [
     {
       menu: [],
@@ -82,7 +83,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   showMenu: boolean = false;
   showModifier: boolean = false;
 
-  checkBoxAllModifier: boolean = false;
+  checkBoxAllModifier: boolean = true;
   checkBoxAllScTax: boolean = false;
   modifierDetail: any = [];
   totalCard: number = 0;
@@ -92,7 +93,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   menuLookUp: any = [];
   menuLookupId: number = 0;
   menuLookUpParent: any = [];
-
+  terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
   tablesMaps: any = [];
   table: any = [];
   screenWidth: number = window.innerWidth;
@@ -130,10 +131,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  fnShowModifierDetail(index: number) {
-    this.modifierDetail = this.modifiers[index];
-  }
-
   sendMessage() {
     console.log('MENUT EMIT');
     this.socketService.emit('message-from-client', 'reload');
@@ -160,16 +157,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  fnLock() {
-    if (
-      localStorage.getItem('pos3.lockTableId') != this.table.outletTableMapId
-    ) {
-      alert(
-        'This table is being used by another user. Please select another table.'
-      );
-      this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
-    }
-  }
+  fnLock() {}
 
   lock: boolean = true;
   httpDailyStart() {
@@ -303,7 +291,13 @@ export class MenuComponent implements OnInit, OnDestroy {
           this.totalAmount = data['totalAmount'];
           this.table = data['table'][0];
 
-          this.fnLock();
+          console.log(this.terminalId, this.table['lockBy']);
+          if (this.terminalId != this.table['lockBy']) {
+            alert(
+              'This table is being used by another user. Please select another table.'
+            );
+            //  this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
+          }
         },
         (error) => {
           console.log(error);
@@ -384,6 +378,71 @@ export class MenuComponent implements OnInit, OnDestroy {
       alert(menuSetMinQty + ' menu required!');
     }
     console.log(total);
+  }
+
+  fnShowModifierDetail(index: number) {
+    this.modifierDetail = this.modifiers[index];
+  }
+  fnSubmitModifier() {
+    console.log(this.modifierDetail['detail']);
+    let totalCheck = 0;
+    for (let i = 0; i < this.modifierDetail['detail'].length; i++) {
+      totalCheck += this.modifierDetail['detail'][i]['checkBox'] ? 1 : 0;
+    }
+    console.log(totalCheck);
+    if (this.isChecked == false) {
+      alert('Please check item first!');
+    } else if (totalCheck == 0) {
+      alert('Please select modifier first!');
+    } else {
+      const body = {
+        cart: this.cart,
+        cartId: this.id,
+        modifiers: this.modifierDetail['detail'],
+      };
+      this.http
+        .post<any>(this.api + 'menuItemPos/addToItemModifier', body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            console.log(data);
+            this.logService.logAction(
+              'Add Modifier ' +
+                this.modifierDetail['descs'] +
+                '(' +
+                this.modifierDetail['id'] +
+                ') @' +
+                this.modifierDetail['price'],
+              this.id
+            );
+            this.reload();
+            this.results = data['results'];
+
+            for (let i = 0; i < this.modifierDetail['detail'].length; i++) {
+              this.modifierDetail['detail'][i]['checkBox'] = 0;
+            }
+          },
+          (error) => {
+            console.log(error);
+            this.logService.logAction(
+              'ERROR Add Modifier ' +
+                this.modifierDetail['descs'] +
+                '(' +
+                this.modifierDetail['id'] +
+                ') @' +
+                this.modifierDetail['price'],
+              this.id
+            );
+          }
+        );
+    }
+    // if(this.results.length){
+    //   alert('Please close the previous modifier popup first!');
+    // }else{
+    //   this.modalService.dismissAll();
+    //   this.results = [];
+    // }
   }
   open(
     content: any,
@@ -923,28 +982,34 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   printToKitchen() {
     window.open(this.api + 'printQueue?cartId=' + this.id);
-    // this.http.get<any>(this.api+"printing/tableChecker",{
-    //   params : {
-    //     id : this.id
-    //   }
-    // }).subscribe(
-    //   data=>{
-    //     console.log(data);
-    //   },
-    //   error=>{
-    //     console.log(error);
-    //   }
-    // )
   }
   questCheckTemp: string = '';
 
-  printTableChecker(content: any) {
-    //window.open(this.api + 'printing/tableChecker?id=' + this.id);
-    this.modalService.open(content, { size: 'md' });
+  sendOrderItems: any = [];
+  fnTableChecker(content: any) {
+    this.modalService.open(content, { size: 'lg' });
     this.http
-      .get(this.api + 'printing/tableChecker', {
+      .get<any>(this.api + 'menuItemPos/tableChecker', {
         params: {
           id: this.id,
+        },
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.sendOrderItems = data['data'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  printTableChecker(so: string) {
+    this.http
+      .get(this.api + 'menuItemPos/tableCheckerDetail', {
+        params: {
+          so: so,
         },
         responseType: 'text',
       })
@@ -957,9 +1022,13 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       );
   }
+
+   
   printNote: string = '';
   printNoteError: boolean = false;
   printLoading: boolean = false;
+
+
   fnPrint() {
     this.printNoteError = false;
     this.printNote = '';
@@ -1152,5 +1221,10 @@ export class MenuComponent implements OnInit, OnDestroy {
     } else {
       alert('Please select active table');
     }
+  }
+
+
+  fnDeleteItems(item:any){
+
   }
 }
