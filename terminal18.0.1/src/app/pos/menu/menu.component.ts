@@ -53,6 +53,9 @@ export class MenuComponent implements OnInit, OnDestroy {
       menu: [],
     },
   ];
+  questCheckTemp: string = '';
+
+  sendOrderItems: any = [];
   zoom: number = parseInt(localStorage.getItem('pos3.zoom') || '100');
   public: string = '';
   summary: any = [];
@@ -62,7 +65,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   cartOrdered: any = [];
 
   discountGroup: any = [];
-
+  menuSet: any = [];
   id: string = '';
   totalAmount: number = 0;
   totalAmountOrdered: number = 0;
@@ -79,6 +82,10 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   showHeader: boolean = true;
 
+  printNote: string = '';
+  printNoteError: boolean = false;
+  printLoading: boolean = false;
+
   showApplyDiscount: boolean = false;
   showMenu: boolean = false;
   showModifier: boolean = false;
@@ -89,6 +96,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   totalCard: number = 0;
   totalCardOrder: number = 0;
 
+  remark: string = '';
+  results: any = [];
+  discountGroupSelect: any = {};
+  lock: boolean = true;
   lookUpHeader: string = '';
   menuLookUp: any = [];
   menuLookupId: number = 0;
@@ -137,11 +148,12 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.id = this.activeRouter.snapshot.queryParams['id'];
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
-
-    (this.id = this.activeRouter.snapshot.queryParams['id']),
+ 
+ 
       this.modalService.dismissAll();
     if (this.id == undefined) {
       alert('ERROR, ngOnInit() id == undefined ');
@@ -159,7 +171,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   fnLock() {}
 
-  lock: boolean = true;
   httpDailyStart() {
     let id = this.configService.getDailyCheck();
     const url = this.api + 'daily/getDailyStart';
@@ -281,18 +292,19 @@ export class MenuComponent implements OnInit, OnDestroy {
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'],
+          id: this.id,
         },
       })
       .subscribe(
         (data) => {
+          console.log('httpCart', data);
           this.cart = data['items'];
           this.totalCard = data['totalItem'];
           this.totalAmount = data['totalAmount'];
           this.table = data['table'][0];
-
-          console.log(this.terminalId, this.table['lockBy']);
-          if (this.terminalId != this.table['lockBy']) {
+          const lockBy = this.table['lockBy'] != '' ? this.table['lockBy'] : 0;
+          console.log(this.terminalId, lockBy);
+          if (this.terminalId != lockBy) {
             alert(
               'This table is being used by another user. Please select another table.'
             );
@@ -312,7 +324,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'],
+          id: this.id,
         },
       })
       .subscribe(
@@ -341,7 +353,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.httpCartOrdered();
   }
 
-  menuSet: any = [];
   onSubmitMenuSet() {
     console.log(this.item, this.menuSet);
 
@@ -354,7 +365,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
     if (total >= menuSetMinQty) {
       const body = {
-        id: this.activeRouter.snapshot.queryParams['id'],
+        id: this.id,
         menuSet: this.menuSet,
         menu: this.item,
       };
@@ -508,7 +519,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     const body = {
       model: this.model,
       items: items,
-      cartId: this.activeRouter.snapshot.queryParams['id'],
+      cartId: this.id,
     };
     console.log(body);
     this.http
@@ -540,23 +551,36 @@ export class MenuComponent implements OnInit, OnDestroy {
   openSm(content: any) {
     this.modalService.open(content, { size: 'sm' });
   }
-
+  autoBack: boolean = true;
   openComponent(id: string) {
-    //this.modalService.open(BillComponent, {size:'xl'});
     const modalRef = this.modalService.open(BillComponent, { size: 'lg' });
     modalRef.componentInstance.id = id;
+
+    modalRef.result.then(
+      (result) => {
+        // result berisi data yang dikirim dari BillComponent saat modal ditutup
+        console.log('Data dari BillComponent:', result);
+        this.id = this.activeRouter.snapshot.queryParams['id'];
+        this.reload();
+      },
+      (reason) => {
+        // modal ditutup tanpa data (dismiss)
+         this.id = this.activeRouter.snapshot.queryParams['id'];
+        this.reload();
+        console.log('Modal dismissed:', reason);
+      }
+    );
   }
 
   back() {
     this.logService.logAction('Clear Lock Table');
-    const body = { cartId: this.activeRouter.snapshot.queryParams['id'] };
+    const body = { cartId: this.id };
     this.http
       .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
         headers: this.configService.headers(),
       })
       .subscribe(
         (data) => {
-          localStorage.removeItem('pos3.lockTableId');
           this.sendMessage();
           history.back();
         },
@@ -569,7 +593,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   addToCart(menu: any) {
     if (menu.qty > 0) {
       const body = {
-        id: this.activeRouter.snapshot.queryParams['id'],
+        id: this.id,
         menu: menu,
       };
       this.http
@@ -610,7 +634,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     const body = {
       model: this.model,
       item: this.item,
-      cartId: this.activeRouter.snapshot.queryParams['id'],
+      cartId: this.id,
     };
 
     this.http
@@ -650,7 +674,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     const qty = this.model.newQty;
     const body = {
       model: this.model,
-      cartId: this.activeRouter.snapshot.queryParams['id'],
+      cartId: this.id,
     };
 
     this.http
@@ -746,8 +770,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     } else {
     }
   }
-  remark: string = '';
-  results: any = [];
+
   addToItemModifier(a: any) {
     if (this.isChecked == false) {
       alert('Please check item first!');
@@ -789,7 +812,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         );
     }
   }
-  discountGroupSelect: any = {};
+
   addDiscountGroupWithRemark(content: any, a: any) {
     if (this.isChecked == false) {
       alert('Please check item first!');
@@ -872,8 +895,14 @@ export class MenuComponent implements OnInit, OnDestroy {
         .subscribe(
           (data) => {
             console.log(data);
-            this.logService.logAction('Send Order', this.id);
-            this.printQueue(data['sendOrder']);
+            this.logService.logAction('Send Order & Print Queue', this.id); 
+            
+            if (this.autoBack) {
+              this.back();
+            }
+          
+
+            //this.printQueue(data['sendOrder']);
           },
           (error) => {
             console.log(error);
@@ -883,7 +912,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  printQueue(sendOrder: string = '') {
+  printQueueDELETE(sendOrder: string = '') {
     const url = this.api + 'menuItemPos/printQueue';
     this.http
       .get<any>(url, {
@@ -895,8 +924,11 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           console.log(data);
-          this.reload();
-          this.back();
+          // this.reload();
+
+          if (this.autoBack) {
+            this.back();
+          }
           this.logService.logAction('printQueue', this.id);
         },
         (error) => {
@@ -983,9 +1015,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   printToKitchen() {
     window.open(this.api + 'printQueue?cartId=' + this.id);
   }
-  questCheckTemp: string = '';
 
-  sendOrderItems: any = [];
   fnTableChecker(content: any) {
     this.modalService.open(content, { size: 'lg' });
     this.http
@@ -1022,12 +1052,6 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       );
   }
-
-   
-  printNote: string = '';
-  printNoteError: boolean = false;
-  printLoading: boolean = false;
-
 
   fnPrint() {
     this.printNoteError = false;
@@ -1223,8 +1247,5 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-
-  fnDeleteItems(item:any){
-
-  }
+  fnDeleteItems(item: any) {}
 }

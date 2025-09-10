@@ -34,6 +34,7 @@ export class BillComponent implements OnInit {
       menu: [],
     },
   ];
+    terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
   item: any = [];
   cart: any = [];
   //id: string = '';
@@ -46,7 +47,7 @@ export class BillComponent implements OnInit {
   printNote: string = '';
   printNoteError: boolean = false;
   printLoading: boolean = false;
-  
+
   totalItem: number = 0;
   bill: any = [];
   grandTotal: number = 0;
@@ -61,6 +62,7 @@ export class BillComponent implements OnInit {
   groups: any = [];
   taxSc: any = [];
   subTotal: any = [];
+  tableSendOrder: number = 0;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -88,13 +90,17 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data) => {
+          console.log(data);
           this.close = data['cart']['close'];
           this.groups = data['groups'];
-          this.cart = data['cart']
-          // this.groups.forEach((el: any) => {
-          //    this.httpBill(el.subgroup);
-          //  });
-          this.callWithDelay();
+          this.cart = data['cart'];
+           this.htmlBill  = [];
+         // if( this.groups.length > 1 ){
+            this.callWithDelay();
+         // }else{
+        //    this.httpBill(this.groups[0].subgroup);
+         // }
+         
         },
         (error) => {
           console.log(error);
@@ -146,7 +152,14 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data: string) => {
-          this.htmlBill.push(data);
+          console.log('httpBill', data);
+          this.loading = false;
+          const items = {
+            subgroup: subgroup,
+            html: data
+          }
+          this.htmlBill.push(items);
+          // this.htmlBill = data;
         },
         (error) => {
           console.log(error);
@@ -186,14 +199,12 @@ export class BillComponent implements OnInit {
   fnPrint() {
     this.printResp = '';
     this.isPrinting = true;
-    let htmlBill = '';
+    let htmlBill = this.htmlBill;
 
-    this.htmlBill.forEach((element: any) => {
-      htmlBill += element;
-    });
-    const config = this.configService.getConfigJson();
-    const printerIp = config.printerIp;
-    const printerPort = config.printerPort;
+    // this.htmlBill.forEach((element: any) => {
+    //   htmlBill += element;
+    // });
+    const config = this.configService.getConfigJson(); 
     const body = {
       message: htmlBill,
       printer: {
@@ -224,8 +235,9 @@ export class BillComponent implements OnInit {
         }
       );
   }
-  printBill(){
-     const body = {
+
+  printBill() {
+    const body = {
       id: this.id,
     };
     this.http
@@ -234,8 +246,16 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data) => {
-          this.reload();
-          this.fnPrint();
+          if (data['tableSendOrder'] == 0) {
+            this.tableSendOrder = data['tableSendOrder'];
+            this.createPayment(); 
+
+          } else {
+
+            this.reSendOrder();
+         
+          }
+
           console.log(data);
         },
         (error) => {
@@ -243,6 +263,65 @@ export class BillComponent implements OnInit {
         }
       );
   }
+
+  reSendOrder() {
+    this.loading = true;
+    const body = {
+      cartId: this.id,
+      tableSendOrder: 1,
+    };
+ 
+    const url = this.api + 'menuItemPos/sendOrder';
+    this.http
+      .post<any>(url, body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data); 
+            this.reload();
+           this.fnPrint();
+        },
+        (error) => {
+          console.log(error); 
+        }
+      ); 
+  }
+
+
+  createPayment() {
+    // 3 process become 1 function
+    // sendOrder()
+    // PrintQueue()
+    // Go To Payment()
+
+    const body = {
+      id: this.id,
+      terminalId : this.terminalId
+    };
+    this.http
+      .post<any>(this.api + 'bill/createPayment', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.router.navigate([], {
+            queryParams: {
+              id:  data['id'],
+            },
+            queryParamsHandling: 'merge', // Merge with existing query params
+            replaceUrl: true, // Replace the current history entry
+          });
+          this.id = data['id'];
+          this.fnPrint();
+          this.reload();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
   printCopyBill() {
     const body = {
       id: this.id,

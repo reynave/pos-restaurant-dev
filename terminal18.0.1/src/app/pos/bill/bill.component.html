@@ -12,10 +12,10 @@
 
          <div style="max-height: 85vh; overflow-y: auto;">
             <div *ngFor="let a of groups; let i = index">
-               <pre class="font-monospace" [innerHTML]="htmlBill[i]"></pre>
+               <pre class="font-monospace" [innerHTML]="htmlBill[i]['html']"></pre>
                <hr *ngIf="groups.length > 1">
-            </div>
-
+            </div>  
+   <!-- <pre class="font-monospace" [innerHTML]="htmlBill"></pre> -->
          </div>
 
 
@@ -37,7 +37,8 @@
             @if(close == 0){
 
             <div class="text-center d-grid mx-5 mb-3">
-               <button type="button" class="btn btn-lg btn-success py-3" [disabled]="cart.tableMapStatusId < 13" (click)="payment()">PAYMENT</button>
+               <button type="button" class="btn btn-lg btn-success py-3" 
+               [disabled]="cart.tableMapStatusId < 13" (click)="payment()">PAYMENT</button>
             </div>
 
             <div class="text-center d-grid mx-5 mb-3">
