@@ -3,3 +3,7 @@
     overflow-y: auto;
     margin-bottom: 1rem;
 }
+
+.tr-active td {
+    background-color: #e8eef7 !important;
+}

@@ -73,7 +73,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   api: string = '';
   server: string = '';
   isChecked: boolean = false;
-  model = new Actor(1, '');
+  model = new Actor(0, '');
 
   cssClass: string = 'btn btn-sm py-3   rounded shadow-sm';
   cssMenu: string = 'btn btn-sm py-3 bg-white  me-1 lh-1  rounded shadow-sm';
@@ -152,9 +152,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
- 
- 
-      this.modalService.dismissAll();
+
+    this.modalService.dismissAll();
     if (this.id == undefined) {
       alert('ERROR, ngOnInit() id == undefined ');
       this.router.navigate(['error']);
@@ -395,65 +394,47 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.modifierDetail = this.modifiers[index];
   }
   fnSubmitModifier() {
-    console.log(this.modifierDetail['detail']);
-    let totalCheck = 0;
-    for (let i = 0; i < this.modifierDetail['detail'].length; i++) {
-      totalCheck += this.modifierDetail['detail'][i]['checkBox'] ? 1 : 0;
-    }
-    console.log(totalCheck);
-    if (this.isChecked == false) {
-      alert('Please check item first!');
-    } else if (totalCheck == 0) {
-      alert('Please select modifier first!');
-    } else {
-      const body = {
-        cart: this.cart,
-        cartId: this.id,
-        modifiers: this.modifierDetail['detail'],
-      };
-      this.http
-        .post<any>(this.api + 'menuItemPos/addToItemModifier', body, {
-          headers: this.configService.headers(),
-        })
-        .subscribe(
-          (data) => {
-            console.log(data);
-            this.logService.logAction(
-              'Add Modifier ' +
-                this.modifierDetail['descs'] +
-                '(' +
-                this.modifierDetail['id'] +
-                ') @' +
-                this.modifierDetail['price'],
-              this.id
-            );
-            this.reload();
-            this.results = data['results'];
+    const body = {
+      cart: this.cart,
+      cartId: this.id,
+      modifiers: this.modifierDetail['detail'],
+    };
+    this.http
+      .post<any>(this.api + 'menuItemPos/addToItemModifier', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.logService.logAction(
+            'Add Modifier ' +
+              this.modifierDetail['descs'] +
+              '(' +
+              this.modifierDetail['id'] +
+              ') @' +
+              this.modifierDetail['price'],
+            this.id
+          );
+          this.reload();
+          this.results = data['results'];
 
-            for (let i = 0; i < this.modifierDetail['detail'].length; i++) {
-              this.modifierDetail['detail'][i]['checkBox'] = 0;
-            }
-          },
-          (error) => {
-            console.log(error);
-            this.logService.logAction(
-              'ERROR Add Modifier ' +
-                this.modifierDetail['descs'] +
-                '(' +
-                this.modifierDetail['id'] +
-                ') @' +
-                this.modifierDetail['price'],
-              this.id
-            );
+          for (let i = 0; i < this.modifierDetail['detail'].length; i++) {
+            this.modifierDetail['detail'][i]['checkBox'] = 0;
           }
-        );
-    }
-    // if(this.results.length){
-    //   alert('Please close the previous modifier popup first!');
-    // }else{
-    //   this.modalService.dismissAll();
-    //   this.results = [];
-    // }
+        },
+        (error) => {
+          console.log(error);
+          this.logService.logAction(
+            'ERROR Add Modifier ' +
+              this.modifierDetail['descs'] +
+              '(' +
+              this.modifierDetail['id'] +
+              ') @' +
+              this.modifierDetail['price'],
+            this.id
+          );
+        }
+      );
   }
   open(
     content: any,
@@ -565,7 +546,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       },
       (reason) => {
         // modal ditutup tanpa data (dismiss)
-         this.id = this.activeRouter.snapshot.queryParams['id'];
+        this.id = this.activeRouter.snapshot.queryParams['id'];
         this.reload();
         console.log('Modal dismissed:', reason);
       }
@@ -695,21 +676,37 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnChecked(index: number) {
-    this.cart[index].checkBox == 0
-      ? (this.cart[index].checkBox = 1)
-      : (this.cart[index].checkBox = 0);
+    if (this.cart[index].sendOrder == '') {
+      this.cart[index].checkBox == 0
+        ? (this.cart[index].checkBox = 1)
+        : (this.cart[index].checkBox = 0);
 
-    let isVoid = 0;
-    for (let i = 0; i < this.cart.length; i++) {
-      if (this.cart[i]['checkBox'] == 1) {
-        isVoid++;
-        i = this.cart.length + 10;
+      // Jika parent di-check (checkBox == 1), semua modifier anak juga di-check
+      if (
+        this.cart[index].checkBox == 1 &&
+        Array.isArray(this.cart[index].modifier)
+      ) {
+        this.cart[index].modifier.forEach((el: { checkBox: number }) => {
+          el.checkBox = 1;
+        });
+      } else if (Array.isArray(this.cart[index].modifier)) {
+        this.cart[index].modifier.forEach((el: { checkBox: number }) => {
+          el.checkBox = 0;
+        });
       }
     }
-    if (isVoid == 0) {
-      this.isChecked = false;
-    } else {
-      this.isChecked = true;
+  }
+
+  fnCheckedModifier(index: number, subIndex: number) {
+    if (this.cart[index].modifier[subIndex].sendOrder == '') {
+      this.cart[index].modifier[subIndex].checkBox == 0
+        ? (this.cart[index].modifier[subIndex].checkBox = 1)
+        : (this.cart[index].modifier[subIndex].checkBox = 0);
+      // check apakah ada modifier yang di-check
+      let isModifierChecked = this.cart[index].modifier.some(
+        (mod: { checkBox: number }) => mod.checkBox == 1
+      );
+      console.log(isModifierChecked);
     }
   }
 
@@ -733,6 +730,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onVoid() {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
+
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -752,7 +753,6 @@ export class MenuComponent implements OnInit, OnDestroy {
           .subscribe(
             (data) => {
               console.log(data);
-
               this.reload();
             },
             (error) => {
@@ -765,6 +765,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnCustomNotes() {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -772,6 +775,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addToItemModifier(a: any) {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -814,6 +820,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addDiscountGroupWithRemark(content: any, a: any) {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -826,6 +835,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addDiscountGroup(a: any) {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -895,12 +907,11 @@ export class MenuComponent implements OnInit, OnDestroy {
         .subscribe(
           (data) => {
             console.log(data);
-            this.logService.logAction('Send Order & Print Queue', this.id); 
-            
+            this.logService.logAction('Send Order & Print Queue', this.id);
+
             if (this.autoBack) {
               this.back();
             }
-          
 
             //this.printQueue(data['sendOrder']);
           },
@@ -1127,6 +1138,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   takeOut() {
+    this.isChecked = false;
+    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -1248,4 +1262,30 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnDeleteItems(item: any) {}
+
+  checkIfAnyItemChecked() {
+    // Checks if any item or its modifiers are checked in cart or cartOrdered
+    let checked = false;
+    for (const item of this.cart) {
+      if (item.checkBox == 1) {
+        checked = true;
+        break;
+      }
+      if (Array.isArray(item.modifier)) {
+        if (item.modifier.some((mod: any) => mod.checkBox == 1)) {
+          checked = true;
+          break;
+        }
+      }
+    }
+    if (!checked) {
+      for (const item of this.cartOrdered) {
+        if (item.checkBox == 1) {
+          checked = true;
+          break;
+        }
+      }
+    }
+    this.isChecked = checked;
+  }
 }

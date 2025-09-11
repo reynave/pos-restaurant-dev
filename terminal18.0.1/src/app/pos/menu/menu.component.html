@@ -19,11 +19,11 @@
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
                      <tr>
-                        <td class="align-content-center" (click)="fnCheckBoxAll()">
+                        <td class="align-content-center text-center" (click)="fnCheckBoxAll()">
                            <i *ngIf="checkBoxAll == false" class="bi bi-square"></i>
                            <i *ngIf="checkBoxAll == true " class="bi bi-check-square-fill"></i>
                         </td>
-                         <td class="align-content-center text-center">
+                        <td class="align-content-center text-center">
                            <span class="badge text-bg-secondary">{{totalCard +
                               totalCardOrder}}</span>
                         </td>
@@ -31,116 +31,40 @@
                            List Menu Ordered
                         </td>
 
-                       
+
                      </tr>
                   </thead>
 
-                  <tbody *ngFor="let x of cartOrdered; let i = index">
-                     <tr (click)="fnCheckedOrdered(i)">
-                        <td>
-
-                           <i *ngIf="x.checkBox == 0 " class="bi bi-square"></i>
-                           <i *ngIf="x.checkBox == 1 " class="bi bi-check-square-fill"></i>
-
-                        </td>
-                        <td class="font-monospace text-center">
-                           {{x.total | number}}x
-                        </td>
-                        <td>
-                           <div class="lh-1">
-                              <div class="badge text-bg-primary">SO</div>  <strong>
-                                 <span class="text-primary"><i class="bi bi-lock-fill"></i></span>
-                                 {{x.name }} {{x.totalModifier > 0 ? '*':''}}
-                              </strong>
-                           </div>
-                           <div class="lh-2">
-                              <small class="font-monospace"> &#64;{{x.price | number}}</small>
-                              <small *ngIf="x.ta > 0 " class="badge text-bg-warning ms-2">TA </small>
-                           </div>
-
-                        </td>
-
-
-
-                        <td class="text-end ">
-                           <strong *ngIf="!checkBoxAllScTax" class="font-monospace">
-                              {{(x.totalAmount < 0 ? 0 : x.totalAmount )| number}}</strong>
-                                 <span *ngIf="checkBoxAllScTax" class="font-monospace"> {{(x.price * x.total )|
-                                    number}}</span>
-                        </td>
-                        
-                     </tr>
-
-                     @if(checkBoxAllModifier && x.modifier.length > 0){
-                     <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 0">
-                        <td> </td>
-                        <td class="text-center"><span class="font-monospace">{{ a.total}}x</span></td>
-                        <td>
-                           <small> {{ a.descl}}</small> &nbsp;
-                           <small class="font-monospace" *ngIf="a.price > 0">&#64;{{a.price | number}}</small>
-                           <div>
-                              <small>{{a.remark}}</small>
-                           </div>
-                        </td>
-
-                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
-                        
-                     </tr>
-                     }
-
-                     @if(checkBoxAllScTax && x.modifier.length > 0){
-                     <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 1">
-                        <td> </td>
-                        <td class="text-center"><span class="font-monospace">{{ a.total}}x</span></td>
-                        <td>
-                           <small> {{ a.descl}}</small> &nbsp;
-                           <small class="font-monospace" *ngIf="a.price > 0">&#64;{{a.price | number}}</small>
-                           <div>
-                              <small>{{a.remark}}</small>
-                           </div>
-                        </td>
-
-                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
-                       
-                     </tr>
-                     }
-
-
-                     <tr *ngIf="checkBoxAllScTax">
-                        <td>
-                        </td>
-
-                        <td>
-
-                        </td>
-
-                        <td class="font-monospace text-center">
-
-                        </td>
-
-                        <td class="text-end "><strong class="font-monospace">{{(x.totalAmount < 0 ? 0 : x.totalAmount )|
-                                 number}}</strong>
-                        </td>
-                         
-                     </tr>
-
-
-                  </tbody>
-
                   <tbody *ngFor="let x of cart; let i = index" [class]="{'tr-active':x.checkBox == 1 }">
-                     <tr >
+                     <tr>
                         <td class="align-content-center" (click)="fnChecked(i)  ">
+                           @if(x.sendOrder == ''){
                            <i *ngIf="x.checkBox == 0 " class="bi bi-square"></i>
                            <i *ngIf="x.checkBox == 1 " class="bi bi-check-square-fill"></i>
+                           }
+                           @else {
+                              <button type="button" class="btn btn-sm btn-primary" >SO</button>
+                           }
                         </td>
-                        <td class="text-end font-monospace align-content-center">
+                        <td class="text-end font-monospace align-content-center text-center">
+                           @if(x.sendOrder == ''){
                            <button type="button" class="btn btn-sm btn-light" style="width: 50px;"
-                              (click)="model.newQty = x.total;open(modalQty, x, i)">{{x.total | number}}x
+                              (click)="model.newQty = 0;open(modalQty, x, i)">{{x.total | number}}
                            </button>
+                           }
+                           @else{
+                           <strong>{{x.total | number}}</strong>
+                           }
+
                         </td>
                         <td (click)="fnChecked(i)  ">
                            <div class="lh-1">
+ 
+
                               <strong>{{x.name }} {{x.totalModifier > 0 ? '*':''}} </strong>
+
+
+
                            </div>
                            <div class="lh-2">
                               <small class="font-monospace">&#64;{{x.price | number}}</small>
@@ -151,21 +75,31 @@
 
 
                         <td class="text-end " (click)="fnChecked(i)  ">
-                           <strong *ngIf="!checkBoxAllModifier" class="font-monospace"> {{(x.totalAmount < 0 ? 0 :
-                                 x.totalAmount )| number}}</strong>
-                                 <span *ngIf="checkBoxAllModifier" class="font-monospace"> {{(x.price * x.total )|
-                                    number}}</span>
+
+                           @if(checkBoxAllScTax){
+                           <span class="font-monospace"> {{ (x.totalAmount) | number}}</span>
+                           }
+                           @else{
+                           <strong class="font-monospace"> {{ x.grandTotalAmount | number}}</strong>
+                           }
+
                         </td>
 
-                        
+
                      </tr>
 
                      @if(checkBoxAllModifier && x.modifier.length > 0){
-                     <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 0">
-                        <td>
-                             
+                     <tr *ngFor="let a of x.modifier; let j = index" [hidden]="a.modifier == 0"
+                        [class]="{'tr-active':a.checkBox == 1 }" (click)="fnCheckedModifier(i, j)">
+
+                        <td class="align-content-center">
+                           @if(x.sendOrder == ''){
+                           <i *ngIf="a.checkBox == 0 " class="bi bi-square"></i>
+                           <i *ngIf="a.checkBox == 1 " class="bi bi-check-square-fill text-primary"></i>
+                           }
                         </td>
-                        <td class="text-center"><span class="font-monospace"> x {{ a.total}}</span></td>
+
+                        <td class="text-center"> </td>
                         <td>
                            <small> {{ a.descl}}</small> &nbsp;
                            <small *ngIf="a.price > 0" class="font-monospace">&#64;{{a.price | number}}</small>
@@ -175,7 +109,7 @@
                         </td>
 
                         <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
-                        
+
                      </tr>
                      }
 
@@ -183,7 +117,7 @@
                      @if(checkBoxAllScTax && x.modifier.length > 0){
                      <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 1">
                         <td></td>
-                        <td class="text-center"><span class="font-monospace"> x {{ a.total}}</span></td>
+                        <td class="text-center"><span class="font-monospace">{{ a.total}}</span></td>
                         <td>
                            <small> {{ a.descl}}</small> &nbsp;
                            <small *ngIf="a.price > 0" class="font-monospace">&#64;{{a.price | number}}</small>
@@ -193,7 +127,7 @@
                         </td>
 
                         <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
-                         
+
                      </tr>
                      }
                      <!-- SUB TOTAL -->
@@ -207,11 +141,10 @@
                         <td class="font-monospace text-center">
                         </td>
 
-                        <td class="text-end "><strong class="font-monospace">{{(x.totalAmount < 0 ? 0 : x.totalAmount )|
-                                 number}}</strong>
+                        <td class="text-end "><strong class="font-monospace">{{x.grandTotalAmount | number}}</strong>
                         </td>
 
-                       
+
                      </tr>
 
 
@@ -248,7 +181,7 @@
             </div>
             <div class="col-2 d-grid">
 
-               <button type="button" class="btn btn-danger  " [disabled]="!isChecked" (click)="onVoid()">
+               <button type="button" class="btn btn-danger  " (click)="onVoid()">
                   <i class="bi bi-x-lg"></i> </button>
             </div>
          </div>
@@ -269,7 +202,7 @@
                   <i class="bi bi-receipt-cutoff"></i> Table Checker
                </a>
             </li>
-            
+
             <li class="nav-item"><a class="nav-link" [routerLink]="['/transaction/detail']" [queryParams]="{id:id}"><i
                      class="bi bi-list-check"></i> Transaction Detail</a></li>
 
@@ -308,7 +241,7 @@
          <div class="tab-content px-2">
             <div *ngIf="activeTab === 'function'">
                <div class="row g-2">
-                  
+
                   <div class="col-3 d-grid">
                      <button type="button" [class]="cssClass" class="btn-primary" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
@@ -320,7 +253,8 @@
                         <i class="bi bi-receipt-cutoff"></i> BILL</button>
                   </div>
                   <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" [disabled]="table.tableMapStatusId < 13 " class="btn-success" (click)="payment()">
+                     <button type="button" [class]="cssClass" [disabled]="table.tableMapStatusId < 13 "
+                        class="btn-success" (click)="payment()">
                         <i class="bi bi-credit-card"></i>
                         PAYMENT</button>
 
@@ -874,13 +808,14 @@
       <div class="row g-3">
          <div class="col-4">
             <div *ngFor="let x of sendOrderItems" class="mb-2 d-grid">
-               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm btn-primary"> {{x.sendOrder}}</button>
+               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm btn-primary">
+                  {{x.sendOrder}}</button>
             </div>
          </div>
          <div class="col-8">
-         
-           <div class="mb-3">
-          
+
+            <div class="mb-3">
+
                <textarea class="form-control form-control-sm font-monospace" disabled rows="20"
                   [(ngModel)]="questCheckTemp" name="guestPrintingNote"
                   placeholder="Please select Send Order"></textarea>
@@ -889,10 +824,10 @@
                {{printNote}}
             </div>
             <div class="d-grid">
-               <button type="button" [disabled]="questCheckTemp == '' || printLoading" class="btn btn-lg btn-dark"  
+               <button type="button" [disabled]="questCheckTemp == '' || printLoading" class="btn btn-lg btn-dark"
                   (click)="fnPrint()">Print</button>
             </div>
-           
+
          </div>
       </div>
    </div>
