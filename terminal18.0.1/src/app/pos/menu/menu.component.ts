@@ -110,6 +110,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   screenWidth: number = window.innerWidth;
   checkBoxAll: boolean = false;
   activeTab: string = 'menu';
+  selectedItem : any;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -161,7 +162,6 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpMenuLookUp(0);
       this.httpMenu();
       this.httpCart();
-      this.httpCartOrdered();
       this.httpGetModifier();
       this.httpTables();
       this.httpDailyStart();
@@ -316,32 +316,8 @@ export class MenuComponent implements OnInit, OnDestroy {
       );
   }
 
-  httpCartOrdered() {
-    this.loading = true;
-    const url = this.api + 'menuItemPos/cartOrdered';
-    this.http
-      .get<any>(url, {
-        headers: this.configService.headers(),
-        params: {
-          id: this.id,
-        },
-      })
-      .subscribe(
-        (data) => {
-          this.totalCardOrder = data['totalItem'];
-          this.cartOrdered = data['items'];
-          this.totalAmountOrdered = data['totalAmount'];
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
-
+  
   fullReload() {
-    this.httpMenu();
-    this.httpCart();
-    this.httpCartOrdered();
     this.httpGetModifier();
     this.httpTables();
   }
@@ -349,7 +325,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   reload() {
     this.httpMenu();
     this.httpCart();
-    this.httpCartOrdered();
   }
 
   onSubmitMenuSet() {
@@ -388,6 +363,10 @@ export class MenuComponent implements OnInit, OnDestroy {
       alert(menuSetMinQty + ' menu required!');
     }
     console.log(total);
+  }
+
+  openSelectOrder(x: any) {
+this.selectedItem = x
   }
 
   fnShowModifierDetail(index: number) {
@@ -467,6 +446,8 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   modal(content: any, size: string = 'sm') {
+    this.isChecked = false;
+    this.checkIfAnyItemChecked();
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
@@ -491,8 +472,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.cart.forEach((row: any) => {
       if (row['checkBox']) {
         items.push({
-          menuId: row['menuId'],
-          price: row['price'],
+          id: row['id'], 
         });
       }
     });
@@ -676,7 +656,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnChecked(index: number) {
-    if (this.cart[index].sendOrder == '') {
+   
       this.cart[index].checkBox == 0
         ? (this.cart[index].checkBox = 1)
         : (this.cart[index].checkBox = 0);
@@ -694,7 +674,7 @@ export class MenuComponent implements OnInit, OnDestroy {
           el.checkBox = 0;
         });
       }
-    }
+    
   }
 
   fnCheckedModifier(index: number, subIndex: number) {
@@ -1278,14 +1258,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       }
     }
-    if (!checked) {
-      for (const item of this.cartOrdered) {
-        if (item.checkBox == 1) {
-          checked = true;
-          break;
-        }
-      }
-    }
+     
     this.isChecked = checked;
   }
 }

@@ -19,7 +19,7 @@
                 <td *ngIf="!cartId">{{x.cartId}}</td>
                 <td>{{x.so}}</td>
                 <td (click)="openDetailModal(x, contentDetail); $event.preventDefault()">
-                    <a href="javascript:void(0)"> {{x.menu}} <i class="bi bi-info-circle"></i> </a>
+                    <a href="javascript:void(0)">{{x.qty}}X {{x.menu}} <i class="bi bi-info-circle"></i> </a>
                 </td>
                 <td>
                     <span class="badge " [ngClass]="{

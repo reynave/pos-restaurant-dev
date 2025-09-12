@@ -7,3 +7,11 @@
 .tr-active td {
     background-color: #e8eef7 !important;
 }
+
+.inline-modal{
+    position: absolute;
+    z-index: 9991;
+    top: 0px;
+    left: 8px;
+    width: 100%; 
+}
