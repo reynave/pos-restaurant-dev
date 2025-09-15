@@ -338,11 +338,28 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('result');
         this.logService.logAction('CLOSE PAYMENT', this.id);
         this.router.navigate(['tables']);
+
+         console.log('MENU EMIT : CLOSE PAYMENT');
+          const data = {
+            terminalId: this.terminalId,
+            id : '',
+            tableId : ''
+          }
+          this.socketService.emit('message-from-client', data);
+
+
       },
       (reason) => {
         console.log('reason');
         this.logService.logAction('CLOSED payment without action', this.id);
         this.router.navigate(['tables']);
+         console.log('MENU EMIT : CLOSE PAYMENT');
+          const data = {
+            terminalId: this.terminalId,
+            id : '',
+            tableId : ''
+          }
+          this.socketService.emit('message-from-client', data);
       }
     );
   }

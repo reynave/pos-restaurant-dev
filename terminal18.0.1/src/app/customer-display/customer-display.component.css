@@ -2,3 +2,8 @@
     height: 96vh;
     overflow-y: auto;
 }
+
+.wrapper{
+    max-width: 800px;
+    margin: 0 auto;
+}

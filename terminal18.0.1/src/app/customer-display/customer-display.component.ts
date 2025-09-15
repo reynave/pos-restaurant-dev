@@ -29,11 +29,13 @@ export class CustomerDisplayComponent
   terminalId: string = '';
   api: string = '';
   id: string = '';
-  cart: any = [];
+  cart: any = {
+    inputDate:'2023-06-20T14:23:45.000Z',
+  };
   data: any = {};
   showModifier: boolean = true;
   loading: boolean = false;
-
+  display : string = 'idle';
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -47,8 +49,8 @@ export class CustomerDisplayComponent
     this.terminalId = localStorage.getItem('pos3.terminal.mitralink') ?? '';
     this.api = this.configService.getApiUrl();
     this.id = this.activeRoute.snapshot.queryParamMap.get('id') ?? '';
- this.httpCart();
-    this.socketService.listen<any>('message-from-server').subscribe((msg) => { 
+    this.httpCart();
+    this.socketService.listen<any>('message-from-server').subscribe((msg) => {
       if (msg.terminalId == this.terminalId) {
         this.router.navigate([], {
           queryParams: {
@@ -58,6 +60,11 @@ export class CustomerDisplayComponent
           replaceUrl: true, // Replace the current history entry
         });
         this.id = msg.id;
+        if(this.id == null || this.id == ''){
+          this.display = 'idle';
+        }else{
+          this.display = 'cart';
+        }
         this.httpCart();
       }
     });
@@ -89,8 +96,7 @@ export class CustomerDisplayComponent
   ngAfterViewInit(): void {
     console.log('test');
     try {
-      this.myDiv.nativeElement.scrollTop =
-        this.myDiv.nativeElement.scrollHeight;
+      this.myDiv.nativeElement.scrollTop = this.myDiv.nativeElement.scrollHeight;
     } catch (err) {
       console.log(err);
     }
