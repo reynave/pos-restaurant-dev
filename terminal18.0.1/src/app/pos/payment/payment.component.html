@@ -8,9 +8,9 @@
                <strong class="fw-bold ms-2"> Bill {{id}} </strong>
             </div>
             <div class="col-6  d-grid">
-               <a class="btn btn-sm btn-primary"
+               <a class="btn btn-sm btn-{{showApplyDiscount!=false ? 'primary' : 'light' }}"
                   (click)="showApplyDiscount==false ? showApplyDiscount = true : showApplyDiscount = false">
-                  {{showApplyDiscount==false ? 'Show' : 'Hide' }} Apply Discount </a>
+                  {{showApplyDiscount!=false ? 'Show' : 'Hide' }} Modifier </a>
             </div>
          </div>
 

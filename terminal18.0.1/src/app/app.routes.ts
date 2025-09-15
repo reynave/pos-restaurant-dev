@@ -31,6 +31,7 @@ import { ReloginComponent } from './login/relogin/relogin.component';
 import { PrintQueueComponent } from './pos/print-queue/print-queue.component';
 import { FactoryComponent } from './login/factory/factory.component';
 import { MenuLockComponent } from './pos/menu/menu-lock/menu-lock.component';
+import { CustomerDisplayComponent } from './customer-display/customer-display.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -42,6 +43,7 @@ export const routes: Routes = [
     { path: 'relogin', component: ReloginComponent },
     
     { path: 'login/terminal', component: TerminalLoginComponent },
+    { path: 'customerDisplay', component: CustomerDisplayComponent },
 
     { path: 'setting', component: SettingComponent, canActivate: [authGuard, loginGuard] },
 

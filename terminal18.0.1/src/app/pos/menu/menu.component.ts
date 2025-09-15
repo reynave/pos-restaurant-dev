@@ -144,8 +144,14 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   sendMessage() {
-    console.log('MENUT EMIT');
-    this.socketService.emit('message-from-client', 'reload');
+    console.log('MENU EMIT : sendMessage');
+    const data = {
+      terminalId: this.terminalId,
+      id : this.id,
+      tableId : this.table.id
+    }
+    this.socketService.emit('message-from-client', data);
+
   }
 
   ngOnInit() {
@@ -308,7 +314,10 @@ export class MenuComponent implements OnInit, OnDestroy {
               'This table is being used by another user. Please select another table.'
             );
             //  this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
+          }else{
+             this.sendMessage()
           }
+         
         },
         (error) => {
           console.log(error);
@@ -366,12 +375,13 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   openSelectOrder(x: any) {
-this.selectedItem = x
+    this.selectedItem = x
   }
 
   fnShowModifierDetail(index: number) {
     this.modifierDetail = this.modifiers[index];
   }
+
   fnSubmitModifier() {
     const body = {
       cart: this.cart,
@@ -415,6 +425,7 @@ this.selectedItem = x
         }
       );
   }
+  
   open(
     content: any,
     x: any,

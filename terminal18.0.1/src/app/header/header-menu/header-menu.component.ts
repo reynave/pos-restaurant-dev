@@ -135,4 +135,8 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     this.offcanvasService.dismiss();
     this.router.navigate(['/']);
   }
+
+  openInNewTab(route: string) {
+    window.open(`/#${route}`, '_blank');
+  }
 }

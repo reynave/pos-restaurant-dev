@@ -1,0 +1,52 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4 text-center">
+            <div class="mt-5">
+                <img src="./img/logo.png" class="img-fluid" />
+
+                <img src="./assets/images/pexels-chanwalrus-958545.jpg" class="img-fluid mt-3" />
+            </div>
+
+        </div>
+        <div class="col-8">
+
+            <div class="order-panel mt-3 cover-full" #myDiv>
+                <div class="row">
+                    <div class="col-6">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td> Order </td>
+                                    <td> : #{{id}} </td>
+                                </tr>
+                                <tr>
+                                    <td> Date </td>
+                                    <td> : {{cart.inputDate | date:'short'}} </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-6">
+                        <table>
+                            <tbody>
+
+                                <tr>
+                                    <td> Terminal </td>
+                                    <td> : {{terminalId}} </td>
+                                </tr>
+                                <tr>
+                                    <td> Employee </td>
+                                    <td> : {{cart.inputBy}} </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <hr>
+                <!-- Bill Table Component -->
+                <app-bill-table [data]="data" [showApplyDiscount]="showModifier">Loading...</app-bill-table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { HttpClient, HttpClientModule } from '@angular/common/http'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import {   Router, RouterModule } from '@angular/router';
 import { KeyNumberComponent } from '../../keypad/key-number/key-number.component';
 import { DailyCloseComponent } from '../daily/daily-close/daily-close.component';
 import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
 import { SocketService } from './../../service/socket.service';
-import { UserLoggerService } from '../../service/user-logger.service';
-import { param } from 'jquery';
+import { UserLoggerService } from '../../service/user-logger.service'; 
 
 export class Actor {
   constructor(
