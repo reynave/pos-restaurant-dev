@@ -137,6 +137,9 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   }
 
   openInNewTab(route: string) {
-    window.open(`/#${route}`, '_blank');
+     const params = "width=800,height=600,left=100,top=50,resizable=yes,scrollbars=yes";
+
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/');
+    window.open(`${baseUrl}#${route}`, '_blank', params);
   }
 }

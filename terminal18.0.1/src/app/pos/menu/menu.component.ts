@@ -914,31 +914,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  printQueueDELETE(sendOrder: string = '') {
-    const url = this.api + 'menuItemPos/printQueue';
-    this.http
-      .get<any>(url, {
-        headers: this.configService.headers(),
-        params: {
-          sendOrder: sendOrder,
-        },
-      })
-      .subscribe(
-        (data) => {
-          console.log(data);
-          // this.reload();
-
-          if (this.autoBack) {
-            this.back();
-          }
-          this.logService.logAction('printQueue', this.id);
-        },
-        (error) => {
-          console.log(error);
-          this.logService.logAction('ERROR printQueue', this.id);
-        }
-      );
-  }
+ 
 
   exitWithoutOrder() {
     const body = {

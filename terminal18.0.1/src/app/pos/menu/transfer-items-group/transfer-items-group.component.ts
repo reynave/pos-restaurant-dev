@@ -95,11 +95,7 @@ export class TransferItemsGroupComponent implements OnInit {
         (data) => {
           console.log(data);
           this.items = data['items'];
-          let i = 1;
-          this.items.forEach((element: any) => {
-            element['id'] = i;
-            i++;
-          });
+        
           this.table = data['table'];
         },
         (error) => {
@@ -246,6 +242,7 @@ export class TransferItemsGroupComponent implements OnInit {
           price: this.items[this.indexNumber]['price'],
           menuId: this.items[this.indexNumber]['menuId'],
           total: total,
+          totalOriginal: this.items[this.indexNumber]['totalReset'],
           name: this.items[this.indexNumber]['name'],
           id: this.items[this.indexNumber]['id'],
         };
@@ -275,8 +272,7 @@ export class TransferItemsGroupComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  fnCancel(index: number) {
-    const targetId = 3;
+  fnCancel(index: number) { 
     const itemIndex = this.items.findIndex(
       (item: { id: number }) => item.id === this.itemsTransfer[index]['id']
     );

@@ -36,9 +36,7 @@ export class TablePrintQueueComponent implements OnInit {
     this.api = this.configService.getApiUrl();
 
     console.log('messageFromParent:', this.data);
-    this.cartId = this.data
-      ? this.data
-      : this.activatedRoute.snapshot.queryParams['cartId'];
+    this.cartId = this.data  ? this.data : this.activatedRoute.snapshot.queryParams['cartId'];
     this.httpGet();
     this.socketService.listen<any>('printing').subscribe((msg) => {
       console.log(msg);
