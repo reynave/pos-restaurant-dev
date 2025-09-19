@@ -63,6 +63,7 @@ export class BillComponent implements OnInit {
   taxSc: any = [];
   subTotal: any = [];
   tableSendOrder: number = 0;
+  env : any = environment;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -185,10 +186,10 @@ export class BillComponent implements OnInit {
         (data) => {
           this.modalService.dismissAll();
           console.log(data);
-          history.back();
-          setTimeout(() => {
+          //history.back();
+        //  setTimeout(() => {
             this.router.navigate(['payment'], { queryParams: { id: this.id } });
-          }, 500);
+         // }, 500);
         },
         (error) => {
           console.log(error);

@@ -15,3 +15,12 @@
     left: 8px;
     width: 100%; 
 }
+
+.table-xs tr td{
+    font-size: 0.8rem;
+  font-family: "Noto Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+}

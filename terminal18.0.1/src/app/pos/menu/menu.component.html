@@ -3,7 +3,7 @@
 <div [ngClass]="{'container': screenWidth >= 1200, 'container-fluid': screenWidth < 1200}">
    <div class="row g-2">
       <!-- TABLE CART -->
-      <div class="col-4">
+      <div class="col-5 col-lg-4 ">
 
          <div class="order-panel  mb-2">
             <span *ngIf="table.overTime > 0" class="badge text-bg-danger">Overdue: {{table.overTime}} min</span>
@@ -15,7 +15,7 @@
                      class="bi bi-exclamation-triangle"></i></button>
             </div>
             <div class="mb-2">Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
-            <div class="order-panel-fixHeight">
+            <div style="height: 46vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
                      <tr>
@@ -24,8 +24,7 @@
                            <i *ngIf="checkBoxAll == true " class="bi bi-check-square-fill"></i>
                         </td>
                         <td class="align-content-center text-center">
-                           <span class="badge text-bg-secondary">{{totalCard +
-                              totalCardOrder}}</span>
+                           Qty
                         </td>
                         <td colspan="2" class="align-content-center">
                            List Menu Ordered
@@ -62,16 +61,11 @@
                            <div class="lh-2">
                               <small class="font-monospace">&#64;{{x.price | number}}</small>
                               <span *ngIf="x.ta > 0 " class="badge text-bg-warning  ms-2">TA</span>
-                           </div> 
+                           </div>
                         </td>
- 
-                        <td class="text-end " (click)="fnChecked(i)  "> 
-                           @if(checkBoxAllScTax){
+
+                        <td class="text-end" (click)="fnChecked(i)">
                            <span class="font-monospace"> {{ (x.totalAmount) | number}}</span>
-                           }
-                           @else{
-                           <strong class="font-monospace"> {{ x.grandTotalAmount | number}}</strong>
-                           } 
                         </td>
 
 
@@ -89,7 +83,7 @@
 
                         <td class="align-content-center">
 
-                           @if(a.sendOrder == ''){
+                           @if(a.sendOrder == '' || a.allowVoid == 1){
                            <i *ngIf="a.checkBox == 0 " class="bi bi-square"></i>
                            <i *ngIf="a.checkBox == 1 " class="bi bi-check-square-fill text-primary"></i>
                            }
@@ -101,7 +95,7 @@
                            <small *ngIf="a.price > 0" class="font-monospace">&#64;{{a.price | number}}</small>
                            <div>
                               <small>{{a.remark}}</small>
-                           </div> 
+                           </div>
                         </td>
 
                         <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
@@ -156,12 +150,54 @@
          </div>
 
          <div class="order-panel mb-2">
-            <div class="order-summary ">
-               <div class="d-flex justify-content-between">
-                  <span>Total</span>
-                  <span class="fw-bold">{{totalAmount + totalAmountOrdered | number}}</span>
+            <div class="row g-2">
+
+               <div class="col-6">
+                 <table class="table table-sm table-xs">
+                     <tbody>
+                        <tr>
+                           <td>Item Total :</td>   
+                           <td class="text-end">{{billTotalItem | number}}</td>
+                        </tr>
+
+                        <tr>
+                           <td>Discount :</td>  
+                           <td class="text-end">{{billDiscount | number}}</td>
+                        </tr>
+
+                        <tr>
+                           <td>Sub Total :</td>   
+                           <td class="text-end">{{billSubTotal | number}}</td>
+                        </tr>
+
+                     </tbody>
+                  </table>
+               </div>
+
+                <div class="col-6">
+                  <table class="table table-sm table-xs">
+                     <tbody>
+                        <tr>
+                           <td>Tax :</td> 
+                           <td class="text-end"> {{billTax | number}}</td>
+                        </tr>
+
+                        <tr>
+                           <td>Sc :</td>
+                           <td class="text-end">{{billSc | number}}</td>
+                        </tr>
+
+                        <tr>
+                           <td>Total :</td> 
+                           <td class="text-end"><span class="fw-bold">{{ billGrandTotal | number}}</span></td>
+                        </tr>
+
+                     </tbody>
+                  </table>
                </div>
             </div>
+
+            
          </div>
 
          <div class="row g-1">
@@ -190,17 +226,18 @@
 
 
       <!-- TABS / MENU -->
-      <div class="col-8 position-relative">
+      <div class="col-7 col-lg-8 position-relative">
 
          <div class="inline-modal" *ngIf="selectedItem">
             <div class="card shadow-sm">
                <div class="card-header">
-                 <button type="button" class="btn btn-light btn-sm" (click)="selectedItem = null">Back</button>   Item Information
+                  <button type="button" class="btn btn-light btn-sm" (click)="selectedItem = null">Back</button> Item
+                  Information
                </div>
-                  <div class="card-body">
-                     
-                    <table class="table table-sm" >
-                      <tbody>
+               <div class="card-body">
+
+                  <table class="table table-sm">
+                     <tbody>
                         <tr>
                            <th>ID</th>
                            <td width="50%" class="text-primary">{{selectedItem?.id}}</td>
@@ -208,69 +245,71 @@
                         <tr>
                            <th>Description</th>
                            <td class="text-primary">{{selectedItem?.name}}</td>
-                        </tr>  
+                        </tr>
                         <tr>
                            <th>send Order</th>
-                           <td class="text-primary"><span class="badge text-bg-primary">{{selectedItem?.sendOrder}}</span></td>
+                           <td class="text-primary"><span
+                                 class="badge text-bg-primary">{{selectedItem?.sendOrder}}</span></td>
                         </tr>
                         <tr>
                            <th>Order By and Time</th>
                            <td>{{selectedItem?.employeeName}} , {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         </tr>
-                       
+
                         <tr>
                            <th>Item Price</th>
                            <td>{{selectedItem?.price | number}}</td>
                         </tr>
-                         
+
                         <tr>
                            <th colspan="2">Modifier, Tax and Service</th>
-                            
+
                         </tr>
-                        <tr  *ngFor="let mod of selectedItem?.modifier">
+                        <tr *ngFor="let mod of selectedItem?.modifier">
                            <td><i class="bi bi-plus"></i> {{mod?.descl}}</td>
-                           <td>  {{mod?.price | number}} 
+                           <td> {{mod?.price | number}}
                               <span class="badge text-bg-primary">{{mod?.sendOrder}}</span>
                            </td>
                         </tr>
                         <tr>
                            <th>Item Actual Price</th>
-                           <td  class="fw-bold text-primary">{{selectedItem?.grandTotalAmount | number}}</td>
+                           <td class="fw-bold text-primary">{{selectedItem?.grandTotalAmount | number}}</td>
                         </tr>
                         <tr>
                            <th>Sales Type / Floor Name</th>
-                           <td  class="text-primary">{{table?.floorName}}</td>
+                           <td class="text-primary">{{table?.floorName}}</td>
                         </tr>
                         <tr>
                            <th>Printer</th>
                            <td class="text-primary"> </td>
                         </tr>
 
-                         <tr *ngFor="let x of selectedItem?.printerRows">
+                        <tr *ngFor="let x of selectedItem?.printerRows">
                            <td>{{x?.printerName}}'s Printer </td>
-                           <td class="text-primary"> 
-                               {{ x.inputDate | date:'HH:mm' }}, 
-                               <span class="badge " [ngClass]="{
+                           <td class="text-primary">
+                              {{ x.inputDate | date:'HH:mm' }},
+                              <span class="badge " [ngClass]="{
                                  'text-bg-warning': x.status ==  0,
                                  'text-bg-info': x.status == 1,
                                  'text-bg-success': x.status == 2,
                                  'text-bg-danger': x.status == -1
                                  }">{{ x.statusName }}</span>
-                             
+
                            </td>
                         </tr>
                         <tr>
                            <td colspan="4" class="text-end">
-                             <button type="button" class="btn btn-dark btn-sm px-5" (click)="selectedItem = null">Back</button>
+                              <button type="button" class="btn btn-dark btn-sm px-5"
+                                 (click)="selectedItem = null">Back</button>
                            </td>
                         </tr>
-                      </tbody>
-                    </table> 
-                  </div>
+                     </tbody>
+                  </table>
+               </div>
 
             </div>
 
-           
+
          </div>
 
          <ul class="nav nav-pills mb-2">
@@ -314,7 +353,7 @@
                <a class="nav-link pointer-event" [class.active]="activeTab === 'kitchen'"
                   (click)="activeTab = 'kitchen'"><i class="bi bi-fire"></i> KITCHEN</a>
             </li>
-            
+
          </ul>
 
          <div class="tab-content px-2">

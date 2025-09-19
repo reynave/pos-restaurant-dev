@@ -42,8 +42,10 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     this.httpHeader();
     this.getTokenJson = this.configService.getTokenJson();
     this.path = this.activeRouter.snapshot.routeConfig?.path;
-    console.log(this.path);
+  
   }
+
+  
 
   openEnd(content: any) {
     this.offcanvasService.open(content, { position: 'end' });
@@ -56,24 +58,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
   }
   back() {
     history.back();
-    if (this.path == 'menu' || this.path == 'payment') {
-      this.logService.logAction('Clear Lock Table');
-      const body = { cartId: this.activeRouter.snapshot.queryParams['id'] };
-      this.http
-        .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
-          headers: this.configService.headers(),
-        })
-        .subscribe(
-          (data) => {
-            this.sendMessage();
-            localStorage.removeItem('pos3.lockTableId');
-            console.log(data);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-    }
+   
   }
   signOff() {
     this.logService.logAction('Sign Off');

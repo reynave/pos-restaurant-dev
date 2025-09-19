@@ -38,7 +38,7 @@
 
             <div class="text-center d-grid mx-5 mb-3">
                <button type="button" class="btn btn-lg btn-success py-3" 
-               [disabled]="cart.tableMapStatusId < 13" (click)="payment()">PAYMENT</button>
+               [disabled]="cart.paymentId === '' " (click)="payment()">PAYMENT</button>
             </div>
 
             <div class="text-center d-grid mx-5 mb-3">
@@ -75,6 +75,7 @@
                {{printResp}}
             </div>
 
+            @if(env.production == false) {
             <div class="text-center mt-5">
                <a target="_blank" href="{{api}}bill/printing?id={{id}}&api=true"><small>API Variable</small></a>
                <small class="mx-1">丨</small>
@@ -86,6 +87,7 @@
                </div>
 
             </div>
+         }
          </div>
       </div>
    </div>

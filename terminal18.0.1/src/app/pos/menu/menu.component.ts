@@ -61,8 +61,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   summary: any = [];
   modifiers: any = [];
   item: any = [];
-  cart: any = [];
-  cartOrdered: any = [];
+  cart: any = []; 
 
   discountGroup: any = [];
   menuSet: any = [];
@@ -135,11 +134,12 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.isChecked = false;
     }
 
-    this.cartOrdered.forEach((el: any) => {
-      el['checkBox'] = this.checkBoxAll;
-    });
+ 
     this.cart.forEach((el: any) => {
       el['checkBox'] = this.checkBoxAll;
+      el['modifier'].forEach((mod: any) => {
+        mod['checkBox'] = this.checkBoxAll;
+      });
     });
   }
 
@@ -168,10 +168,41 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpMenuLookUp(0);
       this.httpMenu();
       this.httpCart();
+      this.httpBill();
       this.httpGetModifier();
       this.httpTables();
       this.httpDailyStart();
     }
+  }
+   
+  billTax : number = 0;
+  billSc : number = 0;
+  billDiscount : number = 0;
+  billGrandTotal : number = 0;
+  billTotalItem : number = 0;
+  billSubTotal : number = 0;
+  httpBill(){ 
+    this.billDiscount = 0;
+    this.http.get(this.api + 'payment/cart', {
+      headers: this.configService.headers(),
+      params: {
+        id: this.id,  
+      }
+    }).subscribe(
+      (data:any) => {
+        console.log('httpBill', data); 
+        this.billTotalItem = data['data']['totalItem'];
+        this.billGrandTotal = data['data']['grandTotal'];
+        this.billSubTotal = data['data']['subTotal'];
+        data['data']['discountGroup'].forEach((element: { [x: string]: any; }) => {
+          console.log(element);
+          this.billDiscount +=  parseInt(element['amount'] || 0);
+        }); 
+        this.billTax = data['data']['taxSc'][0]['totalAmount'];
+        this.billSc = data['data']['taxSc'][1]['totalAmount'];
+      },
+      (error) => {  console.log(error); }
+    );
   }
 
   fnLock() {}
@@ -313,7 +344,7 @@ export class MenuComponent implements OnInit, OnDestroy {
             alert(
               'This table is being used by another user. Please select another table.'
             );
-            //  this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
+              this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
           }else{
              this.sendMessage()
           }
@@ -334,6 +365,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   reload() {
     this.httpMenu();
     this.httpCart();
+     this.httpBill();
   }
 
   onSubmitMenuSet() {
@@ -689,7 +721,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnCheckedModifier(index: number, subIndex: number) {
-    if (this.cart[index].modifier[subIndex].sendOrder == '') {
+    if (this.cart[index].modifier[subIndex].sendOrder == '' || this.cart[index].modifier[subIndex].allowVoid == 1) {
       this.cart[index].modifier[subIndex].checkBox == 0
         ? (this.cart[index].modifier[subIndex].checkBox = 1)
         : (this.cart[index].modifier[subIndex].checkBox = 0);
@@ -701,25 +733,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  fnCheckedOrdered(index: number) {
-    this.cartOrdered[index].checkBox == 0
-      ? (this.cartOrdered[index].checkBox = 1)
-      : (this.cartOrdered[index].checkBox = 0);
-
-    let isVoid = 0;
-    for (let i = 0; i < this.cartOrdered.length; i++) {
-      if (this.cartOrdered[i]['checkBox'] == 1) {
-        isVoid++;
-        i = this.cartOrdered.length + 10;
-      }
-    }
-    if (isVoid == 0) {
-      this.isChecked = false;
-    } else {
-      this.isChecked = true;
-    }
-  }
-
+  
   onVoid() {
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
@@ -834,8 +848,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     } else {
       this.loading = true;
       const body = {
-        cart: this.cart,
-        cartOrdered: this.cartOrdered,
+        cart: this.cart, 
         remark: this.remark,
         cartId: this.id,
         discountGroup: a,
@@ -887,7 +900,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       cartId: this.id,
       tableSendOrder: this.table.sendOrder,
     };
-    if (this.cart.length == 0 && this.cartOrdered.length == 0) {
+    if (this.cart.length == 0  ) {
       alert('Cart is empty');
     } else {
       const url = this.api + 'menuItemPos/sendOrder';
@@ -1118,19 +1131,13 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       });
 
-      let cartOrdered: any[] = [];
-      this.cartOrdered.forEach((el: any) => {
-        if (el['checkBox'] == 1) {
-          cartOrdered.push(el);
-        }
-      });
+     
 
       console.log(this.cart);
 
       this.loading = true;
       const body = {
-        cart: cart,
-        cartOrdered: cartOrdered,
+        cart: cart, 
         cartId: this.id,
       };
       const url = this.api + 'menuItemPos/takeOut';
@@ -1231,7 +1238,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   fnDeleteItems(item: any) {}
 
   checkIfAnyItemChecked() {
-    // Checks if any item or its modifiers are checked in cart or cartOrdered
+    // Checks if any item or its modifiers are checked in cart
     let checked = false;
     for (const item of this.cart) {
       if (item.checkBox == 1) {

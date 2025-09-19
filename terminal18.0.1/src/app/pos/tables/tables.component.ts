@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http'; 
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {   Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { KeyNumberComponent } from '../../keypad/key-number/key-number.component';
 import { DailyCloseComponent } from '../daily/daily-close/daily-close.component';
 import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
 import { SocketService } from './../../service/socket.service';
-import { UserLoggerService } from '../../service/user-logger.service'; 
+import { UserLoggerService } from '../../service/user-logger.service';
 
 export class Actor {
   constructor(
@@ -94,6 +94,7 @@ export class TablesComponent implements OnInit {
     this.getConfigJson = this.configService.getConfigJson();
     this.getTokenJson = this.configService.getTokenJson();
     this.sendMessage();
+    this.fnClearLock();
     this.modalService.dismissAll();
     this.httpOutlet();
     this.httpGet();
@@ -123,6 +124,28 @@ export class TablesComponent implements OnInit {
     }
     this.model.cover = cover; // fallback kalau cover kosong
   }
+
+
+  fnClearLock(){
+  
+        this.logService.logAction('Clear Lock Table');
+        const body = { terminalId: this.terminalId };
+        this.http
+          .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
+            headers: this.configService.headers(),
+          })
+          .subscribe(
+            (data) => {
+              this.sendMessage(); 
+              console.log(data);
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+      }
+  
+
 
   httpOutlet() {
     this.loading = true;
@@ -200,6 +223,7 @@ export class TablesComponent implements OnInit {
     if (typeof x.lockBy !== 'undefined' && x.lockBy !== '') {
       if (x.lockBy !== this.terminalId) {
         alert('Table Locked by Terminal ' + x.lockBy);
+        history.back();
         allow = false;
       }
     }
@@ -281,20 +305,10 @@ export class TablesComponent implements OnInit {
       .subscribe(
         (data) => {
           console.log(data);
-          this.sendMessage()
+          this.sendMessage();
           this.loading = false;
-          if (x.tableMapStatusId == '12') {
-            this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
-            this.logService.logAction('Go to Menu', x.cardId);
-          } else if (x.tableMapStatusId == '18') {
-            this.router.navigate(['/payment'], {
-              queryParams: { id: x.cardId },
-            });
-            this.logService.logAction('Go to payment', x.cardId);
-          } else {
-            this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
-            this.logService.logAction('Go to Menu', x.cardId);
-          }
+          this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
+          this.logService.logAction('Go to Menu', x.cardId);
         },
         (error) => {
           console.log(error);
@@ -325,7 +339,6 @@ export class TablesComponent implements OnInit {
   }
 
   onSubmit() {
-
     if (this.model.cover == '' || this.model.cover == '0') {
       this.model.cover = this.capacity;
     }

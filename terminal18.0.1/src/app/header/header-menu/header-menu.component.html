@@ -22,6 +22,7 @@
 
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
          <ul class="navbar-nav align-items-center">
+            @if(path == 'tables' ){
             <li class="nav-item">
                <a class="btn btn-primary mx-1" title="Tables" (click)="logService.logAction('Click Tables');"
                   [routerLink]="['/tables']"> <i class="bi bi-map"></i> </a>
@@ -59,7 +60,7 @@
                      class="bi bi-person-exclamation"></i> </a>
             </li>
             <li class="nav-item">
-               <a class="btn btn-primary mx-1"    (click)="openInNewTab('/customerDisplay')"  title="Customer Display">
+               <a class="btn btn-primary mx-1" (click)="openInNewTab('/customerDisplay')" title="Customer Display">
                   <i class="bi bi-display"></i></a>
             </li>
 
@@ -72,11 +73,12 @@
                <a class="btn btn-primary mx-1" title="Daily Close" (click)="dailyClose();">
                   <i class="bi bi-key"></i> Daily Close</a>
             </li>
-
+            }
          </ul>
       </div>
 
       <!-- Right menu -->
+       @if(path == 'tables' ){
       <ul class="navbar-nav flex-row ms-3">
 
          <li class="nav-item mx-1">
@@ -87,6 +89,7 @@
 
 
       </ul>
+      }
 
    </div>
 </nav>
@@ -202,8 +205,8 @@
 
             <div class="d-grid">
                <button class="btn btn-lg btn-light  m-1"
-                  (click)="logService.logAction('click Customer Screen');offcanvasService.dismiss()"
-                   ><i class="bi bi-display"></i> Customer Screen</button>
+                  (click)="logService.logAction('click Customer Screen');offcanvasService.dismiss()"><i
+                     class="bi bi-display"></i> Customer Screen</button>
             </div>
 
          </div>
