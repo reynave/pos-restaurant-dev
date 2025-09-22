@@ -5,79 +5,207 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConfigService } from '../../../service/config.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
+import { HeaderMenuComponent } from '../../../header/header-menu/header-menu.component';
+import { KeyNumberComponent } from '../../../keypad/key-number/key-number.component';
 
 @Component({
   selector: 'app-split-bill',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    HeaderMenuComponent,
+    KeyNumberComponent,
+  ],
   templateUrl: './split-bill.component.html',
-  styleUrl: './split-bill.component.css'
+  styleUrl: './split-bill.component.css',
 })
 export class SplitBillComponent implements OnInit {
   id: string = '';
   items: any = [];
-  subgroup: any = [];
-    api: string = '';
+  subgroup: number = 1;
+  api: string = '';
+  screenWidth: number = window.innerWidth;
+  qty: any = 0;
+  tablesMaps: any = [];
+  item: any = {};
+  parentGroup: number = 0;
+  indexNumber: number = 0;
+  itemsTransfer: any = [];
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
-    private activeRouter: ActivatedRoute,
-
-  ) { }
+    private activeRouter: ActivatedRoute
+  ) {
+    window.addEventListener('resize', () => {
+      this.screenWidth = window.innerWidth;
+    });
+  }
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
-    this.id = this.activeRouter.snapshot.queryParams['id'],
-      this.modalService.dismissAll();
+    this.id = this.activeRouter.snapshot.queryParams['id'];
+    this.subgroup = this.activeRouter.snapshot.queryParams['subgroup'] || 1;
+    this.parentGroup =
+      this.activeRouter.snapshot.queryParams['parentGroup'] || 0;
+
+    this.modalService.dismissAll();
 
     if (this.id == undefined) {
-      alert("ERROR, ngOnInit() id == undefined ");
-      this.router.navigate(['tables'])
+      alert('ERROR, ngOnInit() id == undefined ');
+      this.router.navigate(['tables']);
     } else {
       this.httpGet();
     }
   }
 
   httpGet() {
-    this.http.get<any>(this.api + "bill/splitBill", {
-      headers: this.configService.headers(),
-      params: {
-        id: this.id
-      }
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.items = data['items'];
-        this.subgroup = data['subgroup'];
-
-      },
-      error => {
-        console.log(error)
-      }
-    )
+    this.http
+      .get<any>(this.api + 'bill/splitBill', {
+        headers: this.configService.headers(),
+        params: {
+          id: this.id,
+          subgroup: this.subgroup,
+          parentGroup: this.parentGroup,
+        },
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.items = data['items'];
+          this.itemsTransfer = data['itemsTransfer'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
+  handleData(data: any) {
+    if (data == 'b') {
+      let qty = this.qty.toString();
+      qty = qty.slice(0, -1);
 
-  updateGroup(item: any, a: string, i: number) {
-    console.log(item.id, a, i)
-    this.items[i]['subgroup'] = a;
+      if (qty == '') {
+        qty = '0';
+      }
+      this.qty = parseInt(qty);
+    } else {
+      if (this.qty == 0) {
+        this.qty = data;
+      } else {
+        this.qty = this.qty + data;
+      }
 
-    const body = {
-      id : item.id,
-      group : a
+      this.qty = parseInt(this.qty);
     }
-     this.http.post<any>(this.api + "bill/updateGroup",body, {
-      headers: this.configService.headers(), 
-    }).subscribe(
-      data => {
-        console.log(data); 
-      },
-      error => {
-        console.log(error)
-      }
-    )
   }
 
+  openKey(content: any, item: any, index: number) {
+    this.qty = 0;
+    this.item = item;
+    this.indexNumber = index;
+    console.log(this.item, this.indexNumber);
+    this.modalService.open(content, { size: 'sm' });
+  }
+  onSubmit() {
+    let total = 0;
+    total = this.qty;
+
+    if (this.qty > 0) {
+      // const targetId = this.items[this.indexNumber]['id'];
+      // const index = this.itemsTransfer.findIndex(
+      //   (item: { id: number }) => item.id === targetId
+      // );
+      // console.log(index);
+      // if (index == -1) {
+      //   if (this.items[this.indexNumber]['total'] < total) {
+      //     total = this.items[this.indexNumber]['total'];
+      //   }
+
+      //   const data = {
+      //     price: this.items[this.indexNumber]['price'],
+      //     total: total,
+      //     totalOriginal: this.items[this.indexNumber]['totalReset'],
+      //     menu: this.items[this.indexNumber]['menu'],
+      //     id: this.items[this.indexNumber]['id'],
+      //   };
+      //   this.itemsTransfer.push(data);
+      // } else {
+      //   if (this.items[this.indexNumber]['total'] > 0) {
+      //     if (this.items[this.indexNumber]['total'] < total) {
+      //       this.itemsTransfer[index]['total'] =
+      //         parseInt(this.itemsTransfer[index]['total']) +
+      //         this.items[this.indexNumber]['total'];
+      //     } else {
+      //       this.itemsTransfer[index]['total'] =
+      //         parseInt(this.itemsTransfer[index]['total']) + total;
+      //     }
+      //   }
+      // }
+      // // ITEMS
+      // if (this.items[this.indexNumber]['total'] - parseInt(this.qty) < 0) {
+      //   this.items[this.indexNumber]['total'] = 0;
+      // } else {
+      //   this.items[this.indexNumber]['total'] =
+      //     this.items[this.indexNumber]['total'] - parseInt(this.qty);
+      // }
+      // this.qty = 0;
+      // this.modalService.dismissAll();
+      this.updateGroup(this.items[this.indexNumber], this.qty);
+    }
+    this.modalService.dismissAll();
+  }
+
+  fnCancel(index: number) {
+    
+    const body = {
+      id: this.id,
+      parentGroup: this.parentGroup,
+      subgroup: this.subgroup,
+      item: this.itemsTransfer[index] 
+    }; 
+    console.log(body)
+    this.http
+      .post<any>(this.api + 'bill/resetGroup', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.httpGet();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  updateGroup(item: any, qty: number) {
+    const body = {
+      id: this.id,
+      parentGroup: this.parentGroup,
+      subgroup: this.subgroup,
+      itemTransfer: item,
+      qty: qty
+    };
+    console.log(body);
+    this.http
+      .post<any>(this.api + 'bill/updateGroup', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.httpGet();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
 }

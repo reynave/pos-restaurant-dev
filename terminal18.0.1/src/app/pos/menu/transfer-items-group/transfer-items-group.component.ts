@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConfigService } from '../../../service/config.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
 import { UserLoggerService } from '../../../service/user-logger.service';
 import { HeaderMenuComponent } from '../../../header/header-menu/header-menu.component';
 import { KeyNumberComponent } from '../../../keypad/key-number/key-number.component';

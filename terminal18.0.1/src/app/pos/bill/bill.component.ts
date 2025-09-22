@@ -343,9 +343,9 @@ export class BillComponent implements OnInit {
       );
   }
 
-  splitBill() {
+  splitBill(parentGroup : number, subgroup : number) {
     this.router
-      .navigate(['bill/splitBill'], { queryParams: { id: this.id } })
+      .navigate(['bill/splitBill'], { queryParams: { id: this.id, parentGroup: parentGroup, subgroup: subgroup } })
       .then(() => {
         this.activeModal.dismiss();
       });
