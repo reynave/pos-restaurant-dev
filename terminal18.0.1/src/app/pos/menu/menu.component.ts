@@ -172,6 +172,11 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpGetModifier();
       this.httpTables();
       this.httpDailyStart();
+
+      if(localStorage.getItem('pos3.modal.bill') == '1'){
+        this.openComponent(this.id);
+        localStorage.removeItem('pos3.modal.bill');
+      }
     }
   }
    

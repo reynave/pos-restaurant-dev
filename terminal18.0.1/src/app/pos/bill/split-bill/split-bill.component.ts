@@ -69,8 +69,7 @@ export class SplitBillComponent implements OnInit {
         headers: this.configService.headers(),
         params: {
           id: this.id,
-          subgroup: this.subgroup,
-          parentGroup: this.parentGroup,
+          subgroup: this.subgroup, 
         },
       })
       .subscribe(
@@ -116,46 +115,7 @@ export class SplitBillComponent implements OnInit {
     let total = 0;
     total = this.qty;
 
-    if (this.qty > 0) {
-      // const targetId = this.items[this.indexNumber]['id'];
-      // const index = this.itemsTransfer.findIndex(
-      //   (item: { id: number }) => item.id === targetId
-      // );
-      // console.log(index);
-      // if (index == -1) {
-      //   if (this.items[this.indexNumber]['total'] < total) {
-      //     total = this.items[this.indexNumber]['total'];
-      //   }
-
-      //   const data = {
-      //     price: this.items[this.indexNumber]['price'],
-      //     total: total,
-      //     totalOriginal: this.items[this.indexNumber]['totalReset'],
-      //     menu: this.items[this.indexNumber]['menu'],
-      //     id: this.items[this.indexNumber]['id'],
-      //   };
-      //   this.itemsTransfer.push(data);
-      // } else {
-      //   if (this.items[this.indexNumber]['total'] > 0) {
-      //     if (this.items[this.indexNumber]['total'] < total) {
-      //       this.itemsTransfer[index]['total'] =
-      //         parseInt(this.itemsTransfer[index]['total']) +
-      //         this.items[this.indexNumber]['total'];
-      //     } else {
-      //       this.itemsTransfer[index]['total'] =
-      //         parseInt(this.itemsTransfer[index]['total']) + total;
-      //     }
-      //   }
-      // }
-      // // ITEMS
-      // if (this.items[this.indexNumber]['total'] - parseInt(this.qty) < 0) {
-      //   this.items[this.indexNumber]['total'] = 0;
-      // } else {
-      //   this.items[this.indexNumber]['total'] =
-      //     this.items[this.indexNumber]['total'] - parseInt(this.qty);
-      // }
-      // this.qty = 0;
-      // this.modalService.dismissAll();
+    if (this.qty > 0) { 
       this.updateGroup(this.items[this.indexNumber], this.qty);
     }
     this.modalService.dismissAll();
@@ -187,8 +147,7 @@ export class SplitBillComponent implements OnInit {
 
   updateGroup(item: any, qty: number) {
     const body = {
-      id: this.id,
-      parentGroup: this.parentGroup,
+      id: this.id, 
       subgroup: this.subgroup,
       itemTransfer: item,
       qty: qty

@@ -5,15 +5,13 @@
       <ul class="navbar-nav flex-row me-3">
          <li class="nav-item me-2">
 
-            @if(path == 'tables' || path == '' ){
-
-            <strong class="text-white"><small>Ver {{ver}}</small></strong>
-
+            @if(path == 'tables' || path == '' ){ 
+               <strong class="text-white"><small>Ver {{ver}}</small></strong> 
             }
             @else {
-            <a class="nav-link btn btn-primary px-3 d-flex align-items-center" (click)="back()">
-               <i class="bi bi-arrow-left"></i> BACK
-            </a>
+               <a class="nav-link btn btn-primary px-3 d-flex align-items-center" (click)="back()">
+                  <i class="bi bi-arrow-left"></i> BACK
+               </a>
             }
          </li>
 
@@ -66,8 +64,7 @@
 
             <li class="nav-item">
                <a class="btn btn-primary mx-1" title="Sign Off" (click)=" signOff(); "><i
-                     class="bi bi-box-arrow-left"></i> Sign
-                  Off</a>
+                     class="bi bi-box-arrow-left"></i> Sign Off</a>
             </li>
             <li class="nav-item">
                <a class="btn btn-primary mx-1" title="Daily Close" (click)="dailyClose();">

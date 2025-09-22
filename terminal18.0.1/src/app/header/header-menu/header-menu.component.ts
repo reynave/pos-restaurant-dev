@@ -42,7 +42,10 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     this.httpHeader();
     this.getTokenJson = this.configService.getTokenJson();
     this.path = this.activeRouter.snapshot.routeConfig?.path;
-  
+    console.log('PATH', this.path);
+     if(this.path == 'bill/splitBill' ){
+        localStorage.setItem('pos3.modal.bill', '1'); 
+    }
   }
 
   
@@ -57,6 +60,7 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     this.socketService.emit('message-from-client', 'reload');
   }
   back() {
+   
     history.back();
    
   }

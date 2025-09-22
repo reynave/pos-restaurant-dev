@@ -74,8 +74,7 @@ export class BillComponent implements OnInit {
 
   ngOnInit() {
     this.api = this.configService.getApiUrl();
-    this.httpCart();
-
+    this.httpCart(); 
     this.getCartCopyBill();
   }
 
@@ -95,7 +94,7 @@ export class BillComponent implements OnInit {
           this.close = data['cart']['close'];
           this.groups = data['groups'];
           this.cart = data['cart'];
-           this.htmlBill  = [];
+           this.htmlBill  = []; 
          // if( this.groups.length > 1 ){
             this.callWithDelay();
          // }else{
@@ -110,6 +109,7 @@ export class BillComponent implements OnInit {
   }
 
   async callWithDelay() {
+   
     for (const el of this.groups) {
       await this.httpBill(el.subgroup); // kalau httpBill async
       await this.delay(100); // delay 1 detik
@@ -147,8 +147,8 @@ export class BillComponent implements OnInit {
       .get(url, {
         responseType: 'text' as const,
         params: {
-          id: this.id,
-          subgroup: subgroup,
+          id: this.id, 
+          subgroup :subgroup,
         },
       })
       .subscribe(
@@ -343,9 +343,9 @@ export class BillComponent implements OnInit {
       );
   }
 
-  splitBill(parentGroup : number, subgroup : number) {
+  splitBill(subgroup : number) {
     this.router
-      .navigate(['bill/splitBill'], { queryParams: { id: this.id, parentGroup: parentGroup, subgroup: subgroup } })
+      .navigate(['bill/splitBill'], { queryParams: { id: this.id, subgroup: subgroup } })
       .then(() => {
         this.activeModal.dismiss();
       });
