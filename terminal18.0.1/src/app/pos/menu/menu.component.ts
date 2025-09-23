@@ -110,6 +110,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   checkBoxAll: boolean = false;
   activeTab: string = 'menu';
   selectedItem : any;
+  posMode : string = 'counter'; // counter / table
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -203,8 +204,8 @@ export class MenuComponent implements OnInit, OnDestroy {
           console.log(element);
           this.billDiscount +=  parseInt(element['amount'] || 0);
         }); 
-        this.billTax = data['data']['taxSc'][0]['totalAmount'];
-        this.billSc = data['data']['taxSc'][1]['totalAmount'];
+        this.billTax = data['data']['taxSc'][1]['totalAmount'];
+        this.billSc = data['data']['taxSc'][0]['totalAmount'];
       },
       (error) => {  console.log(error); }
     );
@@ -334,6 +335,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         headers: this.configService.headers(),
         params: {
           id: this.id,
+          posMode : this.posMode
         },
       })
       .subscribe(
@@ -754,6 +756,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         const body = {
           cart: this.cart,
           cartId: this.id,
+          posMode : this.configService.getConfigJson()['outlet']['posMode'],
         };
         const url = this.api + 'menuItemPos/voidItem';
         this.http

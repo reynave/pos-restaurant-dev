@@ -76,7 +76,12 @@ export class TablesComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit() { 
+    if( this.configService.getConfigJson()['outlet']['posMode'] == "cashier"){
+      this.router.navigate(['/cashier']);
+    }
+
+
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';

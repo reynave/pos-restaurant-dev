@@ -31,7 +31,8 @@ import { ReloginComponent } from './login/relogin/relogin.component';
 import { PrintQueueComponent } from './pos/print-queue/print-queue.component';
 import { FactoryComponent } from './login/factory/factory.component';
 import { MenuLockComponent } from './pos/menu/menu-lock/menu-lock.component';
-import { CustomerDisplayComponent } from './customer-display/customer-display.component';
+import { CustomerDisplayComponent } from './customer-display/customer-display.component'; 
+import { CashierComponent } from './pos/cashier/cashier.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -47,19 +48,21 @@ export const routes: Routes = [
 
     { path: 'setting', component: SettingComponent, canActivate: [authGuard, loginGuard] },
 
+    { path: 'cashier', component: CashierComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+
     // DAILYSTARTGUARD REQUREMENT
     { path: 'tables', component: TablesComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu', component: MenuComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/modifier', component: MenuModifierComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItems', component: TransferItemsComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItemsGroup', component: TransferItemsGroupComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
- { path: 'menu/lock', component: MenuLockComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+    { path: 'menu/lock', component: MenuLockComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
  
     { path: 'bill', component: BillComponent, canActivate: [authGuard, dailyStartGuard ,terminalGuard, loginGuard] },
     { path: 'bill/splitBill', component: SplitBillComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
 
     { path: 'payment', component: PaymentComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
-  { path: 'printQueue', component: PrintQueueComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+    { path: 'printQueue', component: PrintQueueComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
 
     { path: 'items', component: ItemsComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'userLogs', component: UserLogsComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
