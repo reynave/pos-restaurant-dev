@@ -153,20 +153,20 @@
             <div class="row g-2">
 
                <div class="col-6">
-                 <table class="table table-sm table-xs">
+                  <table class="table table-sm table-xs">
                      <tbody>
                         <tr>
-                           <td>Item Total :</td>   
-                           <td class="text-end">{{billTotalItem | number}}</td>
+                           <td>Item Total :</td>
+                           <td class="text-end">{{billItemTotal | number}}</td>
                         </tr>
 
                         <tr>
-                           <td>Discount :</td>  
+                           <td>Discount :</td>
                            <td class="text-end">{{billDiscount | number}}</td>
                         </tr>
 
                         <tr>
-                           <td>Sub Total :</td>   
+                           <td>Sub Total :</td>
                            <td class="text-end">{{billSubTotal | number}}</td>
                         </tr>
 
@@ -174,21 +174,21 @@
                   </table>
                </div>
 
-                <div class="col-6">
+               <div class="col-6">
                   <table class="table table-sm table-xs">
                      <tbody>
-                        <tr>
-                           <td>Tax :</td> 
-                           <td class="text-end"> {{billTax | number}}</td>
-                        </tr>
 
                         <tr>
                            <td>Sc :</td>
                            <td class="text-end">{{billSc | number}}</td>
                         </tr>
+                        <tr>
+                           <td>Tax :</td>
+                           <td class="text-end"> {{billTax | number}}</td>
+                        </tr>
 
                         <tr>
-                           <td>Total :</td> 
+                           <td>Total :</td>
                            <td class="text-end"><span class="fw-bold">{{ billGrandTotal | number}}</span></td>
                         </tr>
 
@@ -197,7 +197,7 @@
                </div>
             </div>
 
-            
+
          </div>
 
          <div class="row g-1">
@@ -253,7 +253,8 @@
                         </tr>
                         <tr>
                            <th>Order By and Time</th>
-                           <td>{{selectedItem?.employeeName}} , {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss a'}}</td>
+                           <td>{{selectedItem?.employeeName}} , {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss
+                              a'}}</td>
                         </tr>
 
                         <tr>

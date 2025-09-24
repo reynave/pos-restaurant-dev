@@ -187,7 +187,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   billGrandTotal : number = 0;
   billTotalItem : number = 0;
   billSubTotal : number = 0;
+  billItemTotal : number = 0;
+
   httpBill(){ 
+      this.billTax =  0;
+        this.billSc = 0;
     this.billDiscount = 0;
     this.http.get(this.api + 'payment/cart', {
       headers: this.configService.headers(),
@@ -200,11 +204,12 @@ export class MenuComponent implements OnInit, OnDestroy {
         this.billTotalItem = data['data']['totalItem'];
         this.billGrandTotal = data['data']['grandTotal'];
         this.billSubTotal = data['data']['subTotal'];
+        this.billItemTotal = data['data']['itemTotal'];
         data['data']['discountGroup'].forEach((element: { [x: string]: any; }) => {
           console.log(element);
           this.billDiscount +=  parseInt(element['amount'] || 0);
         }); 
-        this.billTax = data['data']['taxSc'][1]['totalAmount'];
+        this.billTax =  data['data']['taxSc'][1]['totalAmount'];
         this.billSc = data['data']['taxSc'][0]['totalAmount'];
       },
       (error) => {  console.log(error); }
@@ -364,15 +369,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   
-  fullReload() {
-    this.httpGetModifier();
-    this.httpTables();
-  }
-
   reload() {
     this.httpMenu();
-    this.httpCart();
-     this.httpBill();
+     this.httpCart();
+      this.httpBill();
   }
 
   onSubmitMenuSet() {

@@ -127,9 +127,26 @@ export class CashierComponent implements OnInit {
     }
   }
 
-  editOrder(id: string) {
-    this.router.navigate(['/menu'], { queryParams: { id: id } });
-    this.logService.logAction('Go to Menu', id);
+  goToMenu(id: string) { 
+    const url = this.api + 'menuItemPos/lockTable';
+    const body = {
+      cartId:  id,
+      terminalId: this.terminalId,
+    };
+ 
+    this.http
+      .post<any>(url, body, { headers: this.configService.headers() })
+      .subscribe(
+        (data) => {
+          console.log(data); 
+          this.router.navigate(['/menu'], { queryParams: { id: id } });
+          this.logService.logAction('Go to Menu', id);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  
   } 
 
    signOff() {
