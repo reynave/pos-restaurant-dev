@@ -64,6 +64,7 @@ export class BillComponent implements OnInit {
   subTotal: any = [];
   tableSendOrder: number = 0;
   env : any = environment;
+  posMode : string = '' ;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -73,6 +74,8 @@ export class BillComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.posMode = this.configService.getConfigJson()['outlet']['posMode'];
+    
     this.api = this.configService.getApiUrl();
     this.httpCart(); 
     this.getCartCopyBill();

@@ -33,12 +33,21 @@
 
          <div style="min-height: 80vh;" class="align-content-center">
  
-
+          
             @if(close == 0){ 
-            <div class="text-center d-grid mx-5 mb-3">
-               <button type="button" class="btn btn-lg btn-success py-3" 
-               [disabled]="cart.paymentId === '' " (click)="payment()">PAYMENT</button>
-            </div>
+               @if(posMode == 'cashier') {
+                  <div class="text-center d-grid mx-5 mb-3">
+                     <button type="button" class="btn btn-lg btn-success py-3"   (click)="payment()">PAYMENT</button>
+                  </div>
+               }
+               @else {
+                  <div class="text-center d-grid mx-5 mb-3">
+                     <button type="button" class="btn btn-lg btn-success py-3"   [disabled]="cart.paymentId === '' " (click)="payment()">PAYMENT</button>
+                  </div>
+               }
+
+
+          
 
             @if(groups.length > 0) {
             <div class="text-center d-grid mx-5 mb-3"  *ngFor="let x of groups">
