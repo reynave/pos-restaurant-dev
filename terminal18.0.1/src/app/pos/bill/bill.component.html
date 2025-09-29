@@ -6,19 +6,15 @@
                <app-bill-table [data]="data">Loading...</app-bill-table>
             </div>
          </div>
-      </div> -->
-
-      <div class="col-6">
-
+      </div> --> 
+      <div class="col-6"> 
          <div style="max-height: 85vh; overflow-y: auto;">
             <div *ngFor="let a of groups; let i = index">
-               <pre class="font-monospace" [innerHTML]="htmlBill[i]['html']"></pre>
+               <pre class="font-monospace" [innerHTML]="htmlBill[i]?.['html']"></pre>
                <hr *ngIf="groups.length > 1">
             </div>  
-   <!-- <pre class="font-monospace" [innerHTML]="htmlBill"></pre> -->
-         </div>
-
-
+            <!-- <pre class="font-monospace" [innerHTML]="htmlBill"></pre> -->
+         </div> 
          <!-- <div *ngFor="let a of groups; let i = index">
                <textarea class="form-control form-control-sm font-monospace"  rows="20" [(ngModel)]="htmlBill[i]" ></textarea>
                <hr *ngIf="groups.length > 1">

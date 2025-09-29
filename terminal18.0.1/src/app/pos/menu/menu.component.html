@@ -253,8 +253,8 @@
                         </tr>
                         <tr>
                            <th>Order By and Time</th>
-                           <td>{{selectedItem?.employeeName}} , {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss
-                              a'}}</td>
+                           <td>{{selectedItem?.employeeName}} , 
+                              {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         </tr>
 
                         <tr>
@@ -314,12 +314,12 @@
          </div>
 
          <ul class="nav nav-pills mb-2">
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="posMode != 'counter'">
                <a class="nav-link" (click)="sendOrder();">
                   <i class="bi bi-fork-knife"></i> Send Order
                </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="posMode != 'counter'">
                <a class="nav-link" (click)="fnTableChecker(contentGuestPrinting)">
                   <i class="bi bi-receipt-cutoff"></i> Table Checker
                </a>
@@ -361,7 +361,7 @@
             <div *ngIf="activeTab === 'function'">
                <div class="row g-2">
 
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [class]="cssClass" class="btn-primary" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
                         <i class="bi bi-fork-knife"></i> SEND ORDER</button>
@@ -385,7 +385,7 @@
                            class="bi bi-trash"></i>
                         EXIT WITHOUT ORDER</button>
                   </div>
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [disabled]="lock" [class]="cssClass" class="btn-warning"
                         (click)="transferItemsGroup()"> <i class="bi bi-send-plus"></i>
                         TRANSFER ITEMS
@@ -398,25 +398,25 @@
                         TAKE OUT</button>
                   </div>
 
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [class]="cssClass" class="btn-light" (click)="openTables(modalMergeCheck)">
                         <i class="bi bi-intersect"></i>
                         MERGE </button>
                   </div>
 
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [class]="cssClass" class="btn-light"
                         (click)="model.newQty = 0; openSm(modalChangeCover)">
                         <i class="bi bi-people"></i>
                         CHANGE COVER </button>
                   </div>
 
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
                         TRANSFER LOG</button>
                   </div>
-                  <div class="col-3 d-grid">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
                         MERGE LOG</button>

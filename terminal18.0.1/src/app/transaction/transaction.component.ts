@@ -44,7 +44,8 @@ export class TransactionComponent implements OnInit {
      this.api = this.configService.getApiUrl();
     this.outletId = this.configService.getConfigJson()['outlet']['id'];
     this.modalService.dismissAll(); 
-    this.httpOutlet(); 
+   // this.httpOutlet(); 
+     this.httpGet(); 
 
   }
   httpOutlet() {
@@ -55,7 +56,7 @@ export class TransactionComponent implements OnInit {
     }).subscribe(
       data => {
         this.outletSelect = data['outletSelect']; 
-        this.httpGet(); 
+       
       },
       error => {
         console.log(error);
@@ -69,10 +70,12 @@ export class TransactionComponent implements OnInit {
     this.http.get<any>(url, {
       headers: this.configService.headers(),
       params: {
-        outletId:  this.outletId,
+       // outletId:  this.outletId,
+         dailyCheckId: this.configService.getDailyCheck(),
       }
     }).subscribe(
       data => {
+        console.log
         this.items = data['items']; 
       },
       error => {

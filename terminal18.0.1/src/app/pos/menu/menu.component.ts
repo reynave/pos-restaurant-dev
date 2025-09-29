@@ -111,6 +111,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   activeTab: string = 'menu';
   selectedItem : any;
   posMode : string = 'counter'; // counter / table
+    autoBack: boolean = true;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -162,6 +163,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.public = this.server + 'public/floorMap/';
 
     this.modalService.dismissAll();
+    console.log(this.posMode)
+    
     if (this.id == undefined) {
       alert('ERROR, ngOnInit() id == undefined ');
       this.router.navigate(['error']);
@@ -562,7 +565,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   openSm(content: any) {
     this.modalService.open(content, { size: 'sm' });
   }
-  autoBack: boolean = true;
+
   openComponent(id: string) {
     const modalRef = this.modalService.open(BillComponent, { size: 'lg' });
     modalRef.componentInstance.id = id;
