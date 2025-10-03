@@ -1,7 +1,5 @@
-<app-header-menu></app-header-menu>
-
 <div [ngClass]="{'container': screenWidth >= 1200, 'container-fluid': screenWidth < 1200}">
-   <div class="row g-2">
+   <div class="row g-2 mt-1">
       <!-- TABLE CART -->
       <div class="col-5 col-lg-4 ">
 
@@ -15,7 +13,7 @@
                      class="bi bi-exclamation-triangle"></i></button>
             </div>
             <div class="mb-2">Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
-            <div style="height: 46vh; overflow-y: auto;">
+            <div style="height: 44vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
                      <tr>
@@ -200,7 +198,7 @@
 
          </div>
 
-         <div class="row g-1">
+         <div class="row g-1 mb-2">
             <div class="col-5 d-grid">
                <button class="btn btn-light  text-start"
                   (click)="checkBoxAllModifier == false ? checkBoxAllModifier = true : checkBoxAllModifier = false">
@@ -221,6 +219,13 @@
                <button type="button" class="btn btn-danger  " (click)="onVoid()">
                   <i class="bi bi-x-lg"></i> </button>
             </div>
+         </div> 
+         <div class="row">
+              <div class="col-12 d-grid" >
+                  <button type="button" class="btn btn-warning"  (click)="back();">
+                      <i class="bi bi-arrow-left"></i> BACK 
+                  </button>
+               </div> 
          </div>
       </div>
 
@@ -314,12 +319,12 @@
          </div>
 
          <ul class="nav nav-pills mb-2">
-            <li class="nav-item" *ngIf="posMode != 'counter'">
+            <li class="nav-item" *ngIf="posMode != 'cashier'">
                <a class="nav-link" (click)="sendOrder();">
                   <i class="bi bi-fork-knife"></i> Send Order
                </a>
             </li>
-            <li class="nav-item" *ngIf="posMode != 'counter'">
+            <li class="nav-item" *ngIf="posMode != 'cashier'">
                <a class="nav-link" (click)="fnTableChecker(contentGuestPrinting)">
                   <i class="bi bi-receipt-cutoff"></i> Table Checker
                </a>
@@ -358,10 +363,11 @@
          </ul>
 
          <div class="tab-content px-2">
+          
             <div *ngIf="activeTab === 'function'">
                <div class="row g-2">
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="btn-primary" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
                         <i class="bi bi-fork-knife"></i> SEND ORDER</button>
@@ -385,7 +391,7 @@
                            class="bi bi-trash"></i>
                         EXIT WITHOUT ORDER</button>
                   </div>
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [disabled]="lock" [class]="cssClass" class="btn-warning"
                         (click)="transferItemsGroup()"> <i class="bi bi-send-plus"></i>
                         TRANSFER ITEMS
@@ -398,25 +404,25 @@
                         TAKE OUT</button>
                   </div>
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="btn-light" (click)="openTables(modalMergeCheck)">
                         <i class="bi bi-intersect"></i>
                         MERGE </button>
                   </div>
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="btn-light"
                         (click)="model.newQty = 0; openSm(modalChangeCover)">
                         <i class="bi bi-people"></i>
                         CHANGE COVER </button>
                   </div>
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
                         TRANSFER LOG</button>
                   </div>
-                  <div class="col-3 d-grid" *ngIf="posMode != 'counter'">
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
                         MERGE LOG</button>
@@ -612,9 +618,9 @@
 
          </div>
 
-         <div class="px-2" *ngIf="activeTab === 'menu' || activeTab === 'modifier' || activeTab === 'discount'">
-            <div class="row g-1 mb-3">
-
+         <div class="px-2">
+            <div class="row g-1 mb-3"> 
+               @if( activeTab === 'menu' || activeTab === 'modifier' || activeTab === 'discount'){
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'menu' && menuLookUpParent.length > 0">
                   <button type="button" class="btn btn-success py-3"
                      (click)="btnFinish(); menuLookupId = 0; results = '' ">
@@ -631,6 +637,8 @@
                      <i class="bi bi-check2"></i> SUBMIT
                   </button>
                </div>
+
+                }
             </div>
          </div>
 

@@ -3,8 +3,13 @@
 }
 
 .td-active td {
-     background-color: var(--bg-color-primary-40);
+     background-color: #d1e7dd !important;
 }
 .wrapper{
      max-height: 65vh !important;
+}
+.active-input{
+     font-weight: bold;
+     color: #0d2e1f;
+     border: #389c6f 3px solid !important;
 }

@@ -97,10 +97,10 @@ export class LoginComponent implements OnInit {
             posMode: outlet['posMode'],
           },
           printer: {
-            con: 'ip',
-            address: '10.51.122.20',
-            port: 9100,
-            name: 'ESC/POS (Epson-style)',
+            con: data['printer']['con'],
+            address: data['printer']['address'],
+            port: data['printer']['port'],
+            name: data['printer']['name'],
           },
         });
         //  console.log(myJSONString);

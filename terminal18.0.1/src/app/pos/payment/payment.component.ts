@@ -79,17 +79,17 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   paymentGroup: any = {};
   paymentypes: any = [];
   showApplyDiscount: boolean = false;
-
+  groups: any = [];
   screenWidth: number = window.innerWidth;
   terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
-  
-
+  showPrintBill: boolean = false;
+  checkCashType: any = [];
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
-    private activeRouter: ActivatedRoute, 
+    private activeRouter: ActivatedRoute,
     public logService: UserLoggerService,
     config: NgbModalConfig,
     private socketService: SocketService
@@ -101,13 +101,12 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    
-  }
+  ngOnDestroy(): void {}
   ngAfterViewInit(): void {
     console.log('test');
     try {
-      this.myDiv.nativeElement.scrollTop =  this.myDiv.nativeElement.scrollHeight;
+      this.myDiv.nativeElement.scrollTop =
+        this.myDiv.nativeElement.scrollHeight;
     } catch (err) {
       console.log(err);
     }
@@ -117,11 +116,10 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log('MENU EMIT : sendMessage');
     const data = {
       terminalId: this.terminalId,
-      id : this.id,
-      tableId : this.cart.outletTableMapId
-    }
+      id: this.id,
+      tableId: this.cart.outletTableMapId,
+    };
     this.socketService.emit('message-from-client', data);
-
   }
 
   ngOnInit() {
@@ -130,11 +128,37 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.id = this.activeRouter.snapshot.queryParams['id'];
     this.modalService.dismissAll();
     this.httpCart();
+    this.httpCartBill();
+    
     this.httpPaymentType();
-   
+    this.httpCastType();
   }
   back() {
     history.back();
+  }
+
+  httpCastType() {
+    //http://localhost:3000/terminal/daily/checkCashType
+    this.http
+      .get<any>(this.api + 'daily/checkCashType', {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.checkCashType = data['items'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+  selectCashType(x: any) {
+     if (this.inputField == 'paid') {
+      this.paid[this.paymentIndex].paid = parseInt(x.value) + parseInt(this.paid[this.paymentIndex].paid);
+    } else if (this.inputField == 'tips') {
+      this.paid[this.paymentIndex].tips = parseInt(x.value) + parseInt(this.paid[this.paymentIndex].tips);
+    }
   }
 
   httpPaid() {
@@ -155,7 +179,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
           if (data['closePayment'] == 1) {
             this.openModal();
-          } 
+          }
         },
         (error) => {
           console.log(error);
@@ -172,18 +196,43 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         params: {
           id: this.activeRouter.snapshot.queryParams['id'],
           dailyCheckId: this.configService.getDailyCheck() ?? '',
+          isGrouping : 0,
         },
       })
       .subscribe(
-        (data) => {
+        (data) => { 
           this.data = data['data'];
           this.discountGroup = data['data']['discountGroup'];
           this.closePaymentAmount = data['data']['closePaymentAmount'];
           this.unpaid = data['data']['unpaid'];
           this.grandTotal = data['data']['grandTotal'];
           this.httpPaid();
-          
-           this.sendMessage();
+
+          this.sendMessage();
+          this.callWithDelay();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  } 
+  httpCartBill() {
+    this.loading = true;
+    const url = this.api + 'payment/cart';
+    this.http
+      .get<any>(url, {
+        headers: this.configService.headers(),
+        params: {
+          id: this.activeRouter.snapshot.queryParams['id'],
+          dailyCheckId: this.configService.getDailyCheck() ?? '',
+          isGrouping : 1,
+        },
+      })
+      .subscribe(
+        (data) => {
+          this.htmlBill = [];
+          this.groups = data['groups'];   
+          this.callWithDelay();
         },
         (error) => {
           console.log(error);
@@ -191,6 +240,15 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
+  async callWithDelay() {
+    for (const el of this.groups) {
+      await this.httpBill(el.subgroup); // kalau httpBill async
+      await this.delay(100); // delay 1 detik
+    }
+  }
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   httpPaymentType() {
     this.loading = true;
     const url = this.api + 'payment/paymentGroup';
@@ -208,26 +266,34 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  httpBill() {
+  httpBill(subgroup: number) {
     this.loading = true;
     const url = this.api + 'bill/printing';
     this.http
       .get(url, {
         responseType: 'text' as const,
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'],
+          id: this.id,
+          subgroup: subgroup,
+            totalGroup : this.groups.length
         },
       })
       .subscribe(
         (data: string) => {
-          this.htmlBill = data;
+          console.log('httpBill', data);
+          this.loading = false;
+          const items = {
+            subgroup: subgroup,
+            html: data,
+          };
+          this.htmlBill.push(items);
+          // this.htmlBill = data;
         },
         (error) => {
           console.log(error);
         }
       );
   }
-
   reload() {
     this.httpCart();
   }
@@ -247,7 +313,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(
         (data) => {
           this.modalService.dismissAll();
-          console.log(data); 
+          console.log(data);
           this.httpCart();
           this.logService.logAction(
             'Add Payment ' + body['payment']['name'],
@@ -339,27 +405,25 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         this.logService.logAction('CLOSE PAYMENT', this.id);
         this.router.navigate(['tables']);
 
-         console.log('MENU EMIT : CLOSE PAYMENT');
-          const data = {
-            terminalId: this.terminalId,
-            id : '',
-            tableId : ''
-          }
-          this.socketService.emit('message-from-client', data);
-
-
+        console.log('MENU EMIT : CLOSE PAYMENT');
+        const data = {
+          terminalId: this.terminalId,
+          id: '',
+          tableId: '',
+        };
+        this.socketService.emit('message-from-client', data);
       },
       (reason) => {
         console.log('reason');
         this.logService.logAction('CLOSED payment without action', this.id);
         this.router.navigate(['tables']);
-         console.log('MENU EMIT : CLOSE PAYMENT');
-          const data = {
-            terminalId: this.terminalId,
-            id : '',
-            tableId : ''
-          }
-          this.socketService.emit('message-from-client', data);
+        console.log('MENU EMIT : CLOSE PAYMENT');
+        const data = {
+          terminalId: this.terminalId,
+          id: '',
+          tableId: '',
+        };
+        this.socketService.emit('message-from-client', data);
       }
     );
   }
@@ -441,5 +505,13 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log(error);
         }
       );
+  }
+
+  tablePaymentActive(i: number, paid: any) {
+    console.log(i, paid);
+    if (paid.submit != 1) {
+      this.paymentIndex = i;
+      this.inputField = 'paid';
+    }
   }
 }

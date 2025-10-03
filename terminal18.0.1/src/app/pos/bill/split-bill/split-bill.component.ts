@@ -47,6 +47,7 @@ export class SplitBillComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    
     this.api = this.configService.getApiUrl();
     this.id = this.activeRouter.snapshot.queryParams['id'];
     this.subgroup = this.activeRouter.snapshot.queryParams['subgroup'] || 1;
@@ -82,6 +83,10 @@ export class SplitBillComponent implements OnInit {
           console.log(error);
         }
       );
+  }
+  back(){
+      localStorage.setItem('pos3.modal.bill', '1'); 
+    history.back();
   }
 
   handleData(data: any) {

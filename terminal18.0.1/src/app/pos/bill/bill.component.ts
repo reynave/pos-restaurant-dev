@@ -152,6 +152,7 @@ export class BillComponent implements OnInit {
         params: {
           id: this.id, 
           subgroup :subgroup,
+          totalGroup : this.groups.length
         },
       })
       .subscribe(
@@ -211,16 +212,20 @@ export class BillComponent implements OnInit {
     const config = this.configService.getConfigJson(); 
     const body = {
       message: htmlBill,
-      printer: {
-        address: config.printerIp,
-        port: config.printerPort,
-      },
+      printer: config.printer,
     };
     this.printNoteError = false;
     this.printNote = '';
     this.printLoading = true;
     console.log(body);
     this.printNote = 'Printing, please wait...';
+
+    const printerType = 'usb';
+    if(printerType == 'usb'){
+      this.usbPrinter(); 
+    }else{
+
+ 
     this.http
       .post(this.api + 'printing/print', body, {
         headers: this.configService.headers(),
@@ -238,7 +243,46 @@ export class BillComponent implements OnInit {
           this.printNote = 'ERROR ' + error.error.detail;
         }
       );
+
+   }
   }
+
+
+  usbPrinter() {
+    console.log('usbPrinter');
+    this.printResp = '';
+    this.isPrinting = true;
+    let htmlBill = this.htmlBill;
+ 
+    const body = {
+      message: htmlBill[0].html,
+      printer: 'TP805L',
+    };
+    this.printNoteError = false;
+    this.printNote = '';
+    this.printLoading = true;
+    console.log(body);
+    this.printNote = 'Printing, please wait...';
+
+    this.http
+      .post(  'http://localhost/app/printing/RestPrinter.php', body)
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.printNote = 'Print Success';
+          this.printLoading = false;
+        },
+        (error) => {
+          this.printNoteError = true;
+          this.printLoading = false;
+          console.log(error);
+          this.printNote = 'ERROR ' + error.error.detail;
+        }
+      );
+
+      
+  }
+
 
   printBill() {
     const body = {

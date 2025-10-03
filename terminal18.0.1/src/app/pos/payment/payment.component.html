@@ -1,31 +1,52 @@
-<app-header-menu></app-header-menu>
 <div [ngClass]="{'container': screenWidth >= 1200, 'container-fluid': screenWidth < 1200}">
-   <div class="row g-3">
+   <div class="row g-3 mt-1">
       <div class="col-4">
 
          <div class="row g-1 mb-2">
             <div class="col-6">
                <strong class="fw-bold ms-2"> Bill {{id}} </strong>
             </div>
+
             <div class="col-6  d-grid">
-               <a class="btn btn-sm btn-{{showApplyDiscount!=false ? 'primary' : 'light' }}"
-                  (click)="showApplyDiscount==false ? showApplyDiscount = true : showApplyDiscount = false">
-                  {{showApplyDiscount!=false ? 'Show' : 'Hide' }} Modifier </a>
+               <a class="btn btn-sm btn-{{showPrintBill!=false ? 'primary' : 'light' }}"
+                  (click)="showPrintBill==false ? showPrintBill = true : showPrintBill = false">
+                  {{showPrintBill!=false ? 'Print View' : 'Summary Payment' }} </a>
             </div>
          </div>
 
          <div class="order-panel mb-2" style="height: 80vh; overflow-y: auto;" #myDiv>
+
+            @if(showPrintBill != false){
+            <div *ngFor="let a of groups; let i = index">
+               <pre class="font-monospace" [innerHTML]="htmlBill[i]?.['html']"></pre>
+               <hr *ngIf="groups.length > 1">
+            </div>
+
+            }
+            @else {
+            <div class="mb-2 d-grid">
+               <a class="btn btn-sm btn-{{showApplyDiscount!=false ? 'primary' : 'light' }}"
+                  (click)="showApplyDiscount==false ? showApplyDiscount = true : showApplyDiscount = false">
+                  {{showApplyDiscount!=false ? 'Show' : 'Hide' }} Modifier </a>
+            </div>
+
             <app-bill-table [data]="data" [showApplyDiscount]="showApplyDiscount">Loading...</app-bill-table>
-            
-             
-         </div> 
+            }
+
+         </div>
+
+         <div class="d-grid">
+            <button type="button" class="btn  btn-warning" (click)="back()">
+               <i class="bi bi-arrow-left"></i> BACK
+            </button>
+         </div>
 
       </div>
 
       <div class="col-6 ">
          <div>
 
-            <div class="order-panel p-0 mb-3" style="height: 50vh; overflow-y: auto;">
+            <div class="order-panel p-0 mb-3" style="height: 40vh; overflow-y: auto;">
                <table class="table table-sm">
                   <thead class="sticky-top bg-white">
                      <tr>
@@ -37,19 +58,22 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <tr *ngFor="let x of paid; let i = index" [class]="(i==paymentIndex)? 'td-active':''">
-                        <td width="200">
-                           <div class="form-control border-0">
+                     <tr *ngFor="let x of paid; let i = index" 
+                        [class]="(i==paymentIndex)? 'td-active':''">
+                        <td width="200" (click)="tablePaymentActive(i,x)">
+                           <div class="p-2">
                               {{x.name}}
                            </div>
                         </td>
                         <td>
-                           <input type="text" class="form-control c1" currencyMask [(ngModel)]="x.paid"
+                           <input type="text" class="form-control c1 " currencyMask [(ngModel)]="x.paid"
+                           [class]="{'active-input':(i==paymentIndex && inputField=='paid')}"
                               [disabled]="x.submit==1" (blur)="updateRow(x)" (click)="paymentActive(i,'paid')"
                               [currencyMask]="{ prefix: '', thousands: ',',  min: 0, precision  : 0, allowNegative  :  false}">
                         </td>
                         <td>
                            <input type="text" class="form-control c1" currencyMask [(ngModel)]="x.tips"
+                              [class]="{'active-input':(i==paymentIndex && inputField=='tips')}"
                               [disabled]="x.submit==1" (blur)="updateRow(x)" (click)="paymentActive(i, 'tips')"
                               [currencyMask]="{ prefix: '', thousands: ',',  min: 0, precision  : 0, allowNegative  :  false}">
                         </td>
@@ -71,20 +95,31 @@
 
 
             <div class="order-panel p-3">
-               <div class="row g-3">
+               <div class="row g-2">
+                  <div class="col-6">
+
+                     <div class="row g-1">
+                        <div class="col-6 d-grid mb-1" *ngFor="let x of checkCashType">
+                           <button class="btn btn-lg border rounded btn-outline-dark" (click)="selectCashType(x)">{{x.name}}</button>
+                        </div>
+                     </div>
+
+                  </div>
+
                   <div class="col-6">
                      <app-key-number (dataEmitted)="handleData($event)"></app-key-number>
-                  </div>
-                  <div class="col-6">
-                     <div class="d-grid mb-2">
-                        <button class="btn btn-warning btn-lg py-4 rounded shadow-sm"
-                           (click)="clearCurrentValue()">CE</button>
+                     <div class="row g-1 mt-1">
+                        <div class="col-4 d-grid">
+                           <button class="btn btn-warning btn-lg  rounded shadow-sm"
+                              (click)="clearCurrentValue()">CE</button>
+                        </div>
+                        <div class="col-8 d-grid">
+                           <button class="btn btn-success btn-lg rounded shadow-sm" (click)="addPaid()">SUBMIT</button>
+
+                        </div>
                      </div>
-                     <div class="d-grid">
-                        <button class="btn btn-success btn-lg py-4 rounded shadow-sm"
-                           (click)="addPaid()">SUBMIT</button>
-                     </div>
                   </div>
+
                </div>
 
 
@@ -138,25 +173,26 @@
          </div>
       </div>
       <div class="row g-2 mb-3">
-      
+
          <div class="col-6 d-grid">
             <button type="button" class="btn btn-lg btn-primary py-3"
                (click)="modal.close('OK click'); logService.logAction('Finish Payment', id);">
                <h1>
                   <i class="bi bi-check2"></i>
                </h1>
-               Finish</button>
+               Finish
+            </button>
          </div>
          <div class="col-6 d-grid">
             <button type="button" class="btn btn-lg btn-success py-3"
                (click)="modal.close('OK click');logService.logAction('Finish Payment And Print Closed Bill', id);">
-               <h1> <i  class="bi bi-printer"></i> </h1> Print Closed Bill
-               
-               </button>
+               <h1> <i class="bi bi-printer"></i> </h1> Print Closed Bill
+
+            </button>
          </div>
       </div>
 
-       <p class="text-center"><em>Thank you for finish payment!</em></p>
+      <p class="text-center"><em>Thank you for finish payment!</em></p>
    </div>
-    
+
 </ng-template>
