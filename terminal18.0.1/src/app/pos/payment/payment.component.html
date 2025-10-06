@@ -17,9 +17,8 @@
          <div class="order-panel mb-2" style="height: 80vh; overflow-y: auto;" #myDiv>
 
             @if(showPrintBill != false){
-            <div *ngFor="let a of groups; let i = index">
-               <pre class="font-monospace" [innerHTML]="htmlBill[i]?.['html']"></pre>
-               <hr *ngIf="groups.length > 1">
+            <div>
+               <pre class="font-monospace" [innerHTML]="htmlBill"></pre> 
             </div>
 
             }

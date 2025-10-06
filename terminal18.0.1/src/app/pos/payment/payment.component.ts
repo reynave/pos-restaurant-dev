@@ -3,13 +3,12 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit,
-  Renderer2,
+  OnInit, 
   ViewChild,
 } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -20,8 +19,7 @@ import {
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { BillTableComponent } from '../bill/bill-table/bill-table.component';
-import { KeyNumberComponent } from '../../keypad/key-number/key-number.component';
-import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
+import { KeyNumberComponent } from '../../keypad/key-number/key-number.component'; 
 import { UserLoggerService } from '../../service/user-logger.service';
 import { SocketService } from '../../service/socket.service';
 export class Actor {
@@ -38,8 +36,7 @@ export class Actor {
     RouterModule,
     NgxCurrencyDirective,
     BillTableComponent,
-    KeyNumberComponent,
-    HeaderMenuComponent,
+    KeyNumberComponent, 
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css',
@@ -209,43 +206,53 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           this.httpPaid();
 
           this.sendMessage();
-          this.callWithDelay();
+        //  this.callWithDelay();
         },
         (error) => {
           console.log(error);
         }
       );
   } 
+
+
+  
   httpCartBill() {
     this.loading = true;
-    const url = this.api + 'payment/cart';
+    const url = this.api + 'payment/bill';
     this.http
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'],
-          dailyCheckId: this.configService.getDailyCheck() ?? '',
-          isGrouping : 1,
+          id: this.activeRouter.snapshot.queryParams['id'], 
         },
       })
       .subscribe(
         (data) => {
-          this.htmlBill = [];
-          this.groups = data['groups'];   
-          this.callWithDelay();
+          console.log('httpCartBill', data);
+          this.htmlBill = data['htmlBill'];
+          this.groups = data['groups'];
+          this.loading = false;
+          this.showPrintBill = true;
+          // this.renderBill(data);
         },
         (error) => {
           console.log(error);
         }
       );
   }
+  renderBill(data: any) {
 
-  async callWithDelay() {
-    for (const el of this.groups) {
-      await this.httpBill(el.subgroup); // kalau httpBill async
-      await this.delay(100); // delay 1 detik
-    }
   }
+
+  
+    
+
+  // async callWithDelay() {
+  //   for (const el of this.groups) {
+  //     await this.httpBill(el.subgroup); // kalau httpBill async
+  //     await this.delay(100); // delay 1 detik
+  //   }
+  // }
   delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

@@ -172,7 +172,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpMenuLookUp(0);
       this.httpMenu();
       this.httpCart();
-      this.httpBill();
+      this.httpBillGrandTotal();
       this.httpGetModifier();
       this.httpTables();
       this.httpDailyStart();
@@ -192,9 +192,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   billSubTotal : number = 0;
   billItemTotal : number = 0;
 
-  httpBill(){ 
-      this.billTax =  0;
-        this.billSc = 0;
+  httpBillGrandTotal(){ 
+    this.billTax =  0;
+    this.billSc = 0;
     this.billDiscount = 0;
     this.http.get(this.api + 'payment/cart', {
       headers: this.configService.headers(),
@@ -375,7 +375,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   reload() {
     this.httpMenu();
      this.httpCart();
-      this.httpBill();
+      this.httpBillGrandTotal();
   }
 
   onSubmitMenuSet() {
