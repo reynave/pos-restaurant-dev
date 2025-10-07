@@ -1,7 +1,7 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -78,9 +78,32 @@ export class BillComponent implements OnInit {
     
     this.api = this.configService.getApiUrl();
     this.httpCart(); 
+    this.httpCartBill()
     this.getCartCopyBill();
   }
 
+   httpCartBill() {
+    this.loading = true;
+    const url = this.api + 'payment/bill';
+    this.http
+      .get<any>(url, {
+        headers: this.configService.headers(),
+        params: {
+          id: this.activeRouter.snapshot.queryParams['id'], 
+        },
+      })
+      .subscribe(
+        (data) => {
+          console.log('httpCartBill', data);
+          this.htmlBill = data['htmlBill'];
+          this.groups = data['groups'];
+          this.loading = false;  
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
   httpCart() {
     this.loading = true;
     const url = this.api + 'payment/cart';
@@ -94,15 +117,9 @@ export class BillComponent implements OnInit {
       .subscribe(
         (data) => {
           console.log(data);
-          this.close = data['cart']['close'];
-          this.groups = data['groups'];
+          this.close = data['cart']['close']; 
           this.cart = data['cart'];
-           this.htmlBill  = []; 
-         // if( this.groups.length > 1 ){
-            this.callWithDelay();
-         // }else{
-        //    this.httpBill(this.groups[0].subgroup);
-         // }
+       
          
         },
         (error) => {
@@ -111,17 +128,7 @@ export class BillComponent implements OnInit {
       );
   }
 
-  async callWithDelay() {
    
-    for (const el of this.groups) {
-      await this.httpBill(el.subgroup); // kalau httpBill async
-      await this.delay(100); // delay 1 detik
-    }
-  }
-
-  delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   getCartCopyBill() {
     const url = this.api + 'bill/getCartCopyBill';
@@ -220,10 +227,10 @@ export class BillComponent implements OnInit {
     console.log(body);
     this.printNote = 'Printing, please wait...';
 
-    const printerType = 'usb';
-    if(printerType == 'usb'){
+    let printerType: string = 'ip';
+    if (printerType === 'usb') {
       this.usbPrinter(); 
-    }else{
+    } else {
 
  
     this.http
@@ -296,12 +303,9 @@ export class BillComponent implements OnInit {
         (data) => {
           if (data['tableSendOrder'] == 0) {
             this.tableSendOrder = data['tableSendOrder'];
-            this.createPayment(); 
-
-          } else {
-
-            this.reSendOrder();
-         
+            this.createPayment();  
+          } else { 
+            this.reSendOrder(); 
           }
 
           console.log(data);
@@ -391,6 +395,7 @@ export class BillComponent implements OnInit {
   }
 
   splitBill(subgroup : number) {
+    console.log(subgroup)
     this.router
       .navigate(['bill/splitBill'], { queryParams: { id: this.id, subgroup: subgroup } })
       .then(() => {

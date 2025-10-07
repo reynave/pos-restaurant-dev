@@ -1,24 +1,11 @@
 <div class="container-fluid">
    <div class="row">
-      <!-- <div class="col-6"> 
-         <div class="wrapper">
-            <div class="py-5">
-               <app-bill-table [data]="data">Loading...</app-bill-table>
-            </div>
-         </div>
-      </div> --> 
+  
       <div class="col-6"> 
-         <div style="max-height: 85vh; overflow-y: auto;">
-            <div *ngFor="let a of groups; let i = index">
-               <pre class="font-monospace" [innerHTML]="htmlBill[i]?.['html']"></pre>
-               <hr *ngIf="groups.length > 1">
-            </div>  
-            <!-- <pre class="font-monospace" [innerHTML]="htmlBill"></pre> -->
+         <div style="max-height: 85vh; overflow-y: auto;"> 
+               <pre class="font-monospace" [innerHTML]="htmlBill"></pre> 
          </div> 
-         <!-- <div *ngFor="let a of groups; let i = index">
-               <textarea class="form-control form-control-sm font-monospace"  rows="20" [(ngModel)]="htmlBill[i]" ></textarea>
-               <hr *ngIf="groups.length > 1">
-            </div> -->
+        
       </div>
       <div class="col-6 bg-main rounded">
 
@@ -41,16 +28,13 @@
                      <button type="button" class="btn btn-lg btn-success py-3"   [disabled]="cart.paymentId === '' " (click)="payment()">PAYMENT</button>
                   </div>
                }
-
-
+ 
           
-
-            @if(groups.length > 0) {
             <div class="text-center d-grid mx-5 mb-3"  *ngFor="let x of groups">
-               <button type="button" class="btn btn-lg  btn-warning py-3"  *ngIf="x.subgroup > 1"
-                [disabled]="printLoading" (click)="splitBill(x.subgroup)">SPLIT BILL #{{x.subgroup}}</button>
+               <button type="button" class="btn btn-lg  btn-warning py-3" *ngIf="x > 1"  
+                [disabled]="printLoading" (click)="splitBill(x)">SPLIT BILL #{{x}}</button>
             </div>
-            }
+          
           
             <div class="text-center d-grid mx-5 mb-3" >
                <button type="button" class="btn btn-lg  btn-warning py-3" 

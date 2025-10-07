@@ -231,9 +231,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log('httpCartBill', data);
           this.htmlBill = data['htmlBill'];
           this.groups = data['groups'];
-          this.loading = false;
-          this.showPrintBill = true;
-          // this.renderBill(data);
+          this.loading = false;  
         },
         (error) => {
           console.log(error);
@@ -362,6 +360,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           (data) => {
             console.log(data);
             this.httpPaid();
+            this.httpCartBill()
             this.httpCart();
             this.logService.logAction(
               'Delete Paid ' + body.paid.name + ' @' + body.paid.paid,
@@ -393,9 +392,12 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .subscribe(
         (data) => {
+          this.paymentIndex = 0;
+          this.inputField = '';
           console.log(data);
           this.httpCart();
           this.httpPaid();
+          this.httpCartBill();
           this.logService.logAction('Submit Payment', this.id);
         },
         (error) => {
