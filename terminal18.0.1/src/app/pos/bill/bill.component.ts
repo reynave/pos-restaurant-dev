@@ -34,7 +34,7 @@ export class BillComponent implements OnInit {
       menu: [],
     },
   ];
-    terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
+  terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
   item: any = [];
   cart: any = [];
   //id: string = '';
@@ -63,8 +63,8 @@ export class BillComponent implements OnInit {
   taxSc: any = [];
   subTotal: any = [];
   tableSendOrder: number = 0;
-  env : any = environment;
-  posMode : string = '' ;
+  env: any = environment;
+  posMode: string = '';
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -75,21 +75,21 @@ export class BillComponent implements OnInit {
 
   ngOnInit() {
     this.posMode = this.configService.getConfigJson()['outlet']['posMode'];
-    
+
     this.api = this.configService.getApiUrl();
-    this.httpCart(); 
-    this.httpCartBill()
+    this.httpCart();
+    this.httpCartBill();
     this.getCartCopyBill();
   }
 
-   httpCartBill() {
+  httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
     this.http
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'], 
+          id: this.activeRouter.snapshot.queryParams['id'],
         },
       })
       .subscribe(
@@ -97,7 +97,7 @@ export class BillComponent implements OnInit {
           console.log('httpCartBill', data);
           this.htmlBill = data['htmlBill'];
           this.groups = data['groups'];
-          this.loading = false;  
+          this.loading = false;
         },
         (error) => {
           console.log(error);
@@ -117,18 +117,20 @@ export class BillComponent implements OnInit {
       .subscribe(
         (data) => {
           console.log(data);
-          this.close = data['cart']['close']; 
-          this.cart = data['cart'];
-       
-         
+          if (data['data']['cart'].length == 0) {
+            alert('Items not found');
+            this.activeModal.close();
+            return;
+          } else {
+            this.close = data['cart']['close'];
+            this.cart = data['cart'];
+          }
         },
         (error) => {
           console.log(error);
         }
       );
   }
-
-   
 
   getCartCopyBill() {
     const url = this.api + 'bill/getCartCopyBill';
@@ -157,9 +159,9 @@ export class BillComponent implements OnInit {
       .get(url, {
         responseType: 'text' as const,
         params: {
-          id: this.id, 
-          subgroup :subgroup,
-          totalGroup : this.groups.length
+          id: this.id,
+          subgroup: subgroup,
+          totalGroup: this.groups.length,
         },
       })
       .subscribe(
@@ -168,8 +170,8 @@ export class BillComponent implements OnInit {
           this.loading = false;
           const items = {
             subgroup: subgroup,
-            html: data
-          }
+            html: data,
+          };
           this.htmlBill.push(items);
           // this.htmlBill = data;
         },
@@ -198,9 +200,9 @@ export class BillComponent implements OnInit {
           this.modalService.dismissAll();
           console.log(data);
           //history.back();
-        //  setTimeout(() => {
-            this.router.navigate(['payment'], { queryParams: { id: this.id } });
-         // }, 500);
+          //  setTimeout(() => {
+          this.router.navigate(['payment'], { queryParams: { id: this.id } });
+          // }, 500);
         },
         (error) => {
           console.log(error);
@@ -216,7 +218,7 @@ export class BillComponent implements OnInit {
     // this.htmlBill.forEach((element: any) => {
     //   htmlBill += element;
     // });
-    const config = this.configService.getConfigJson(); 
+    const config = this.configService.getConfigJson();
     const body = {
       message: htmlBill,
       printer: config.printer,
@@ -229,38 +231,34 @@ export class BillComponent implements OnInit {
 
     let printerType: string = 'ip';
     if (printerType === 'usb') {
-      this.usbPrinter(); 
+      this.usbPrinter();
     } else {
-
- 
-    this.http
-      .post(this.api + 'printing/print', body, {
-        headers: this.configService.headers(),
-      })
-      .subscribe(
-        (data) => {
-          console.log(data);
-          this.printNote = 'Print Success';
-          this.printLoading = false;
-        },
-        (error) => {
-          this.printNoteError = true;
-          this.printLoading = false;
-          console.log(error);
-          this.printNote = 'ERROR ' + error.error.detail;
-        }
-      );
-
-   }
+      this.http
+        .post(this.api + 'printing/print', body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            console.log(data);
+            this.printNote = 'Print Success';
+            this.printLoading = false;
+          },
+          (error) => {
+            this.printNoteError = true;
+            this.printLoading = false;
+            console.log(error);
+            this.printNote = 'ERROR ' + error.error.detail;
+          }
+        );
+    }
   }
-
 
   usbPrinter() {
     console.log('usbPrinter');
     this.printResp = '';
     this.isPrinting = true;
     let htmlBill = this.htmlBill;
- 
+
     const body = {
       message: htmlBill[0].html,
       printer: 'TP805L',
@@ -272,7 +270,7 @@ export class BillComponent implements OnInit {
     this.printNote = 'Printing, please wait...';
 
     this.http
-      .post(  'http://localhost/app/printing/RestPrinter.php', body)
+      .post('http://localhost/app/printing/RestPrinter.php', body)
       .subscribe(
         (data) => {
           console.log(data);
@@ -286,15 +284,14 @@ export class BillComponent implements OnInit {
           this.printNote = 'ERROR ' + error.error.detail;
         }
       );
-
-      
   }
-
 
   printBill() {
     const body = {
       id: this.id,
+      htmlBill: this.htmlBill,
     };
+    console.log(body);
     this.http
       .post<any>(this.api + 'bill/billUpdate', body, {
         headers: this.configService.headers(),
@@ -303,11 +300,31 @@ export class BillComponent implements OnInit {
         (data) => {
           if (data['tableSendOrder'] == 0) {
             this.tableSendOrder = data['tableSendOrder'];
-            this.createPayment();  
-          } else { 
-            this.reSendOrder(); 
+            this.createPayment();
+          } else {
+            this.reSendOrder();
           }
 
+          console.log(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  createTxtBill() {
+    const body = {
+      cartId: this.id,
+      htmlBill: this.htmlBill, 
+    };
+    console.log(body);
+    this.http
+      .post<any>(this.api + 'bill/createTxtBill', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
           console.log(data);
         },
         (error) => {
@@ -322,7 +339,7 @@ export class BillComponent implements OnInit {
       cartId: this.id,
       tableSendOrder: 1,
     };
- 
+
     const url = this.api + 'menuItemPos/sendOrder';
     this.http
       .post<any>(url, body, {
@@ -330,16 +347,16 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data) => {
-          console.log(data); 
-            this.reload();
-           this.fnPrint();
+          console.log(data);
+          this.reload();
+          this.fnPrint();
+          this.createTxtBill();
         },
         (error) => {
-          console.log(error); 
+          console.log(error);
         }
-      ); 
+      );
   }
-
 
   createPayment() {
     // 3 process become 1 function
@@ -349,7 +366,7 @@ export class BillComponent implements OnInit {
 
     const body = {
       id: this.id,
-      terminalId : this.terminalId
+      terminalId: this.terminalId,
     };
     this.http
       .post<any>(this.api + 'bill/createPayment', body, {
@@ -359,7 +376,7 @@ export class BillComponent implements OnInit {
         (data) => {
           this.router.navigate([], {
             queryParams: {
-              id:  data['id'],
+              id: data['id'],
             },
             queryParamsHandling: 'merge', // Merge with existing query params
             replaceUrl: true, // Replace the current history entry
@@ -367,6 +384,7 @@ export class BillComponent implements OnInit {
           this.id = data['id'];
           this.fnPrint();
           this.reload();
+          this.createTxtBill();
         },
         (error) => {
           console.log(error);
@@ -394,10 +412,12 @@ export class BillComponent implements OnInit {
       );
   }
 
-  splitBill(subgroup : number) {
-    console.log(subgroup)
+  splitBill(subgroup: number) {
+    console.log(subgroup);
     this.router
-      .navigate(['bill/splitBill'], { queryParams: { id: this.id, subgroup: subgroup } })
+      .navigate(['bill/splitBill'], {
+        queryParams: { id: this.id, subgroup: subgroup },
+      })
       .then(() => {
         this.activeModal.dismiss();
       });

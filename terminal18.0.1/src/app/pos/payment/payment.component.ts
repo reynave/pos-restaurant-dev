@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  OnInit, 
+  OnInit,
   ViewChild,
 } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
@@ -19,7 +19,7 @@ import {
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { BillTableComponent } from '../bill/bill-table/bill-table.component';
-import { KeyNumberComponent } from '../../keypad/key-number/key-number.component'; 
+import { KeyNumberComponent } from '../../keypad/key-number/key-number.component';
 import { UserLoggerService } from '../../service/user-logger.service';
 import { SocketService } from '../../service/socket.service';
 export class Actor {
@@ -36,7 +36,7 @@ export class Actor {
     RouterModule,
     NgxCurrencyDirective,
     BillTableComponent,
-    KeyNumberComponent, 
+    KeyNumberComponent,
   ],
   templateUrl: './payment.component.html',
   styleUrl: './payment.component.css',
@@ -66,7 +66,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   grandTotal: number = 0;
   closePaymentAmount: number = 1;
   unpaid: number = 0;
-
+closePayment : number = 0;
   paymentIndex: number = -1;
   inputField: string = '';
   discountGroup: any = [];
@@ -126,7 +126,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.modalService.dismissAll();
     this.httpCart();
     this.httpCartBill();
-    
+
     this.httpPaymentType();
     this.httpCastType();
   }
@@ -151,10 +151,12 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
   selectCashType(x: any) {
-     if (this.inputField == 'paid') {
-      this.paid[this.paymentIndex].paid = parseInt(x.value) + parseInt(this.paid[this.paymentIndex].paid);
+    if (this.inputField == 'paid') {
+      this.paid[this.paymentIndex].paid =
+        parseInt(x.value) + parseInt(this.paid[this.paymentIndex].paid);
     } else if (this.inputField == 'tips') {
-      this.paid[this.paymentIndex].tips = parseInt(x.value) + parseInt(this.paid[this.paymentIndex].tips);
+      this.paid[this.paymentIndex].tips =
+        parseInt(x.value) + parseInt(this.paid[this.paymentIndex].tips);
     }
   }
 
@@ -172,11 +174,38 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(
         (data) => {
           this.paid = data['items'];
-          console.log('httpPaid', data);
-
-          if (data['closePayment'] == 1) {
-            this.openModal();
+          for (let i = 0; i < this.paid.length; i++) {
+            if (this.paid[i].submit == 0) {
+              this.paymentIndex = i;
+              this.inputField = 'paid';
+              // exit loop
+              break;
+            }
           }
+          this.loading = false;
+          console.log('httpPaid', data);
+          this.closePayment = data['closePayment'];
+          this.httpCartBill();
+          
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+  httpCreateTxt(){
+    const url = this.api + 'payment/createTxt';
+    const body = {
+      id: this.id,
+      htmlBill: this.htmlBill, 
+    };
+    this.http
+      .post<any>(url, body, {
+        headers: this.configService.headers(), 
+      })
+      .subscribe(
+        (data) => {
+          console.log('httpCreateTxt', data);
         },
         (error) => {
           console.log(error);
@@ -193,11 +222,11 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         params: {
           id: this.activeRouter.snapshot.queryParams['id'],
           dailyCheckId: this.configService.getDailyCheck() ?? '',
-          isGrouping : 0,
+          isGrouping: 0,
         },
       })
       .subscribe(
-        (data) => { 
+        (data) => {
           this.data = data['data'];
           this.discountGroup = data['data']['discountGroup'];
           this.closePaymentAmount = data['data']['closePaymentAmount'];
@@ -206,16 +235,14 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           this.httpPaid();
 
           this.sendMessage();
-        //  this.callWithDelay();
+          //  this.callWithDelay();
         },
         (error) => {
           console.log(error);
         }
       );
-  } 
+  }
 
-
-  
   httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
@@ -223,7 +250,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'], 
+          id: this.activeRouter.snapshot.queryParams['id'],
         },
       })
       .subscribe(
@@ -231,29 +258,20 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           console.log('httpCartBill', data);
           this.htmlBill = data['htmlBill'];
           this.groups = data['groups'];
-          this.loading = false;  
+          this.loading = false;
+          if (this.closePayment == 1) {
+      
+            this.openModal();
+           
+          }
         },
         (error) => {
           console.log(error);
         }
       );
   }
-  renderBill(data: any) {
-
-  }
-
   
-    
-
-  // async callWithDelay() {
-  //   for (const el of this.groups) {
-  //     await this.httpBill(el.subgroup); // kalau httpBill async
-  //     await this.delay(100); // delay 1 detik
-  //   }
-  // }
-  delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+ 
   httpPaymentType() {
     this.loading = true;
     const url = this.api + 'payment/paymentGroup';
@@ -271,34 +289,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
   }
 
-  httpBill(subgroup: number) {
-    this.loading = true;
-    const url = this.api + 'bill/printing';
-    this.http
-      .get(url, {
-        responseType: 'text' as const,
-        params: {
-          id: this.id,
-          subgroup: subgroup,
-            totalGroup : this.groups.length
-        },
-      })
-      .subscribe(
-        (data: string) => {
-          console.log('httpBill', data);
-          this.loading = false;
-          const items = {
-            subgroup: subgroup,
-            html: data,
-          };
-          this.htmlBill.push(items);
-          // this.htmlBill = data;
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
+  
   reload() {
     this.httpCart();
   }
@@ -317,6 +308,8 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .subscribe(
         (data) => {
+          this.paymentIndex = -1;
+          this.inputField = '';
           this.modalService.dismissAll();
           console.log(data);
           this.httpCart();
@@ -360,7 +353,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           (data) => {
             console.log(data);
             this.httpPaid();
-            this.httpCartBill()
+            this.httpCartBill();
             this.httpCart();
             this.logService.logAction(
               'Delete Paid ' + body.paid.name + ' @' + body.paid.paid,
@@ -392,7 +385,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       })
       .subscribe(
         (data) => {
-          this.paymentIndex = 0;
+            this.paymentIndex = -1;
           this.inputField = '';
           console.log(data);
           this.httpCart();
@@ -408,6 +401,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   openModal() {
+    this.httpCreateTxt();
     this.modalService.open(this.myModal).result.then(
       (result) => {
         console.log('result');

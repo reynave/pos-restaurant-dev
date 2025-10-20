@@ -21,8 +21,13 @@ import { UserLoggerService } from '../../service/user-logger.service';
 import { MergerLogComponent } from './merger-log/merger-log.component';
 import { TablePrintQueueComponent } from '../print-queue/table-print-queue/table-print-queue.component';
 import { SocketService } from '../../service/socket.service';
+import { NgxCurrencyDirective } from 'ngx-currency';
 export class Actor {
-  constructor(public newQty: number, public note: string) {}
+  constructor(
+    public newQty: number, 
+    public note: string,
+    public price : number
+  ) {}
 }
 @Component({
   selector: 'app-menu',
@@ -36,6 +41,7 @@ export class Actor {
     HeaderMenuComponent,
     KeyNumberComponent,
     TablePrintQueueComponent,
+    NgxCurrencyDirective
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
@@ -72,7 +78,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   api: string = '';
   server: string = '';
   isChecked: boolean = false;
-  model = new Actor(0, '');
+  model = new Actor(0, '', 0);
 
   cssClass: string = 'btn btn-sm py-3   rounded shadow-sm';
   cssMenu: string = 'btn btn-sm py-3 bg-white  me-1 lh-1  rounded shadow-sm';
@@ -110,7 +116,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   checkBoxAll: boolean = false;
   activeTab: string = 'menu';
   selectedItem : any;
-  posMode : string = 'counter'; // counter / table
+  posMode : string = 'table'; // counter / table
     autoBack: boolean = true;
   constructor(
     public configService: ConfigService,
@@ -158,6 +164,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.id = this.activeRouter.snapshot.queryParams['id'];
+    this.posMode =  localStorage.getItem('pos3.mode') || 'table';
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
@@ -605,11 +612,13 @@ export class MenuComponent implements OnInit, OnDestroy {
       );
   }
 
-  addToCart(menu: any) {
+  addToCart(menu: any, openPrice : number = 0) {
     if (menu.qty > 0) {
       const body = {
         id: this.id,
         menu: menu,
+        price : this.model.price,
+        openPrice : openPrice
       };
       this.http
         .post<any>(this.api + 'menuItemPos/addToCart', body, {
@@ -641,6 +650,10 @@ export class MenuComponent implements OnInit, OnDestroy {
             );
           }
         );
+
+        if(openPrice == 1){
+          this.modalService.dismissAll();
+        }
     }
   }
 
@@ -1098,6 +1111,16 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.model.newQty = parseInt(newQty || '0'); // fallback kalau cover kosong
   }
 
+  handleDataOpenPrice(data: string) {
+    let newPrice = this.model.price.toString();
+    if (data == 'b') {
+      newPrice = newPrice.slice(0, -1);
+    } else {
+      newPrice = newPrice + data;
+    }
+    this.model.price = parseInt(newPrice || '0'); // fallback kalau cover kosong
+  }
+
   transferItems() {
     this.logService.logAction('menu/transferItems', this.id);
     this.router
@@ -1266,5 +1289,12 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
      
     this.isChecked = checked;
+  }
+
+  selectItemOpenPrice : any = [];
+  modalOpenPrice(content: any, menu: any) {
+    this.selectItemOpenPrice = menu; 
+    this.model.price = menu.price;
+    this.modalService.open(content);
   }
 }

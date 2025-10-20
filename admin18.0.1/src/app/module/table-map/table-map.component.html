@@ -1,28 +1,31 @@
-<div class="row my-1">
-  <div class="col-9 ">
-    <label> Select Floor ({{outletFloorPlandId}}): </label>
-    <a *ngFor="let x of floorPlan" class="btn btn-sm " (click)="activeFloor(x)"
-      [class]="{'btn-primary': outletFloorPlandId == x.id}">
-      {{x.desc1}}
-    </a>
-    @if(editable == true){
-    <a href="javascript:;" [routerLink]="['/floorMap']" class="btn btn-sm btn-outline-dark mx-1"><i
-        class="bi bi-plus-square-fill"></i> Add Floor</a>
+<div class="bg-light px-2 border-bottom shadow-sm mb-1">
 
-    }
-  </div>
-  <div class="col-3 text-end">
-    <span class="mx-2" *ngIf="loading"><img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="20"></span>
-    <span class="mx-2 text-primary"><small>{{resp}}</small></span>
-    @if(outletFloorPlandId != 0){
-    <button type="button" (click)="onEditable()" class="btn btn-sm btn-light border mx-1">{{!editable ?
-      'Editable':'Cancel'}}</button>
-    <button type="button" (click)="onSave()" *ngIf="editable" class="btn btn-sm btn-success border mx-1">Save</button>
-    }
+  <div class="row my-1">
+    <div class="col-9 ">
+      <label> Select Floor : </label>
+      <a *ngFor="let x of floorPlan" class="btn btn-sm " (click)="activeFloor(x)"
+        [class]="{'btn-primary': outletFloorPlandId == x.id}">
+        {{x.desc1}}
+      </a>
+      @if(editable == true){
+      <a href="javascript:;" [routerLink]="['/floorMap']" class="btn btn-sm btn-outline-dark mx-1"><i
+          class="bi bi-plus-square-fill"></i> Add Floor</a>
 
+      }
+    </div>
+    <div class="col-3 text-end">
+      <span class="mx-2" *ngIf="loading"><img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="20"></span>
+      <span class="mx-2 text-primary"><small>{{resp}}</small></span>
+      @if(outletFloorPlandId != 0){
+      <button type="button" (click)="onEditable()" class="btn btn-sm btn-light border mx-1">{{!editable ?
+        'Editable':'Cancel'}}</button>
+      <button type="button" (click)="onSave()" *ngIf="editable" class="btn btn-sm btn-success border mx-1">Save</button>
+      }
+
+    </div>
   </div>
+
 </div>
-
 <div class="container" *ngIf="outletFloorPlandId == 0">
   <div class="row">
     <div class="col-12">
@@ -59,48 +62,50 @@
 
     <div class="col-lg-4 col-12">
 
+      <div style="height: 90vh; overflow-y: auto;">
 
-      <table class="table table-sm ">
-        <thead class="sticky-top">
-          <tr>
-            <th>TABLE NAME</th>
-            <th class="text-center" style="width: 80px;">COVER</th>
-            <th *ngIf="editable"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let x of tables;let i = index">
-            <td>
-              <input type="text" class="form-control form-control-sm py-0" [disabled]="!editable"
-                [(ngModel)]="x.tableName">
-            </td>
-            <td class="text-center">
-              <input type="number" class="form-control form-control-sm py-0" [disabled]="!editable"
-                [(ngModel)]="x.capacity">
-            </td>
 
-            <td *ngIf="editable">
-              <button type="button" (click)="open(modalTemplate, x, i )" class="btn   py-1"><i
-                  class="bi bi-gear"></i></button>
-              <button type="button" class="btn text-danger  py-1" (click)="onDelete(i);">
-                <i class="bi bi-x-square-fill"></i>
-              </button>
-            </td>
+        <table class="table table-sm ">
+          <thead class="sticky-top">
+            <tr>
+              <th>TABLE NAME</th>
+              <th class="text-center" style="width: 80px;">COVER</th>
+              <th *ngIf="editable"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of tables;let i = index">
+              <td>
+                <input type="text" class="form-control form-control-sm py-0" [disabled]="!editable"
+                  [(ngModel)]="x.tableName">
+              </td>
+              <td class="text-center">
+                <input type="number" class="form-control form-control-sm py-0" [disabled]="!editable"
+                  [(ngModel)]="x.capacity">
+              </td>
 
-          </tr>
+              <td *ngIf="editable">
+                <button type="button" (click)="open(modalTemplate, x, i )" class="btn   py-1"><i
+                    class="bi bi-gear"></i></button>
+                <button type="button" class="btn text-danger  py-1" (click)="onDelete(i);">
+                  <i class="bi bi-x-square-fill"></i>
+                </button>
+              </td>
 
-        </tbody>
-        <tfoot class="sticky-bottom" *ngIf="editable">
-          <tr>
-            <th colspan="3">
-              <div class="d-grid">
-                <button type="button" class="btn btn-success" (click)="open(content,[])">NEW TABLE</button>
-              </div>
-            </th>
-          </tr>
-        </tfoot>
-      </table>
+            </tr>
 
+          </tbody>
+          <tfoot class="sticky-bottom" *ngIf="editable">
+            <tr>
+              <th colspan="3">
+                <div class="d-grid">
+                  <button type="button" class="btn btn-success" (click)="open(content,[])">NEW TABLE</button>
+                </div>
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
     </div>
   </div>
@@ -150,7 +155,7 @@
           </div>
         </div>
       </div>
-       
+
       <div class="mb-3">
         <label for="totalTable">Select template Table Maps</label>
         <div class="row g-1">
@@ -160,13 +165,13 @@
               <div class="border p-1"
                 [class]="{'bg-dark':this.model.templateTableId == x.id, 'text-white':this.model.templateTableId == x.id,}">
                 <strong>{{x.name}}</strong>
-              
+
                 <div>
                   <img [src]="path+'icon/'+x.icon" width="100%">
                 </div>
                 <div><small>{{x.capacity}} Cover</small></div>
-                <div><small>{{x.width}}px X {{x.height}}px  </small></div>
-                
+                <div><small>{{x.width}}px X {{x.height}}px </small></div>
+
               </div>
 
             </a>
@@ -179,7 +184,7 @@
         *Template Table Id is required
       </small>
     </div>
-   
+
     <div class="d-grid px-2 mb-3">
       <button type="submit" class="btn  btn-dark border" [disabled]="!actorForm.form.valid">Submit</button>
     </div>
@@ -248,12 +253,13 @@
 
       <div class="mb-3">
         <label for="totalTable">Select template Table Maps</label>
-        <div class="border bg-light p-1"> 
+        <div class="border bg-light p-1">
           <div class="row g-1">
             <div class="col-2 text-center " *ngFor="let x of selectIcons">
               <a href="javascript:;" (click)="item.icon = x.filename">
 
-                <div class="border  p-1 bg-white" [class]="{'border-3':item.icon == x.filename, 'border-black':item.icon == x.filename}">
+                <div class="border  p-1 bg-white"
+                  [class]="{'border-3':item.icon == x.filename, 'border-black':item.icon == x.filename}">
                   <img [src]="path+'icon/'+x.filename" width="100%">
                 </div>
 
@@ -262,7 +268,7 @@
           </div>
         </div>
       </div>
-     
+
 
     </div>
     <div class="d-grid px-2 mb-3">

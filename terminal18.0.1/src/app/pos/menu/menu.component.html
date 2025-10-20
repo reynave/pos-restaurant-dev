@@ -4,15 +4,14 @@
       <div class="col-5 col-lg-4 ">
 
          <div class="order-panel  mb-2">
-            <span *ngIf="table.overTime > 0" class="badge text-bg-danger">Overdue: {{table.overTime}} min</span>
+            <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i
+                     class="bi bi-exclamation-triangle"></i> Overdue: {{table.overTime}} min</span>
             <div class="d-flex justify-content-between align-items-center">
-               <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? 'Order' : 'Bill'}} {{table.id}} | Cover:
-                  {{table.cover}} | {{table.startDate | date:'HH:mm:ss'}} </strong>
-
-               <button *ngIf="table.overTime > 0" class="btn btn-danger btn-sm"><i
-                     class="bi bi-exclamation-triangle"></i></button>
+               <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? 'Order' : 'Bill'}}
+                  {{table.id}} |  {{table.startDate | date:'yyyy-mm-dd HH:mm:ss'}} </strong>
             </div>
-            <div class="mb-2">Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
+            <div class="mb-2">Cover: {{table.cover}}, Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
+            
             <div style="height: 44vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
@@ -145,6 +144,7 @@
 
                </table>
             </div>
+            
          </div>
 
          <div class="order-panel mb-2">
@@ -220,10 +220,22 @@
                   <i class="bi bi-x-lg"></i> </button>
             </div>
          </div> 
-         <div class="row">
-              <div class="col-12 d-grid" >
-                  <button type="button" class="btn btn-warning"  (click)="back();">
+         <div class="row g-1">
+            
+              <div class="col-6 d-grid" >
+                  <button type="button" *ngIf="table.sendOrder == 1" class="btn btn-warning"  (click)="back();">
                       <i class="bi bi-arrow-left"></i> BACK 
+                  </button>
+ 
+                  <button type="button"  *ngIf="table.sendOrder == 0" class="btn btn-danger" (click)="exitWithoutOrder();">
+                     <i class="bi bi-trash"></i> EXIT WITHOUT ORDER
+                  </button>
+                   
+               </div> 
+
+               <div class="col-6 d-grid" *ngIf="posMode != 'cashier'"> 
+                  <button type="button" class="btn btn-primary"  (click)="sendOrder();">
+                     <i class="bi bi-fork-knife"></i> SEND ORDER
                   </button>
                </div> 
          </div>
@@ -446,9 +458,8 @@
                   <div>Lookup Menu : <strong class="text-uppercase">MENU</strong> </div>
                   }
                   <div class="col-3 mb-1 d-grid" *ngIf="menuLookUpParent.length > 0">
-                     <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
-                           class="bi bi-arrow-left"></i>
-                        BACK</button>
+                        <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
+                           class="bi bi-arrow-left"></i>  BACK</button>
                   </div>
 
                   <div class="col-3 mb-1 d-grid" *ngFor="let x of menuLookUp; let i= index">
@@ -462,14 +473,26 @@
                <div class="row g-2 mb-3">
                   <div class="col-3 mb-1 d-grid" *ngFor="let a of items">
 
-                     <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                        class="card-menu btn-light"
-                        (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
-                        [disabled]="(a.qty - a.usedQty) < 1">
-                        <div class="mb-1">{{a.name}}</div>
-                        <small>&#64;{{a.price | number}} </small>
-                        <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
-                     </button>
+                     @if(a.openPrice == 1){
+                         <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                           class="card-menu btn-light"
+                           (click)="modalOpenPrice(modalOpenPriceContent,a)"
+                           [disabled]="(a.qty - a.usedQty) < 1">
+                           <div class="mb-1">{{a.name}}</div>
+                           <small>&#64;{{a.price | number}}*</small>
+                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small> 
+                        </button>
+                     }
+                     @else{ 
+                        <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                           class="card-menu btn-light"
+                           (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
+                           [disabled]="(a.qty - a.usedQty) < 1">
+                           <div class="mb-1">{{a.name}}</div>
+                           <small>&#64;{{a.price | number}} </small>
+                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small> 
+                        </button>
+                     }
                   </div>
                </div>
             </div>
@@ -627,11 +650,7 @@
                      <i class="bi bi-check2"></i> FINISH
                   </button>
                </div>
-               <div class="col-3 mb-1 d-grid">
-                  <button type="button" class="btn btn-danger py-3" (click)="onVoid();">
-                     <i class="bi bi-x-lg"></i> DELETE
-                  </button>
-               </div>
+              
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'modifier'">
                   <button type="button" class="btn btn-primary py-3" (click)="fnSubmitModifier();  results = '' ">
                      <i class="bi bi-check2"></i> SUBMIT
@@ -956,4 +975,45 @@
          </div>
       </div>
    </div>
+</ng-template>
+
+<ng-template #modalOpenPriceContent let-modal>
+   <div class="modal-header">
+      <strong>Open Price</strong>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+   </div>
+   <div class="modal-body">
+      
+      <form (ngSubmit)="addToCart(selectItemOpenPrice,1)" #actorForm="ngForm">
+         <div class="mb-3">
+            <div class="row g-1">
+               <div class="col-12 mb-2">
+                  Please enter the price for "open Price item"<br>Items : <strong>{{selectItemOpenPrice.name}}</strong>
+               </div> 
+             
+               <div class="col-12">
+              
+                  <input type="number" class="form-control form-control-lg text-end" id="price" required
+                     [(ngModel)]="model.price" name="price" #price="ngModel">
+               </div>
+
+            </div>
+         </div>
+         <div class="mb-3">
+            <app-key-number (dataEmitted)="handleDataOpenPrice($event)"></app-key-number>
+         </div>
+
+         <div class="row g-1">
+            <div class="col d-grid">
+               <button type="button" class="btn btn-lg btn-warning" (click)="model.price=0 ">CE</button>
+            </div>
+            <div class="col  d-grid">
+               <button type="submit" class="btn btn-lg btn-dark"
+                  [disabled]="!actorForm.form.valid ||  model.price == 0">OK</button>
+            </div>
+         </div>
+
+      </form>
+   </div>
+
 </ng-template>
