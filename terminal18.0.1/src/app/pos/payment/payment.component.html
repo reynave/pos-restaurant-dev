@@ -3,34 +3,17 @@
       <div class="col-4">
 
          <div class="row g-1 mb-2">
-            <div class="col-6">
+            <div class="col-12">
                <strong class="fw-bold ms-2"> Bill {{id}} </strong>
             </div>
-
-            <div class="col-6  d-grid">
-               <a class="btn btn-sm btn-{{showPrintBill!=false ? 'primary' : 'light' }}"
-                  (click)="showPrintBill==false ? showPrintBill = true : showPrintBill = false">
-                  {{showPrintBill!=false ? 'Print View' : 'Summary Payment' }} </a>
-            </div>
+ 
          </div>
 
          <div class="order-panel mb-2" style="height: 80vh; overflow-y: auto;" #myDiv>
 
-            @if(showPrintBill != false){
-            <div>
+        
                <pre class="font-monospace" [innerHTML]="htmlBill"></pre> 
-            </div>
-
-            }
-            @else {
-            <div class="mb-2 d-grid">
-               <a class="btn btn-sm btn-{{showApplyDiscount!=false ? 'primary' : 'light' }}"
-                  (click)="showApplyDiscount==false ? showApplyDiscount = true : showApplyDiscount = false">
-                  {{showApplyDiscount!=false ? 'Show' : 'Hide' }} Modifier </a>
-            </div>
-
-            <app-bill-table [data]="data" [showApplyDiscount]="showApplyDiscount">Loading...</app-bill-table>
-            }
+          
 
          </div>
 

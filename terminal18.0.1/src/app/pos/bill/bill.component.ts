@@ -81,7 +81,7 @@ export class BillComponent implements OnInit {
     this.httpCartBill();
     this.getCartCopyBill();
   }
-
+  summary : any = [];
   httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
@@ -98,6 +98,7 @@ export class BillComponent implements OnInit {
           this.htmlBill = data['htmlBill'];
           this.groups = data['groups'];
           this.loading = false;
+          this.summary = data['summary'];
         },
         (error) => {
           console.log(error);
@@ -290,6 +291,8 @@ export class BillComponent implements OnInit {
     const body = {
       id: this.id,
       htmlBill: this.htmlBill,
+      summary: this.summary,
+      groups : this.groups.length,
     };
     console.log(body);
     this.http

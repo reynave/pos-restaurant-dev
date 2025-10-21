@@ -93,6 +93,15 @@ export class TransactionComponent implements OnInit {
   }
 
   openComponent(id : string){ 
+     this.router.navigate([], {
+            queryParams: {
+              id: id,
+            },
+            queryParamsHandling: 'merge', // Merge with existing query params
+            replaceUrl: true, // Replace the current history entry
+          });
+
+    console.log(id);
       const modalRef = this.modalService.open(BillComponent, {size:'lg'});
       modalRef.componentInstance.id = id;
     }
