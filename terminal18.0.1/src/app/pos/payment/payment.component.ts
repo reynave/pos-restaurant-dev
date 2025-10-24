@@ -50,6 +50,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       menu: [],
     },
   ];
+  note : string = 'Thank you for finish payment!';
   item: any = [];
   paymentType: any = [];
   cart: any = [];
@@ -159,7 +160,11 @@ closePayment : number = 0;
         parseInt(x.value) + parseInt(this.paid[this.paymentIndex].tips);
     }
   }
-
+cartPayment : any = {
+  grandTotal :0,
+  paid :0,
+  unpaid :0,
+};
   httpPaid() {
     this.loading = true;
     const url = this.api + 'payment/paid';
@@ -184,6 +189,7 @@ closePayment : number = 0;
           }
           this.loading = false;
           console.log('httpPaid', data);
+          this.cartPayment = data['cartPayment'];
           this.closePayment = data['closePayment'];
           this.httpCartBill();
           
@@ -242,7 +248,13 @@ closePayment : number = 0;
         }
       );
   }
-
+summary : any = {
+  grandTotal : 0,
+  itemTotal : 0,
+  tax : 0,
+  sc : 0,
+  discount : 0, 
+};
   httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
@@ -255,6 +267,8 @@ closePayment : number = 0;
       })
       .subscribe(
         (data) => {
+          this.summary = data['summary'];
+          this.cart = data['cart'];
           console.log('httpCartBill', data);
           this.htmlBill = data['htmlBill'];
           this.groups = data['groups'];
@@ -400,8 +414,40 @@ closePayment : number = 0;
       );
   }
 
+  alertColor = "alert-warning";
   openModal() {
+     this.alertColor = 'alert-warning';
     this.httpCreateTxt();
+    console.log('openModal',this.cart);
+
+    if(this.cart.printBill == 0){
+      this.note = 'Printing bill, Please wait...';
+      console.log("print bill utama");
+      this.configService.getConfigJson()
+      const body = { 
+        message: this.htmlBill,
+        printer : {
+          address : this.configService.getConfigJson()['printer']['address'] ,
+          port : this.configService.getConfigJson()['printer']['port'] ,
+        }
+      }
+      this.http.post<any>(this.api + 'printing/print',  body, 
+        { headers: this.configService.headers() })
+      .subscribe(
+        (data) => {
+          this.note = 'Thank you for finish payment!';
+          console.log('Print Bill', data);  
+          this.http.post<any>(this.api + 'payment/markPrintBill', { id: this.id },
+            { headers: this.configService.headers() });
+          
+        },
+        (error) => {
+          console.log('Print Bill Error', error);
+          this.alertColor = 'alert-danger';
+            this.note = error.error['detail'] || 'ERROR printing bill';
+        }
+      );
+    }
     this.modalService.open(this.myModal).result.then(
       (result) => {
         console.log('result');

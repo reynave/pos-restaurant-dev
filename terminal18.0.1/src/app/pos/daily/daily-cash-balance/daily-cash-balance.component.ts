@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
@@ -18,6 +18,8 @@ import { UserLoggerService } from '../../../service/user-logger.service';
   styleUrl: './daily-cash-balance.component.css'
 })
 export class DailyCashBalanceComponent implements OnInit {
+  
+    @ViewChild('infoCashDrawer', { static: true }) infoCashDrawer: any;
   error: string = '';
   loading: boolean = false;
   items: any = [];
@@ -111,4 +113,27 @@ export class DailyCashBalanceComponent implements OnInit {
     this.modalService.open(content);
   }
 
+  note: string = '';
+  openCashDrawer(){
+    this.note = 'Opening cash drawer...';
+     this.modalService.open(this.infoCashDrawer);
+     const config = this.config.getConfigJson();
+      const body = { 
+        printer: config.printer,
+      };
+
+    this.http.post<any>(this.api + "printing/cashDrawer", body, {
+      headers: this.config.headers(),
+    }).subscribe(
+      data => {
+         this.note = data['message'] + '<br>' + data['error'];
+        console.log('Cash drawer opened', data);
+        this.logService.logAction('openCashDrawer ' + JSON.stringify(body.printer));
+      },
+      error => {
+        console.log(error);
+        this.logService.logAction('ERROR openCashDrawer');
+      } 
+    )
+  }
 }

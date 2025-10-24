@@ -52,9 +52,15 @@
                     </tfoot>
                 </table>
             </div>
+        </div> 
+    </div>
+    <div class="row g-2">
+        <div class="col-6">
+            <div class="d-grid">
+                <button class="btn btn-lg btn-warning" (click)="openCashDrawer()">OPEN CASH DRAWER</button>
+            </div>
         </div>
-
-        <div class="col-12">
+        <div class="col-6">
             <div class="d-grid">
                 <button class="btn btn-lg btn-primary" (click)="open(contentOpenCash)">{{ total['balance'] != null ?
                     'CASH IN':'OPENING BALANCE'}}</button>
@@ -63,10 +69,7 @@
         </div>
     </div>
 </div>
-
-
-
-
+ 
 <ng-template #contentOpenCash let-modal>
     <div class="modal-header">
         <strong class="modal-title">{{ total['balance'] != null ? 'CASH IN':'OPENING BALANCE'}}</strong>
@@ -108,4 +111,20 @@
         </div>
     </div>
 
+</ng-template>
+
+
+<ng-template #infoCashDrawer let-modal>
+	<div class="modal-header">
+		<strong class="modal-title" id="modal-basic-title">Open Cash Drawer</strong>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		 <div class="text-center">
+            <p>{{note}}</p>
+         </div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">close</button>
+	</div>
 </ng-template>

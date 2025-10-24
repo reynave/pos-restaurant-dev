@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfigService } from '../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderMenuComponent } from "../header/header-menu/header-menu.component";
 import { BillComponent } from '../pos/bill/bill.component';
@@ -12,7 +12,7 @@ import { BillComponent } from '../pos/bill/bill.component';
 @Component({
   selector: 'app-transaction',
   standalone: true,
-   imports: [HttpClientModule, CommonModule, FormsModule, NgbDropdownModule, RouterModule, HeaderMenuComponent],
+   imports: [HttpClientModule, CommonModule, FormsModule, NgbDropdownModule, RouterModule, HeaderMenuComponent, NgbDatepickerModule],
   templateUrl: './transaction.component.html',
   styleUrl: './transaction.component.css'
 })
@@ -27,6 +27,18 @@ export class TransactionComponent implements OnInit {
   id: string = ''; 
   api: string = '';  
    screenWidth: number = window.innerWidth;
+
+   startDate : any = {
+    year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate()
+   };
+  endDate : any = {
+   year: new Date().getFullYear(),
+    month: new Date().getMonth() + 1,
+    day: new Date().getDate()
+   };
+
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -72,10 +84,12 @@ export class TransactionComponent implements OnInit {
       params: {
        // outletId:  this.outletId,
          dailyCheckId: this.configService.getDailyCheck(),
+          startDate: this.activeRouter.snapshot.queryParams['startDate'] || '',
+          endDate: this.activeRouter.snapshot.queryParams['endDate'] || '',
       }
     }).subscribe(
       data => {
-        console.log
+        this.loading = false;
         this.items = data['items']; 
       },
       error => {
@@ -86,6 +100,28 @@ export class TransactionComponent implements OnInit {
 
   goToDetail(x : any){
     this.router.navigate(['transaction/detail'], { queryParams : {id : x.id}})
+  }
+
+  fnVoid(id: string){
+    if(confirm("Are you sure to void this transaction?")){
+      this.loading = true;
+      const url = this.api + "transaction/void";
+      this.http.post<any>(url, {
+        id: id,
+      }, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          this.loading = false; 
+          history.back();
+           
+        },
+        error => {
+          this.loading = false;
+          console.log(error);
+        }
+      );
+    }
   }
   
   back(){
@@ -104,5 +140,25 @@ export class TransactionComponent implements OnInit {
     console.log(id);
       const modalRef = this.modalService.open(BillComponent, {size:'lg'});
       modalRef.componentInstance.id = id;
+    }
+ 
+
+    loadItems(){
+      this.loading = true;
+      const startDateStr = `${this.startDate.year}-${String(this.startDate.month).padStart(2, '0')}-${String(this.startDate.day).padStart(2, '0')}`;
+      const endDateStr = `${this.endDate.year}-${String(this.endDate.month).padStart(2, '0')}-${String(this.endDate.day).padStart(2, '0')}`;
+      console.log('Loading items from', startDateStr, 'to', endDateStr);
+ 
+       this.router.navigate([], {
+            queryParams: {
+              startDate: startDateStr,
+              endDate: endDateStr,
+            },
+            queryParamsHandling: 'merge', // Merge with existing query params
+            replaceUrl: true, // Replace the current history entry
+      });
+      setTimeout(() => {
+        this.httpGet();
+      }, 200);
     }
 }

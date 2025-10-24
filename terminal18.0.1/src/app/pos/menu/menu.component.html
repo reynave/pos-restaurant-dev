@@ -223,11 +223,8 @@
          <div class="row g-1">
             
               <div class="col-6 d-grid" >
-                  <button type="button" *ngIf="table.sendOrder == 1" class="btn btn-warning"  (click)="back();">
-                      <i class="bi bi-arrow-left"></i> BACK 
-                  </button>
- 
-                  <button type="button"  *ngIf="table.sendOrder == 0" class="btn btn-danger" (click)="exitWithoutOrder();">
+                  
+                  <button type="button" class="btn btn-danger" (click)="exitWithoutOrder();">
                      <i class="bi bi-trash"></i> EXIT WITHOUT ORDER
                   </button>
                    
@@ -430,6 +427,13 @@
                   </div>
 
                   <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
+                     <button type="button" [class]="cssClass" class="btn-light" (click)="openTables(modalChangeTable)">
+                        <i class="bi bi-arrow-repeat"></i>
+                        CHANGE TABLE </button>
+                  </div>
+
+
+                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
                      <button type="button" [class]="cssClass" class="bg-white border" (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
                         TRANSFER LOG</button>
@@ -485,12 +489,15 @@
                      }
                      @else{ 
                         <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                           class="card-menu btn-light"
+                           class="card-menu btn-light" 
                            (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
                            [disabled]="(a.qty - a.usedQty) < 1">
-                           <div class="mb-1">{{a.name}}</div>
+                           <div class="mb-1">{{a.name}}   </div>
+                           <img src="./img/icons8-delete-48.png" class="mx-1" height="16" width="16" *ngIf="(a.qty - a.usedQty)< 1">
+                           
                            <small>&#64;{{a.price | number}} </small>
                            <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small> 
+
                         </button>
                      }
                   </div>
@@ -793,7 +800,7 @@
    </div>
    <div class="modal-body bg-main rounded-bottom">
 
-
+      <div> <strong>Merger Table</strong></div>
       <div class="map">
 
          <div style="height: 75vh; zoom:{{zoom}}% ">
@@ -831,6 +838,66 @@
 
 </ng-template>
 
+
+<ng-template #modalChangeTable let-modal>
+   <div class="modal-header">
+      <strong class="modal-title"> 
+         <div class="bg-light p-1  rounded border  d-inline-block">
+            <span *ngFor="let x of tablesMaps; let i = index">
+               <button type="button" class="btn btn-sm px-3" (click)="onMap(i)" [class]="{
+                           'border': current == i,
+                            'btn-primary': current == i,
+                            'shadow-sm': current == i,
+                           }"> {{x.desc1}}
+
+                  <span *ngIf="x.checking > 0  " class="badge text-bg-danger rounded-circle">
+                     {{x.checking}}
+                  </span>
+               </button>
+            </span>
+         </div>
+      </strong>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+   </div>
+   <div class="modal-body bg-main rounded-bottom">
+
+      <div> <strong>Change Table</strong></div>
+      <div class="map">
+
+         <div style="height: 75vh; zoom:{{zoom}}% ">
+            <div class="table-map"
+               style="background: url('{{public}}floor/{{tablesMaps[current]?.image}}') left top no-repeat;">
+               <div class="floorPlan" *ngFor="let x of tablesMaps[current]?.maps">
+
+
+                  <div class="items  {{x.bgn}}" [style.transform]="'translate(' + x.posX + 'px,' + x.posY + 'px)'"
+                     [style.width.px]="x.width" [style.height.px]="x.height"
+                     [style.backgroundImage]="'url('+public+'icon/'+x.icon+')'" style="background-size: cover;"
+                     [style.opacity]="(x.id == table.outletTableMapId) || ( x.cardId == '') ? 1: 0.4"
+                     (click)="changeTable(x)">
+                     <div class="text-end p-1" style=" cursor: pointer;">
+                        <div class="table-pos-label">
+                           <strong class="table-name">
+
+                              <span *ngIf="x.overdueMinute > 0 "> <i class="bi bi-exclamation-diamond"></i> </span>
+                              {{x.tableName}} </strong>
+                        </div>
+
+                     </div>
+                  </div>
+
+               </div>
+            </div>
+         </div>
+      </div>
+
+
+
+
+   </div>
+
+
+</ng-template>
 
 <ng-template #modalChangeCover let-modal>
    <div class="modal-header">

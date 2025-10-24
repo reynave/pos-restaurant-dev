@@ -83,7 +83,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   cssClass: string = 'btn btn-sm py-3   rounded shadow-sm';
   cssMenu: string = 'btn btn-sm py-3 bg-white  me-1 lh-1  rounded shadow-sm';
   cssMenuDisable: string =
-    'btn btn-sm py-3 btn-light me-1 lh-1  rounded shadow-sm';
+    'btn btn-sm py-3 btn-light me-1 lh-1 text-danger rounded shadow-sm';
 
   showHeader: boolean = true;
 
@@ -1267,6 +1267,30 @@ export class MenuComponent implements OnInit, OnDestroy {
       }
     } else {
       alert('Please select active table');
+    }
+  }
+
+  changeTable(x: any) {
+    console.log('changeTable', x);
+
+    if (x.cardId == '' && x.tableMapStatusId == '1') {
+      this.logService.logAction(
+        'Change table with ' + x.tableName + ' ?',
+        this.id
+      );
+      if (confirm('Change table with ' + x.tableName + ' ?')) {
+        this.loading = true;
+        const body = {
+          cartId: this.id,
+          table: this.table,
+          newTable: x,
+          dailyCheckId: this.configService.getDailyCheck(),
+        };
+        console.log(body);
+        const url = this.api + 'menuItemPos/changeTable';
+      }
+    } else {
+      alert('Please select available table');
     }
   }
 
