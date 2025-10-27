@@ -1,0 +1,132 @@
+<app-header-menu></app-header-menu>
+
+<div [ngClass]="{'container': screenWidth >= 1200, 'container-fluid': screenWidth < 1200}">
+    <div class="row">
+
+        <div class="col-5 col-md-6">
+            <div class="order-panel">
+                <strong>VOID ITEMS</strong>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th [width]="'50px'">#</th>
+                            <th>Menu</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Qty</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of items; let i = index" (click)="openKey(modalKey,x,i)"
+                            [hidden]="x.total <=0 ">
+                            <td>{{i+1}}</td>
+                            <td>
+                               <div><Strong>{{x.name}} </Strong></div> 
+                                <small *ngFor="let a of x.modifier; let i = index">{{i > 0 ? ', ' : ''}} {{a.note}}</small>
+
+                            </td>
+                            <td class="text-end">{{x.price | number}}</td>
+                            <td class="text-end">{{x.total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <pre>{{items | json}}</pre> -->
+            </div>
+        </div>
+
+        <div class="col-7 col-md-6">
+            <div class="order-panel">
+                <strong> CONFIRM VOID ITEMS</strong>
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th [width]="'50px'">#</th>
+                            <th>Menu</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Qty</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of itemsTransfer; let i = index">
+                            <td>
+                                <button class="btn btn-sm btn-warning" (click)="fnCancel(i)">
+                                    <i class="bi bi-arrow-left"></i> CANCEL
+                                </button>
+                            </td>
+                            <td>{{i+1}}</td>
+                            <td>{{x.name}}</td>
+                            <td class="text-end">{{x.price | number}}</td>
+                            <td class="text-end">{{x.total}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="d-grid m-2 sticky-bottom" *ngIf="itemsTransfer.length > 0">
+                    <button type="button" class="btn btn-lg btn-danger" (click)="open(contentTables)">CONFIRM VOID ITEM</button>
+                </div>
+
+                  <!-- <pre>{{itemsTransfer | json}}</pre> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #modalKey let-modal>
+    <div class="modal-header">
+        <strong class="modal-title" id="modal-basic-title">Select Total Items for Transfer</strong>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <input type="number" autocomplete="off" class="form-control form-control-lg  bg-light mb-2 text-end"
+            placeholder="0" [(ngModel)]="qty" #myInput>
+
+        <div class="mb-2">
+            <app-key-number (dataEmitted)="handleData($event)"></app-key-number>
+        </div>
+
+        <div class="row g-1">
+            <div class="col-6 d-grid">
+                <button type="button" class="btn btn-warning btn-lg" (click)="qty=0">CE</button>
+            </div>
+            <div class="col-6 d-grid">
+                <button type="button" class="btn btn-dark btn-lg" (click)="onSubmit()">SUBMIT</button>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #contentTables let-modal>
+    <div class="modal-header">
+        <strong class="modal-title">
+            SELECT REASON FOR VOID ITEM
+        </strong>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body ">
+        <div class="row g-1 mb-3">
+            <div class="col-10">
+                 <input type="text" class="form-control form-control-lg" placeholder="Note Reason"
+            [(ngModel)]="noteReasonVoid">
+             </div>
+            <div class="col-2 d-grid">
+                <button type="button" class="btn btn-primary btn-lg" (click)="fnVoid(noteReasonVoid)" [disabled]="!noteReasonVoid" >SUBMIT</button>
+           
+            </div> 
+        </div>
+        <div class="row">
+             <div class="col-12">
+                <h4 class="text-center">Or</h4>
+            </div>
+        </div>
+        <div class="row g-2">
+            <div class="col d-grid" *ngFor="let x of voidReason" (click)="fnVoid(x.name)">
+                <button type="button" class="btn btn-lg btn-primary m-1"  >
+                {{x.name}}
+            </button>
+            </div>
+        </div>
+        
+ 
+    </div>
+</ng-template>

@@ -33,6 +33,7 @@ import { FactoryComponent } from './login/factory/factory.component';
 import { MenuLockComponent } from './pos/menu/menu-lock/menu-lock.component';
 import { CustomerDisplayComponent } from './customer-display/customer-display.component'; 
 import { CashierComponent } from './pos/cashier/cashier.component';
+import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -57,6 +58,7 @@ export const routes: Routes = [
     { path: 'menu/transferItems', component: TransferItemsComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItemsGroup', component: TransferItemsGroupComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/lock', component: MenuLockComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+    { path: 'menu/voidItem', component: MenuVoidItemComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
  
     { path: 'bill', component: BillComponent, canActivate: [authGuard, dailyStartGuard ,terminalGuard, loginGuard] },
     { path: 'bill/splitBill', component: SplitBillComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },

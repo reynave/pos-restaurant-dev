@@ -109,6 +109,7 @@ export class TablePrintQueueComponent implements OnInit {
 
     const url = this.api + 'printQueue/template';
     const body = {
+      cartId: this.cartId,
       itemDetail: this.itemDetail,
       rushPrinting: item.rushPrinting
     };

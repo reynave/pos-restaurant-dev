@@ -95,7 +95,7 @@
                            </div>
                         </td>
 
-                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
+                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount + (a.priceIncluded * a.total) |number}} </span></td>
                         <td></td>
                      </tr>
                      }
@@ -447,6 +447,11 @@
                   <div class="col-3 d-grid">
                      <button type="button" [class]="cssClass" class="btn-danger" (click)="onVoidTransaction()">
                         <i class="bi bi-x-lg"></i> VOID TRANSCTION</button>
+                  </div>
+
+                   <div class="col-3 d-grid">
+                     <button type="button" [class]="cssClass" class="btn-danger"  (click)="onVoidItem()">
+                        <i class="bi bi-x-lg"></i> VOID ITEM</button>
                   </div>
                </div>
             </div>

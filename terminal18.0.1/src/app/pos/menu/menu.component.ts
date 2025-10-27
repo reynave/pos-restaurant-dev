@@ -24,9 +24,9 @@ import { SocketService } from '../../service/socket.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
 export class Actor {
   constructor(
-    public newQty: number, 
+    public newQty: number,
     public note: string,
-    public price : number
+    public price: number
   ) {}
 }
 @Component({
@@ -41,7 +41,7 @@ export class Actor {
     HeaderMenuComponent,
     KeyNumberComponent,
     TablePrintQueueComponent,
-    NgxCurrencyDirective
+    NgxCurrencyDirective,
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css',
@@ -67,7 +67,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   summary: any = [];
   modifiers: any = [];
   item: any = [];
-  cart: any = []; 
+  cart: any = [];
 
   discountGroup: any = [];
   menuSet: any = [];
@@ -115,9 +115,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   screenWidth: number = window.innerWidth;
   checkBoxAll: boolean = false;
   activeTab: string = 'menu';
-  selectedItem : any;
-  posMode : string = 'table'; // counter / table
-    autoBack: boolean = true;
+  selectedItem: any;
+  posMode: string = 'table'; // counter / table
+  autoBack: boolean = true;
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -142,7 +142,6 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.isChecked = false;
     }
 
- 
     this.cart.forEach((el: any) => {
       el['checkBox'] = this.checkBoxAll;
       el['modifier'].forEach((mod: any) => {
@@ -155,23 +154,22 @@ export class MenuComponent implements OnInit, OnDestroy {
     console.log('MENU EMIT : sendMessage');
     const data = {
       terminalId: this.terminalId,
-      id : this.id,
-      tableId : this.table.id
-    }
+      id: this.id,
+      tableId: this.table.id,
+    };
     this.socketService.emit('message-from-client', data);
-
   }
 
   ngOnInit() {
     this.id = this.activeRouter.snapshot.queryParams['id'];
-    this.posMode =  localStorage.getItem('pos3.mode') || 'table';
+    this.posMode = localStorage.getItem('pos3.mode') || 'table';
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
     this.public = this.server + 'public/floorMap/';
 
     this.modalService.dismissAll();
-    console.log(this.posMode)
-    
+    console.log(this.posMode);
+
     if (this.id == undefined) {
       alert('ERROR, ngOnInit() id == undefined ');
       this.router.navigate(['error']);
@@ -184,46 +182,52 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.httpTables();
       this.httpDailyStart();
 
-      if(localStorage.getItem('pos3.modal.bill') == '1'){
+      if (localStorage.getItem('pos3.modal.bill') == '1') {
         this.openComponent(this.id);
         localStorage.removeItem('pos3.modal.bill');
       }
     }
   }
-   
-  billTax : number = 0;
-  billSc : number = 0;
-  billDiscount : number = 0;
-  billGrandTotal : number = 0;
-  billTotalItem : number = 0;
-  billSubTotal : number = 0;
-  billItemTotal : number = 0;
 
-  httpBillGrandTotal(){ 
-    this.billTax =  0;
+  billTax: number = 0;
+  billSc: number = 0;
+  billDiscount: number = 0;
+  billGrandTotal: number = 0;
+  billTotalItem: number = 0;
+  billSubTotal: number = 0;
+  billItemTotal: number = 0;
+
+  httpBillGrandTotal() {
+    this.billTax = 0;
     this.billSc = 0;
     this.billDiscount = 0;
-    this.http.get(this.api + 'payment/cart', {
-      headers: this.configService.headers(),
-      params: {
-        id: this.id,  
-      }
-    }).subscribe(
-      (data:any) => {
-        console.log('httpBill', data); 
-        this.billTotalItem = data['data']['totalItem'];
-        this.billGrandTotal = data['data']['grandTotal'];
-        this.billSubTotal = data['data']['subTotal'];
-        this.billItemTotal = data['data']['itemTotal'];
-        data['data']['discountGroup'].forEach((element: { [x: string]: any; }) => {
-          console.log(element);
-          this.billDiscount +=  parseInt(element['amount'] || 0);
-        }); 
-        this.billTax =  data['data']['taxSc'][1]['totalAmount'];
-        this.billSc = data['data']['taxSc'][0]['totalAmount'];
-      },
-      (error) => {  console.log(error); }
-    );
+    this.http
+      .get(this.api + 'payment/cart', {
+        headers: this.configService.headers(),
+        params: {
+          id: this.id,
+        },
+      })
+      .subscribe(
+        (data: any) => {
+          console.log('httpBill', data);
+          this.billTotalItem = data['data']['totalItem'];
+          this.billGrandTotal = data['data']['grandTotal'];
+          this.billSubTotal = data['data']['subTotal'];
+          this.billItemTotal = data['data']['itemTotal'];
+          data['data']['discountGroup'].forEach(
+            (element: { [x: string]: any }) => {
+              console.log(element);
+              this.billDiscount += parseInt(element['amount'] || 0);
+            }
+          );
+          this.billTax = data['data']['taxSc'][1]['totalAmount'];
+          this.billSc = data['data']['taxSc'][0]['totalAmount'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   fnLock() {}
@@ -343,6 +347,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   httpCart() {
+   
     this.loading = true;
     const url = this.api + 'menuItemPos/cart';
     this.http
@@ -350,7 +355,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         headers: this.configService.headers(),
         params: {
           id: this.id,
-          posMode : this.posMode
+          posMode: this.posMode,
         },
       })
       .subscribe(
@@ -366,11 +371,12 @@ export class MenuComponent implements OnInit, OnDestroy {
             alert(
               'This table is being used by another user. Please select another table.'
             );
-              this.router.navigate(['menu/lock'], { queryParams: { id: this.id } });
-          }else{
-             this.sendMessage()
+            this.router.navigate(['menu/lock'], {
+              queryParams: { id: this.id },
+            });
+          } else {
+            this.sendMessage();
           }
-         
         },
         (error) => {
           console.log(error);
@@ -378,11 +384,11 @@ export class MenuComponent implements OnInit, OnDestroy {
       );
   }
 
-  
   reload() {
+     this.checkBoxAll=false;
     this.httpMenu();
-     this.httpCart();
-      this.httpBillGrandTotal();
+    this.httpCart();
+    this.httpBillGrandTotal();
   }
 
   onSubmitMenuSet() {
@@ -424,7 +430,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   openSelectOrder(x: any) {
-    this.selectedItem = x
+    this.selectedItem = x;
   }
 
   fnShowModifierDetail(index: number) {
@@ -474,7 +480,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       );
   }
-  
+
   open(
     content: any,
     x: any,
@@ -532,7 +538,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.cart.forEach((row: any) => {
       if (row['checkBox']) {
         items.push({
-          id: row['id'], 
+          id: row['id'],
         });
       }
     });
@@ -612,13 +618,13 @@ export class MenuComponent implements OnInit, OnDestroy {
       );
   }
 
-  addToCart(menu: any, openPrice : number = 0) {
+  addToCart(menu: any, openPrice: number = 0) {
     if (menu.qty > 0) {
       const body = {
         id: this.id,
         menu: menu,
-        price : this.model.price,
-        openPrice : openPrice
+        price: this.model.price,
+        openPrice: openPrice,
       };
       this.http
         .post<any>(this.api + 'menuItemPos/addToCart', body, {
@@ -651,9 +657,9 @@ export class MenuComponent implements OnInit, OnDestroy {
           }
         );
 
-        if(openPrice == 1){
-          this.modalService.dismissAll();
-        }
+      if (openPrice == 1) {
+        this.modalService.dismissAll();
+      }
     }
   }
 
@@ -723,29 +729,30 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnChecked(index: number) {
-   
-      this.cart[index].checkBox == 0
-        ? (this.cart[index].checkBox = 1)
-        : (this.cart[index].checkBox = 0);
+    this.cart[index].checkBox == 0
+      ? (this.cart[index].checkBox = 1)
+      : (this.cart[index].checkBox = 0);
 
-      // Jika parent di-check (checkBox == 1), semua modifier anak juga di-check
-      if (
-        this.cart[index].checkBox == 1 &&
-        Array.isArray(this.cart[index].modifier)
-      ) {
-        this.cart[index].modifier.forEach((el: { checkBox: number }) => {
-          el.checkBox = 1;
-        });
-      } else if (Array.isArray(this.cart[index].modifier)) {
-        this.cart[index].modifier.forEach((el: { checkBox: number }) => {
-          el.checkBox = 0;
-        });
-      }
-    
+    // Jika parent di-check (checkBox == 1), semua modifier anak juga di-check
+    if (
+      this.cart[index].checkBox == 1 &&
+      Array.isArray(this.cart[index].modifier)
+    ) {
+      this.cart[index].modifier.forEach((el: { checkBox: number }) => {
+        el.checkBox = 1;
+      });
+    } else if (Array.isArray(this.cart[index].modifier)) {
+      this.cart[index].modifier.forEach((el: { checkBox: number }) => {
+        el.checkBox = 0;
+      });
+    }
   }
 
   fnCheckedModifier(index: number, subIndex: number) {
-    if (this.cart[index].modifier[subIndex].sendOrder == '' || this.cart[index].modifier[subIndex].allowVoid == 1) {
+    if (
+      this.cart[index].modifier[subIndex].sendOrder == '' ||
+      this.cart[index].modifier[subIndex].allowVoid == 1
+    ) {
       this.cart[index].modifier[subIndex].checkBox == 0
         ? (this.cart[index].modifier[subIndex].checkBox = 1)
         : (this.cart[index].modifier[subIndex].checkBox = 0);
@@ -757,7 +764,6 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   onVoid() {
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
@@ -773,7 +779,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         const body = {
           cart: this.cart,
           cartId: this.id,
-          posMode : this.configService.getConfigJson()['outlet']['posMode'],
+          posMode: this.configService.getConfigJson()['outlet']['posMode'],
         };
         const url = this.api + 'menuItemPos/voidItem';
         this.http
@@ -866,56 +872,82 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   addDiscountGroup(a: any) {
     this.isChecked = false;
-    // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
+    let access = false;
     this.checkIfAnyItemChecked();
+
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
+    //  access = true;
+    }
+
+    console.log(this.cart);
+    outer: for (let i = 0; i < this.cart.length; i++) {
+      const mods = this.cart[i]['modifier'] || [];
+      for (let j = 0; j < mods.length; j++) {
+      if (mods[j]['applyDiscount'] == 1) {
+        // jika user menolak, keluar dari fungsi dan jangan jalankan if(access) di bawah
+        if (!confirm('A discount has already been applied. Do you want to proceed?')) {
+        return;
+        }
+        // jika user setuju, set access dan keluar dari kedua loop untuk melanjutkan ke if(access)
+        access = true;
+        break outer;
+      }
+      }
+    }
+
+    // Jika tidak ada applyDiscount yang bernilai 1, set access ke true
+    if (!access) {
+      access = true;
+    }
+
+    if (access) {
       this.loading = true;
       const body = {
-        cart: this.cart, 
-        remark: this.remark,
-        cartId: this.id,
-        discountGroup: a,
+      cart: this.cart,
+      remark: this.remark,
+      cartId: this.id,
+      discountGroup: a,
       };
       console.log(body);
       const url = this.api + 'menuItemPos/addDiscountGroup';
       this.http
-        .post<any>(url, body, {
-          headers: this.configService.headers(),
-        })
-        .subscribe(
-          (data) => {
-            this.remark = '';
-            this.modalService.dismissAll();
-            console.log(data);
-            this.reload();
-            this.results = data['results'];
-            this.logService.logAction(
-              'Apply Discount Group ' +
-                a['name'] +
-                '(' +
-                a['id'] +
-                ') @' +
-                a['discRate'] +
-                '%',
-              this.id
-            );
-          },
-          (error) => {
-            console.log(error);
-            this.logService.logAction(
-              'ERROR Apply Discount Group ' +
-                a['name'] +
-                '(' +
-                a['id'] +
-                ') @' +
-                a['discRate'] +
-                '%',
-              this.id
-            );
-          }
+      .post<any>(url, body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+        this.remark = '';
+        this.modalService.dismissAll();
+        console.log(data);
+        this.reload();
+        this.results = data['results'];
+        this.logService.logAction(
+          'Apply Discount Group ' +
+          a['name'] +
+          '(' +
+          a['id'] +
+          ') @' +
+          a['discRate'] +
+          '%',
+          this.id
         );
+        },
+        (error) => {
+        console.log(error);
+        this.logService.logAction(
+          'ERROR Apply Discount Group ' +
+          a['name'] +
+          '(' +
+          a['id'] +
+          ') @' +
+          a['discRate'] +
+          '%',
+          this.id
+        );
+        }
+      );
     }
   }
 
@@ -925,7 +957,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       cartId: this.id,
       tableSendOrder: this.table.sendOrder,
     };
-    if (this.cart.length == 0  ) {
+    if (this.cart.length == 0) {
       alert('Cart is empty');
     } else {
       const url = this.api + 'menuItemPos/sendOrder';
@@ -951,8 +983,6 @@ export class MenuComponent implements OnInit, OnDestroy {
         );
     }
   }
-
- 
 
   exitWithoutOrder() {
     const body = {
@@ -1166,13 +1196,11 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       });
 
-     
-
       console.log(this.cart);
 
       this.loading = true;
       const body = {
-        cart: cart, 
+        cart: cart,
         cartId: this.id,
       };
       const url = this.api + 'menuItemPos/takeOut';
@@ -1277,7 +1305,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.logService.logAction(
         'Change table with ' + x.tableName + ' ?',
         this.id
-      );
+      ); 
       if (confirm('Change table with ' + x.tableName + ' ?')) {
         this.loading = true;
         const body = {
@@ -1288,9 +1316,31 @@ export class MenuComponent implements OnInit, OnDestroy {
         };
         console.log(body);
         const url = this.api + 'menuItemPos/changeTable';
+        // buatkah http.post disini
+        this.http
+          .post<any>(url, body, {
+            headers: this.configService.headers(),
+          })
+          .subscribe(
+            (data) => {
+              console.log(data);
+            //  this.back();
+              this.logService.logAction(
+                'Change to table :' + x.tableName,
+                this.id
+              );
+            },
+            (error) => {
+              console.log(error);
+              this.logService.logAction(
+                'ERROR Change to table :' + x.tableName,
+                this.id
+              );
+            }
+          );
+      } else {
+        alert('Please select available table');
       }
-    } else {
-      alert('Please select available table');
     }
   }
 
@@ -1311,14 +1361,18 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       }
     }
-     
+
     this.isChecked = checked;
   }
 
-  selectItemOpenPrice : any = [];
+  selectItemOpenPrice: any = [];
   modalOpenPrice(content: any, menu: any) {
-    this.selectItemOpenPrice = menu; 
+    this.selectItemOpenPrice = menu;
     this.model.price = menu.price;
     this.modalService.open(content);
+  }
+
+  onVoidItem(){
+    this.router.navigate(['menu/voidItem'], { queryParams: { id: this.id } });
   }
 }
