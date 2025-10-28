@@ -64,7 +64,14 @@ export class MenuComponent implements OnInit, OnDestroy {
   sendOrderItems: any = [];
   zoom: number = parseInt(localStorage.getItem('pos3.zoom') || '100');
   public: string = '';
-  summary: any = [];
+  summary: any = {
+    totalItem: 0,
+    discount: 0,
+    subTotal: 0,
+    sc: 0,
+    tax: 0,
+    grandTotal: 0
+};
   modifiers: any = [];
   item: any = [];
   cart: any = [];
@@ -176,6 +183,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     } else {
       this.httpMenuLookUp(0);
       this.httpMenu();
+      this.httpGetDiscountGroup();
       this.httpCart();
       this.httpBillGrandTotal();
       this.httpGetModifier();
@@ -188,19 +196,10 @@ export class MenuComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  billTax: number = 0;
-  billSc: number = 0;
-  billDiscount: number = 0;
-  billGrandTotal: number = 0;
-  billTotalItem: number = 0;
-  billSubTotal: number = 0;
-  billItemTotal: number = 0;
-
+ 
+ 
   httpBillGrandTotal() {
-    this.billTax = 0;
-    this.billSc = 0;
-    this.billDiscount = 0;
+    
     this.http
       .get(this.api + 'payment/cart', {
         headers: this.configService.headers(),
@@ -211,18 +210,14 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           console.log('httpBill', data);
-          this.billTotalItem = data['data']['totalItem'];
-          this.billGrandTotal = data['data']['grandTotal'];
-          this.billSubTotal = data['data']['subTotal'];
-          this.billItemTotal = data['data']['itemTotal'];
-          data['data']['discountGroup'].forEach(
-            (element: { [x: string]: any }) => {
-              console.log(element);
-              this.billDiscount += parseInt(element['amount'] || 0);
-            }
-          );
-          this.billTax = data['data']['taxSc'][1]['totalAmount'];
-          this.billSc = data['data']['taxSc'][0]['totalAmount'];
+          this.summary = data['data']['summary']; 
+          // data['data']['discountGroup'].forEach(
+          //   (element: { [x: string]: any }) => {
+          //     console.log(element);
+          //     this.billDiscount += parseInt(element['amount'] || 0);
+          //   }
+          // );
+         
         },
         (error) => {
           console.log(error);
@@ -304,7 +299,7 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   httpMenu() {
     this.loading = true;
-    const url = this.api + 'menuItemPos';
+    const url = this.api + 'menuItemPos/lookUpMenu';
     this.http
       .get<any>(url, {
         headers: this.configService.headers(),
@@ -316,8 +311,28 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.loading = false;
-          this.items = data['items'];
-          this.discountGroup = data['discountGroup'];
+          this.items = data['items']; 
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
+  httpGetDiscountGroup() {
+    this.loading = true;
+    const url = this.api + 'menuItemPos/discountGroup';
+    this.http
+      .get<any>(url, {
+        headers: this.configService.headers(),
+        params: { 
+          outletId: this.configService.getConfigJson()['outlet']['id'],
+        },
+      })
+      .subscribe(
+        (data) => {
+          this.loading = false; 
+          this.discountGroup = data['items'];
         },
         (error) => {
           console.log(error);
@@ -385,8 +400,9 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   reload() {
-     this.checkBoxAll=false;
+    this.checkBoxAll=false;
     this.httpMenu();
+    this.httpGetDiscountGroup();
     this.httpCart();
     this.httpBillGrandTotal();
   }

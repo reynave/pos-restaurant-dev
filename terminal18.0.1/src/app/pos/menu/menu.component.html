@@ -88,14 +88,14 @@
 
                         <td class="text-center"> </td>
                         <td>
-                           <small> {{ a.descl}}</small> &nbsp;
-                           <small *ngIf="a.price > 0" class="font-monospace">&#64;{{a.price | number}}</small>
+                           <small>   {{ a.descl}}</small> &nbsp;
+                          
                            <div>
                               <small>{{a.remark}}</small>
                            </div>
                         </td>
 
-                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount + (a.priceIncluded * a.total) |number}} </span></td>
+                        <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}} </span></td>
                         <td></td>
                      </tr>
                      }
@@ -111,8 +111,8 @@
                         </td>
                         <td class="text-center"><span class="font-monospace">{{ a.total}}</span></td>
                         <td>
-                           <small> {{ a.descl}}</small> &nbsp;
-                           <small *ngIf="a.price > 0" class="font-monospace">&#64;{{a.price | number}}</small>
+                           <small>   {{ a.descl}}</small> &nbsp;
+                         
                            <div>
                               <small>{{a.remark}}</small>
                            </div>
@@ -155,17 +155,17 @@
                      <tbody>
                         <tr>
                            <td>Item Total :</td>
-                           <td class="text-end">{{billItemTotal | number}}</td>
+                           <td class="text-end">{{summary.itemTotal | number}}</td>
                         </tr>
 
                         <tr>
                            <td>Discount :</td>
-                           <td class="text-end">{{billDiscount | number}}</td>
+                           <td class="text-end">{{summary.discount | number}}</td>
                         </tr>
 
                         <tr>
                            <td>Sub Total :</td>
-                           <td class="text-end">{{billSubTotal | number}}</td>
+                           <td class="text-end">{{summary.subTotal | number}}</td>
                         </tr>
 
                      </tbody>
@@ -178,16 +178,16 @@
 
                         <tr>
                            <td>Sc :</td>
-                           <td class="text-end">{{billSc | number}}</td>
+                           <td class="text-end">{{summary.sc | number}}</td>
                         </tr>
                         <tr>
                            <td>Tax :</td>
-                           <td class="text-end"> {{billTax | number}}</td>
+                           <td class="text-end"> {{summary.tax | number}}</td>
                         </tr>
 
                         <tr>
                            <td>Total :</td>
-                           <td class="text-end"><span class="fw-bold">{{ billGrandTotal | number}}</span></td>
+                           <td class="text-end"><span class="fw-bold">{{ summary.grandTotal | number}}</span></td>
                         </tr>
 
                      </tbody>
