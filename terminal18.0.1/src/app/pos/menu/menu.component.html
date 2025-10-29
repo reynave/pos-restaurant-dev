@@ -4,14 +4,14 @@
       <div class="col-5 col-lg-4 ">
 
          <div class="order-panel  mb-2">
-            <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i
-                     class="bi bi-exclamation-triangle"></i> Overdue: {{table.overTime}} min</span>
+            <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i class="bi bi-exclamation-triangle"></i>
+               Overdue: {{table.overTime}} min</span>
             <div class="d-flex justify-content-between align-items-center">
                <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? 'Order' : 'Bill'}}
-                  {{table.id}} |  {{table.startDate | date:'yyyy-mm-dd HH:mm:ss'}} </strong>
+                  {{table.id}} | {{table.startDate | date:'yyyy-mm-dd HH:mm:ss'}} </strong>
             </div>
             <div class="mb-2">Cover: {{table.cover}}, Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
-            
+
             <div style="height: 44vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
                   <thead class="sticky-top">
@@ -40,7 +40,7 @@
                            <i *ngIf="x.checkBox == 0 " class="bi bi-square"></i>
                            <i *ngIf="x.checkBox == 1 " class="bi bi-check-square-fill"></i>
                         </td>
-                        <td class="text-end font-monospace align-content-center text-center">
+                        <td class="text-end font-monospace align-content-center text-center" (click)="fnChecked(i)">
                            @if(x.sendOrder == ''){
                            <button type="button" class="btn btn-sm btn-light" style="width: 50px;"
                               (click)="model.newQty = 0;open(modalQty, x, i)">{{x.total | number}}
@@ -51,7 +51,13 @@
                            }
 
                         </td>
-                        <td (click)="fnChecked(i)  ">
+                        <td class="align-content-center text-center" width="5px" (click)="openSelectOrder(x)">
+                           @if(x.sendOrder != ''){
+                           <img src="./img/bill-64.png" width="20">
+                           }
+                        </td>
+                        <td (click)="openSelectOrder(x)">
+
                            <div class="lh-1">
                               <strong>{{x.name }} {{x.totalModifier > 0 ? '*':''}} </strong>
                            </div>
@@ -66,11 +72,7 @@
                         </td>
 
 
-                        <td class="align-content-center">
-                           @if(x.sendOrder != ''){
-                           <button type="button" (click)="openSelectOrder(x)" class="btn btn-sm btn-primary">SO</button>
-                           }
-                        </td>
+
 
                      </tr>
 
@@ -85,23 +87,29 @@
                            <i *ngIf="a.checkBox == 1 " class="bi bi-check-square-fill text-primary"></i>
                            }
                         </td>
-
                         <td class="text-center"> </td>
+                        <td class="align-content-center">
+                           @if(a.sendOrder != ''){
+                           <img src="./img/bill-64.png" width="20">
+                           }
+                        </td>
+
                         <td>
-                           <small>   {{ a.descl}}</small> &nbsp;
-                          
+                           <small> {{ a.descl}}</small> &nbsp;
+
                            <div>
                               <small>{{a.remark}}</small>
                            </div>
                         </td>
 
                         <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}} </span></td>
-                        <td></td>
+
                      </tr>
                      }
 
 
                      @if(checkBoxAllScTax && x.modifier.length > 0){
+                        <!-- for tax -->
                      <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 1">
                         <td>
                            @if(a.sendOrder == ''){
@@ -110,16 +118,21 @@
                            }
                         </td>
                         <td class="text-center"><span class="font-monospace">{{ a.total}}</span></td>
+                        <td class="align-content-center">
+                           @if(a.sendOrder != ''){
+                           <img src="./img/bill-64.png" width="20">
+                           }
+                        </td>
                         <td>
-                           <small>   {{ a.descl}}</small> &nbsp;
-                         
+                           <small> {{ a.descl}}</small> &nbsp;
+
                            <div>
                               <small>{{a.remark}}</small>
                            </div>
                         </td>
 
                         <td class="text-end"> <span class="font-monospace">{{a.totalAmount |number}}</span></td>
-                        <td></td>
+
                      </tr>
                      }
                      <!-- SUB TOTAL -->
@@ -129,13 +142,13 @@
 
                         <td>
                         </td>
-
+                        <td></td>
                         <td class="font-monospace text-center">
                         </td>
 
                         <td class="text-end "><strong class="font-monospace">{{x.grandTotalAmount | number}}</strong>
                         </td>
-                        <td></td>
+
 
                      </tr>
 
@@ -144,7 +157,7 @@
 
                </table>
             </div>
-            
+
          </div>
 
          <div class="order-panel mb-2">
@@ -219,22 +232,22 @@
                <button type="button" class="btn btn-danger  " (click)="onVoid()">
                   <i class="bi bi-x-lg"></i> </button>
             </div>
-         </div> 
+         </div>
          <div class="row g-1">
-            
-              <div class="col-6 d-grid" >
-                  
-                  <button type="button" class="btn btn-danger" (click)="exitWithoutOrder();">
-                     <i class="bi bi-trash"></i> EXIT WITHOUT ORDER
-                  </button>
-                   
-               </div> 
 
-               <div class="col-6 d-grid" *ngIf="posMode != 'cashier'"> 
-                  <button type="button" class="btn btn-primary"  (click)="sendOrder();">
-                     <i class="bi bi-fork-knife"></i> SEND ORDER
-                  </button>
-               </div> 
+            <div class="col-6 d-grid">
+
+               <button type="button" class="btn btn-danger" (click)="exitWithoutOrder();">
+                  <i class="bi bi-trash"></i> EXIT WITHOUT ORDER
+               </button>
+
+            </div>
+
+            <div class="col-6 d-grid" *ngIf="posMode != 'cashier'">
+               <button type="button" class="btn btn-primary" (click)="sendOrder();">
+                  <i class="bi bi-fork-knife"></i> SEND ORDER
+               </button>
+            </div>
          </div>
       </div>
 
@@ -267,7 +280,7 @@
                         </tr>
                         <tr>
                            <th>Order By and Time</th>
-                           <td>{{selectedItem?.employeeName}} , 
+                           <td>{{selectedItem?.employeeName}} ,
                               {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         </tr>
 
@@ -372,7 +385,7 @@
          </ul>
 
          <div class="tab-content px-2">
-          
+
             <div *ngIf="activeTab === 'function'">
                <div class="row g-2">
 
@@ -449,8 +462,8 @@
                         <i class="bi bi-x-lg"></i> VOID TRANSCTION</button>
                   </div>
 
-                   <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" class="btn-danger"  (click)="onVoidItem()">
+                  <div class="col-3 d-grid">
+                     <button type="button" [class]="cssClass" class="btn-danger" (click)="onVoidItem()">
                         <i class="bi bi-x-lg"></i> VOID ITEM</button>
                   </div>
                </div>
@@ -467,8 +480,8 @@
                   <div>Lookup Menu : <strong class="text-uppercase">MENU</strong> </div>
                   }
                   <div class="col-3 mb-1 d-grid" *ngIf="menuLookUpParent.length > 0">
-                        <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
-                           class="bi bi-arrow-left"></i>  BACK</button>
+                     <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
+                           class="bi bi-arrow-left"></i> BACK</button>
                   </div>
 
                   <div class="col-3 mb-1 d-grid" *ngFor="let x of menuLookUp; let i= index">
@@ -483,27 +496,27 @@
                   <div class="col-3 mb-1 d-grid" *ngFor="let a of items">
 
                      @if(a.openPrice == 1){
-                         <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                           class="card-menu btn-light"
-                           (click)="modalOpenPrice(modalOpenPriceContent,a)"
-                           [disabled]="(a.qty - a.usedQty) < 1">
-                           <div class="mb-1">{{a.name}}</div>
-                           <small>&#64;{{a.price | number}}*</small>
-                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small> 
-                        </button>
+                     <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                        class="card-menu btn-light" (click)="modalOpenPrice(modalOpenPriceContent,a)"
+                        [disabled]="(a.qty - a.usedQty) < 1">
+                        <div class="mb-1">{{a.name}}</div>
+                        <small>&#64;{{a.price | number}}*</small>
+                        <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
+                     </button>
                      }
-                     @else{ 
-                        <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                           class="card-menu btn-light" 
-                           (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
-                           [disabled]="(a.qty - a.usedQty) < 1">
-                           <div class="mb-1">{{a.name}}   </div>
-                           <img src="./img/icons8-delete-48.png" class="mx-1" height="16" width="16" *ngIf="(a.qty - a.usedQty)< 1">
-                           
-                           <small>&#64;{{a.price | number}} </small>
-                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small> 
+                     @else{
+                     <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                        class="card-menu btn-light"
+                        (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
+                        [disabled]="(a.qty - a.usedQty) < 1">
+                        <div class="mb-1">{{a.name}} </div>
+                        <img src="./img/icons8-delete-48.png" class="mx-1" height="16" width="16"
+                           *ngIf="(a.qty - a.usedQty)< 1">
 
-                        </button>
+                        <small>&#64;{{a.price | number}} </small>
+                        <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
+
+                     </button>
                      }
                   </div>
                </div>
@@ -654,7 +667,7 @@
          </div>
 
          <div class="px-2">
-            <div class="row g-1 mb-3"> 
+            <div class="row g-1 mb-3">
                @if( activeTab === 'menu' || activeTab === 'modifier' || activeTab === 'discount'){
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'menu' && menuLookUpParent.length > 0">
                   <button type="button" class="btn btn-success py-3"
@@ -662,14 +675,14 @@
                      <i class="bi bi-check2"></i> FINISH
                   </button>
                </div>
-              
+
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'modifier'">
                   <button type="button" class="btn btn-primary py-3" (click)="fnSubmitModifier();  results = '' ">
                      <i class="bi bi-check2"></i> SUBMIT
                   </button>
                </div>
 
-                }
+               }
             </div>
          </div>
 
@@ -846,7 +859,7 @@
 
 <ng-template #modalChangeTable let-modal>
    <div class="modal-header">
-      <strong class="modal-title"> 
+      <strong class="modal-title">
          <div class="bg-light p-1  rounded border  d-inline-block">
             <span *ngFor="let x of tablesMaps; let i = index">
                <button type="button" class="btn btn-sm px-3" (click)="onMap(i)" [class]="{
@@ -1055,16 +1068,16 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
-      
+
       <form (ngSubmit)="addToCart(selectItemOpenPrice,1)" #actorForm="ngForm">
          <div class="mb-3">
             <div class="row g-1">
                <div class="col-12 mb-2">
                   Please enter the price for "open Price item"<br>Items : <strong>{{selectItemOpenPrice.name}}</strong>
-               </div> 
-             
+               </div>
+
                <div class="col-12">
-              
+
                   <input type="number" class="form-control form-control-lg text-end" id="price" required
                      [(ngModel)]="model.price" name="price" #price="ngModel">
                </div>
