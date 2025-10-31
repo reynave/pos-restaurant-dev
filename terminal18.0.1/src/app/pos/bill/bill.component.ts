@@ -301,13 +301,13 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data) => {
+          localStorage.setItem('pos3.id', this.id);
           if (data['tableSendOrder'] == 0) {
             this.tableSendOrder = data['tableSendOrder'];
             this.createPayment();
           } else {
             this.reSendOrder();
-          }
-
+          } 
           console.log(data);
         },
         (error) => {
@@ -377,6 +377,8 @@ export class BillComponent implements OnInit {
       })
       .subscribe(
         (data) => {
+          localStorage.setItem('pos3.id', data['id']);
+
           this.router.navigate([], {
             queryParams: {
               id: data['id'],

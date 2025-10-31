@@ -77,6 +77,10 @@ export class TablesComponent implements OnInit {
   }
 
   ngOnInit() { 
+    
+      localStorage.removeItem('pos3.id');
+
+
     if( this.configService.getConfigJson()['outlet']['posMode'] == "cashier"){
       this.router.navigate(['/cashier']);
     }
@@ -304,7 +308,8 @@ export class TablesComponent implements OnInit {
       terminalId: this.terminalId,
     };
     console.log('gotTo', body);
-    localStorage.setItem('pos3.lockTableId', x.outletTableMapId);
+
+    //localStorage.setItem('pos3.lockTableId', x.outletTableMapId);
     this.http
       .post<any>(url, body, { headers: this.configService.headers() })
       .subscribe(
@@ -312,8 +317,11 @@ export class TablesComponent implements OnInit {
           console.log(data);
           this.sendMessage();
           this.loading = false;
+          localStorage.setItem('pos3.id', x.cardId);
           this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
           this.logService.logAction('Go to Menu', x.cardId);
+
+              
         },
         (error) => {
           console.log(error);
@@ -375,6 +383,7 @@ export class TablesComponent implements OnInit {
       .subscribe(
         (data) => {
           if (data['error'] != true) {
+              localStorage.setItem('pos3.id', data['cardId']);
             this.router.navigate(['/menu'], {
               queryParams: { id: data['cardId'] },
             });

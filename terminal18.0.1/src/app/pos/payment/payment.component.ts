@@ -121,9 +121,16 @@ closePayment : number = 0;
   }
 
   ngOnInit() {
+ 
     this.api = this.configService.getApiUrl();
 
     this.id = this.activeRouter.snapshot.queryParams['id'];
+
+    if(this.id != localStorage.getItem('pos3.id')){
+      console.log('Payment Guard Blocked');
+      this.router.navigate(['/error']);
+      return;
+    }
     this.modalService.dismissAll();
     this.httpCart();
     this.httpCartBill();
@@ -172,8 +179,8 @@ cartPayment : any = {
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'],
-          grandTotal: this.grandTotal,
+          id: this.activeRouter.snapshot.queryParams['id'], 
+          dailyCheckId: this.configService.getDailyCheck(),
         },
       })
       .subscribe(
@@ -236,7 +243,7 @@ cartPayment : any = {
           this.data = data['data'];
           this.discountGroup = data['data']['discountGroup'];
           this.closePaymentAmount = data['data']['closePaymentAmount'];
-          this.unpaid = data['data']['unpaid'];
+        
           this.grandTotal = data['data']['grandTotal'];
           this.httpPaid();
 
@@ -267,6 +274,7 @@ summary : any = {
       })
       .subscribe(
         (data) => {
+          this.unpaid = data['unpaid'];
           this.summary = data['summary'];
           this.cart = data['cart'];
           console.log('httpCartBill', data);
@@ -314,6 +322,7 @@ summary : any = {
       cartId: this.id,
       payment: payment,
       unpaid: this.unpaid,
+ 
     };
     console.log(body);
     this.http
