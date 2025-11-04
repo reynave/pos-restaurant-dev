@@ -3,13 +3,23 @@
    <div class="row g-3">
       <div class="col-12">
          <div class=" mb-3 ">
+            <div class="row">
+               <div class="col-12">
+                  <div class="ms-2">Lookup Menu :  <span [hidden]="lookupName == '' " class="badge text-bg-secondary"> {{lookupName}}  </span></div>
+               </div>
+            </div>
             <div class="row g-2">
-               <div class="col-10">
-                      <input type="text" class="form-control form-control-lg" [(ngModel)]="searchTerm" (input)="searchByName()"
-               placeholder="Search by Name" />
+               <div class="col-8">
+                  <input type="text" class="form-control form-control-lg" [(ngModel)]="searchTerm"
+                     (input)="searchByName()" placeholder="Search by Name" />
                </div>
                <div class="col-2 d-grid">
-                  <button type="button" class="btn btn-lg btn-light" (click)="searchTerm = ''; searchByName()">CE</button>
+                  <button type="button" class="btn btn-lg btn-primary"
+                     (click)="openLookUpModal(modalFilter)">Filter</button>
+               </div>
+               <div class="col-2 d-grid">
+                  <button type="button" class="btn btn-lg btn-light"
+                     (click)="searchTerm = ''; searchByName(); clear()">Clear</button>
                </div>
             </div>
 
@@ -26,7 +36,6 @@
                         @else{
                         <i class="bi bi-square"></i>
                         }
-
                      </th>
                      <th>#</th>
                      <th>Name</th>
@@ -34,7 +43,6 @@
                      <th class="text-end">Qty</th>
                      <th>Start Date</th>
                      <th>Exp Date</th>
-
                   </tr>
                </thead>
 
@@ -48,7 +56,6 @@
                         @else{
                         <i class="bi bi-square"></i>
                         }
-
                      </td>
                      <td>{{i+1}}</td>
                      <td>{{x.name}}</td>
@@ -70,7 +77,6 @@
             <div class="col-6 d-grid">
                <button type="button" class="btn btn-lg  btn-warning " [disabled]="this.checkTotal < 1"
                   (click)="onResetAdjust()">REMOVE ADJUST / UNLIMITED</button>
-
             </div>
             <div class="col-6 d-grid">
                <button type="button" class="btn btn-lg  btn-primary" [disabled]="this.checkTotal < 1"
@@ -136,4 +142,42 @@
       </form>
    </div>
 
+</ng-template>
+
+
+<ng-template #modalFilter let-modal>
+   <div class="modal-header">
+      <strong>Look Up Menu Filter</strong>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+   </div>
+   <div class="modal-body"> 
+
+      <div *ngFor="let item of lookupItems">
+         <ng-container *ngTemplateOutlet="treeTemplate; context: { $implicit: item, level: 0 }"></ng-container>
+      </div>
+
+      <ng-template #treeTemplate let-node let-level="level">
+         <div class="tree-node " [style.marginLeft.px]="level * 30">
+            <div class="row g-1 ">
+               <div class="col-12 d-grid">
+                  <button href="javascript:;" class="  btn btn-lg btn-light text-start mb-1"  (click)="onLookUpSelect(node) ">
+                  {{ node.name }} {{node.id}}
+                  </button>
+               </div>
+            </div>
+
+         </div>
+
+         <div *ngIf="node.children?.length > 0">
+          
+            <ng-container *ngFor="let child of node.children">
+               <ng-container  *ngTemplateOutlet="treeTemplate; context: { $implicit: child, level: level + 1 }"></ng-container>
+            </ng-container>
+         </div>
+
+      </ng-template>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-dark" (click)="onResetAdjust()">Submit</button>
+   </div>
 </ng-template>

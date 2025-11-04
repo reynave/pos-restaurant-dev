@@ -10,56 +10,68 @@ import { ConfigService } from '../../service/config.service';
 import { environment } from '../../../environments/environment';
 import { UserLoggerService } from '../../service/user-logger.service';
 
-
 @Component({
   selector: 'app-items',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, FormsModule, NgbDropdownModule, RouterModule, HeaderMenuComponent, KeyNumberComponent],
+  imports: [
+    HttpClientModule,
+    CommonModule,
+    FormsModule,
+    NgbDropdownModule,
+    RouterModule,
+    HeaderMenuComponent,
+    KeyNumberComponent,
+  ],
   templateUrl: './items.component.html',
-  styleUrl: './items.component.css'
+  styleUrl: './items.component.css',
 })
 export class ItemsComponent implements OnInit {
-
   checkTotal: number = 0;
   isCheckAll: number = 0;
   addQty: number = 1;
   loading: boolean = false;
   items: any = [];
   newQty: number = 99999;
-  api : string = '';
+  api: string = '';
+  lookupItems: any = [];
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
-    public logService: UserLoggerService
-  ) { }
+    public logService: UserLoggerService,
+    private activeRouter: ActivatedRoute,
+    private router: Router
+  ) {}
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
     this.httpMenu();
   }
 
-  httpMenu() {
+  httpMenu(lookupId: number = 0) {
     this.checkTotal = 0;
     this.modalService.dismissAll();
     this.loading = true;
-    const url = this.api + "items/";
-    this.http.get<any>(url, {
-      headers: this.configService.headers(),
-      params: {
-        departmentId: 0,
-        outletId: this.configService.getConfigJson()['outlet']['id']
-      }
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.loading = false;
-        this.items = data['items'];
-        this.searchResults = this.items;
-      },
-      error => {
-        console.log(error);
-      }
-    )
+    const url = this.api + 'items/';
+    this.http
+      .get<any>(url, {
+        headers: this.configService.headers(),
+        params: {
+          departmentId: 0,
+          outletId: this.configService.getConfigJson()['outlet']['id'],
+          lookupId: lookupId,
+        },
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.loading = false;
+          this.items = data['items'];
+          this.searchResults = this.items;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   }
 
   checkBoxAll() {
@@ -85,30 +97,33 @@ export class ItemsComponent implements OnInit {
     });
     console.log(items, this.addQty);
     this.loading = true;
-    const url = this.api + "items/addQty";
+    const url = this.api + 'items/addQty';
     const body = {
       items: items,
       addQty: this.addQty,
-    }
-    this.http.post<any>(url, body, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        this.logService.logAction('Add ' + this.addQty + ', Qty for ' + items.length + ' items  ')
-        console.log(data);
-        this.loading = false;
-        this.httpMenu();
-      },
-      error => {
-        console.log(error);
-        this.logService.logAction('ERROR Add Qty')
-      }
-    )
-
+    };
+    this.http
+      .post<any>(url, body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.logService.logAction(
+            'Add ' + this.addQty + ', Qty for ' + items.length + ' items  '
+          );
+          console.log(data);
+          this.loading = false;
+          this.httpMenu();
+        },
+        (error) => {
+          console.log(error);
+          this.logService.logAction('ERROR Add Qty');
+        }
+      );
   }
 
   onResetAdjust() {
-    if ((confirm("Remove Adjustment item will be unlimited qty?"))) {
+    if (confirm('Remove Adjustment item will be unlimited qty?')) {
       const items: any[] = [];
       this.items.forEach((el: any) => {
         if (el['checkBox'] == 1) {
@@ -118,29 +133,35 @@ export class ItemsComponent implements OnInit {
       console.log(items);
 
       this.loading = true;
-      const url = this.api + "items/resetAdjust";
+      const url = this.api + 'items/resetAdjust';
       const body = {
-        items: items
-      }
-      this.http.post<any>(url, body, {
-        headers: this.configService.headers(),
-      }).subscribe(
-        data => {
-          this.logService.logAction('REMOVE ADJUST / UNLIMITED ' + items.length + ' items')
-          console.log(data);
-          this.loading = false;
-          this.httpMenu();
-        },
-        error => {
-          this.logService.logAction('ERROR Reset Adjust')
-          console.log(error);
-        }
-      )
+        items: items,
+      };
+      this.http
+        .post<any>(url, body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            this.logService.logAction(
+              'REMOVE ADJUST / UNLIMITED ' + items.length + ' items'
+            );
+            console.log(data);
+            this.loading = false;
+            this.httpMenu();
+          },
+          (error) => {
+            this.logService.logAction('ERROR Reset Adjust');
+            console.log(error);
+          }
+        );
     }
   }
 
   fnCheck(index: number) {
-    this.searchResults[index].checkBox == 0 ? this.searchResults[index].checkBox = 1 : this.searchResults[index].checkBox = 0;
+    this.searchResults[index].checkBox == 0
+      ? (this.searchResults[index].checkBox = 1)
+      : (this.searchResults[index].checkBox = 0);
 
     this.checkTotal = 0;
     this.searchResults.forEach((el: any) => {
@@ -152,15 +173,48 @@ export class ItemsComponent implements OnInit {
   }
 
   open(content: any) {
-
     this.modalService.open(content);
+  }
+
+  openLookUpModal(content: any) {
+    this.modalService.open(content);
+    this.loading = true;
+    const url = environment.api + '../menu/menuLookup/';
+    this.http
+      .get<any>(url, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.loading = false;
+          this.lookupItems = data['results'];
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+  lookupName: string = '';
+  onLookUpSelect(node: any) {
+    this.loading = true;
+    this.modalService.dismissAll();
+    this.lookupName = node['name'];
+    // this.router.navigate([], {
+    //   queryParams: {
+    //     id: node['id'],
+    //   },
+    //   queryParamsHandling: 'merge', // Merge with existing query params
+    //   replaceUrl: true, // Replace the current history entry
+    // });
+
+    this.httpMenu(node['id']);
   }
 
   handleData(data: string) {
     let value = '';
 
-
-    value = this.addQty.toString()
+    value = this.addQty.toString();
     if (data == 'b') {
       value = value.slice(0, -1);
       if (value.length < 1) {
@@ -170,13 +224,19 @@ export class ItemsComponent implements OnInit {
       value = value + data;
     }
     this.addQty = parseInt(value);
-
   }
   searchTerm = '';
   searchResults: any = [];
   searchByName() {
-    this.searchResults = this.items.filter((item: { name: string; }) =>
+    this.searchResults = this.items.filter((item: { name: string }) =>
       item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
+  }
+
+  clear() {
+    if (this.lookupName != '') {
+      this.httpMenu();
+      this.lookupName = '';
+    }
   }
 }
