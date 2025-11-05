@@ -78,8 +78,7 @@ export const routes: Routes = [
     { path: 'daily/start', component: DailyStartComponent, canActivate: [authGuard,terminalGuard, loginGuard] },
     { path: 'daily/close', component: DailyCloseComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'daily/cashBalance', component: DailyCashBalanceComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
-
-   
+ 
 
     { path: 'terminalRelogin', component: TerminalReloginComponent },
 

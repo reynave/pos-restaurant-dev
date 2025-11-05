@@ -1,0 +1,193 @@
+<form (ngSubmit)="onSubmit()" #cashbackForm="ngForm">
+    <table class="table table-sm">
+        <tbody>
+            <tr>
+                <td><label for="id">ID:</label></td>
+                <td>
+                    <input type="number" id="id" name="id" [(ngModel)]="model.id" readonly
+                        class="form-control form-control-sm" />
+                </td>
+            </tr>
+            <tr>
+                <td><label for="name">Name:</label></td>
+                <td>
+                    <input type="text" id="name" name="name" [(ngModel)]="model.name"
+                        class="form-control form-control-sm" />
+                </td>
+            </tr>
+            <tr>
+                <td><label for="description">Description:</label></td>
+                <td>
+                    <textarea id="description" name="description" [(ngModel)]="model.description"
+                        class="form-control form-control-sm"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="earningStartDate">Earning Start Date:</label></td>
+                <td>
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="earningStartDate"
+                            [(ngModel)]="model.earningStartDate" ngbDatepicker #earningStartDatePicker="ngbDatepicker"
+                            required />
+                        <button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+                            (click)="earningStartDatePicker.toggle()" type="button"></button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="earningEndDate">Earning End Date:</label></td>
+                <td>
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="earningEndDate"
+                            [(ngModel)]="model.earningEndDate" ngbDatepicker #earningEndDatePicker="ngbDatepicker"
+                            required />
+                        <button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+                            (click)="earningEndDatePicker.toggle()" type="button"></button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="redeemStartDate">Redeem Start Date:</label></td>
+                <td>
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="redeemStartDate"
+                            [(ngModel)]="model.redeemStartDate" ngbDatepicker #redeemStartDatePicker="ngbDatepicker"
+                            required />
+                        <button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+                            (click)="redeemStartDatePicker.toggle()" type="button"></button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="redeemEndDate">Redeem End Date:</label></td>
+                <td>
+                    <div class="input-group">
+                        <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="redeemEndDate"
+                            [(ngModel)]="model.redeemEndDate" ngbDatepicker #redeemEndDatePicker="ngbDatepicker"
+                            required />
+                        <button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+                            (click)="redeemEndDatePicker.toggle()" type="button"></button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Link to payment</label></td>
+                <td>
+                    <div *ngFor="let x of payment">
+                        {{ x.name }} : {{ x.id }} <br />
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary" (click)="open(linkPaymentModal)">Link Payment
+                        Method</button>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="status">Status:</label></td>
+                <td>
+                     <a href="javascript:;" (click)=" model.status == 0 ? model.status = 1 : model.status = 0">
+                        <i *ngIf="model.status == 0" class="bi bi-square"></i>
+                        <i *ngIf="model.status == 1" class="bi bi-check-square"></i>
+                    </a>  
+                </td>
+            </tr>
+            <tr>
+                <td><label for="x1">Can earn repeatedly after Redeem another cashback :</label></td>
+                <td>
+                   <a href="javascript:;" (click)=" model.x1 == 0 ? model.x1 = 1 : model.x1 = 0">
+                        <i *ngIf="model.x1 == 0" class="bi bi-square"></i>
+                        <i *ngIf="model.x1 == 1" class="bi bi-check-square"></i>
+                    </a>  
+                </td>
+            </tr>
+             <tr>
+                <td><label for="x2">Redeem spending amount exclude discount tax and SC:</label></td>
+                <td>
+                    <a href="javascript:;" (click)=" model.x2 == 0 ? model.x2 = 1 : model.x2 = 0">
+                        <i *ngIf="model.x2 == 0" class="bi bi-square"></i>
+                        <i *ngIf="model.x2 == 1" class="bi bi-check-square"></i>
+                    </a> 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <button type="submit">Save</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<table class="table table-sm mt-3">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th></th>
+            <th>Earn Min</th>
+            <th>Earn Max</th>
+            <th>Cashback Min</th>
+            <th>Cashback Max</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let x of cashbackAmounts; let i = index">
+            <td>{{ i+1 }}</td>
+            <td>
+                <a href="javascript:;" (click)=" x.checkbox == 0 ? x.checkbox = 1 : x.checkbox = 0">
+                    <i *ngIf="x.checkbox == 0" class="bi bi-square"></i>
+                    <i *ngIf="x.checkbox == 1" class="bi bi-check-square"></i>
+                </a>
+            </td>
+            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.earnMin" name="earnMin"
+                    class="form-control form-control-sm" /></td>
+            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.earnMax" name="earnMax"
+                    class="form-control form-control-sm" /></td>
+            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.cashbackMin"
+                    name="cashbackMin" class="form-control form-control-sm" /></td>
+            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.cashbackMax"
+                    name="cashbackMax" class="form-control form-control-sm" /></td>
+            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.status" name="status"
+                    class="form-control form-control-sm" /></td>
+
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">
+                <button type="button" class="btn btn-sm btn-danger ms-1" (click)="deleteAmount()">Delete</button>
+                <button type="button" class="btn btn-sm btn-warning ms-1" (click)="updateAmount()">Update</button>
+                <button type="button" class="btn btn-sm btn-success ms-1" (click)="addAmount()">Add</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<ng-template #linkPaymentModal let-modal>
+    <div class="modal-header">
+        <strong class="modal-title" id="modal-basic-title">Link Payment Method</strong>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-12 mb-3" *ngFor="let x of selectPaymentMethods">
+                <strong>{{ x.name }}</strong>
+                <div class="row">
+                    <div class="col-3" *ngFor="let a of x.linkToPayment">
+                        <a href="javascript:;" (click)=" a.checkbox == 0 ? a.checkbox = 1 : a.checkbox = 0">
+                            <i *ngIf="a.checkbox == 0" class="bi bi-square"></i>
+                            <i *ngIf="a.checkbox == 1" class="bi bi-check-square"></i>
+
+                             {{a.name}}
+                        </a>
+                        
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+   <div class="modal-footer sticky-bottom bg-light">
+        <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+        <button type="button" class="btn btn-primary" (click)="updatePaymentLink()" >Save changes</button>   
+    </div>
+
+</ng-template>

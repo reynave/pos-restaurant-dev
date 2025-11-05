@@ -66,6 +66,8 @@ import { TransactionComponent } from './module/report/transaction/transaction.co
 import { UserLoginReportComponent } from './module/report/user-login-report/user-login-report.component';
 import { TransactionDetailComponent } from './module/report/transaction/transaction-detail/transaction-detail.component';
 import { PrinterGroupComponent } from './module/workstation/printer-group/printer-group.component';
+import { CashbackComponent } from './module/general/cashback/cashback.component';
+import { CashbackDetailComponent } from './module/general/cashback/cashback-detail/cashback-detail.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -161,6 +163,9 @@ export const routes: Routes = [
   { path: 'tableMap/template', component: TableMapTemplateComponent },
 
   { path: 'floorMap', component: FloorMapComponent },
+
+  { path: 'cashback', component: CashbackComponent },
+  { path: 'cashback/detail', component: CashbackDetailComponent },
 
   { path: '**', component: PageNotFoundComponent },
 ];
