@@ -120,9 +120,9 @@
         <tr>
             <th>#</th>
             <th></th>
-            <th>Earn Min</th>
+            <!-- <th>Earn Min</th> -->
             <th>Earn Max</th>
-            <th>Cashback Min</th>
+            <!-- <th>Cashback Min</th> -->
             <th>Cashback Max</th>
             <th>Status</th>
         </tr>
@@ -136,16 +136,22 @@
                     <i *ngIf="x.checkbox == 1" class="bi bi-check-square"></i>
                 </a>
             </td>
-            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.earnMin" name="earnMin"
-                    class="form-control form-control-sm" /></td>
+            <!-- <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.earnMin" name="earnMin"
+                    class="form-control form-control-sm" /></td> -->
             <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.earnMax" name="earnMax"
                     class="form-control form-control-sm" /></td>
-            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.cashbackMin"
-                    name="cashbackMin" class="form-control form-control-sm" /></td>
+            <!-- <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.cashbackMin"
+                    name="cashbackMin" class="form-control form-control-sm" /></td> -->
             <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.cashbackMax"
                     name="cashbackMax" class="form-control form-control-sm" /></td>
-            <td><input type="text" currencyMask [currencyMask]="optCurrencyMask" [(ngModel)]="x.status" name="status"
-                    class="form-control form-control-sm" /></td>
+            <td>
+                <select [(ngModel)]="x.status" name="status" class="form-select form-select-sm">
+                    <option value="1" [selected]="x.status == 1">Active</option>
+                    <option value="0" [selected]="x.status == 0">Inactive</option>
+                </select>
+               
+                
+                </td>
 
         </tr>
     </tbody>
