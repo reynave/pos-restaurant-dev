@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -10,6 +10,10 @@ import { DailyCloseComponent } from '../daily/daily-close/daily-close.component'
 import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
 import { SocketService } from './../../service/socket.service';
 import { UserLoggerService } from '../../service/user-logger.service';
+
+import { InactivityService } from '../../service/inactivity.service';
+import { Subscription } from 'rxjs';
+
 
 export class Actor {
   constructor(
@@ -33,7 +37,9 @@ export class Actor {
   templateUrl: './tables.component.html',
   styleUrl: './tables.component.css',
 })
-export class TablesComponent implements OnInit {
+export class TablesComponent implements OnInit, OnDestroy {
+   private inactivitySubscription!: Subscription;
+
   loading: boolean = false;
   lock: boolean = true;
   current: number = 0;
@@ -69,16 +75,30 @@ export class TablesComponent implements OnInit {
     public modalService: NgbModal,
     private router: Router,
     private socketService: SocketService,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    private inactivityService: InactivityService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
     });
   }
+  ngOnDestroy(): void {
+    // Bersihkan langganan untuk mencegah kebocoran memori
+    if (this.inactivitySubscription) {
+      this.inactivitySubscription.unsubscribe();
+    }
+  }
 
   ngOnInit() { 
-    
-      localStorage.removeItem('pos3.id');
+     this.inactivityService.startMonitoring();
+
+    // Berlangganan ke event ketidakaktifan
+    this.inactivitySubscription = this.inactivityService.inactivityDetected$.subscribe(() => {
+      //alert('Tidak ada aktivitas selama 10 detik!');
+      this.logOff();
+    });
+
+    localStorage.removeItem('pos3.id');
 
 
     if( this.configService.getConfigJson()['outlet']['posMode'] == "cashier"){

@@ -1106,3 +1106,18 @@
    </div>
 
 </ng-template>
+
+
+
+<ng-template #modalInfoPrinting let-modal>
+   <div class="modal-header">
+      <strong>Printing</strong>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+   </div>
+   <div class="modal-body">
+      {{printNote}}
+      {{printLoading}}
+      
+   </div>
+
+</ng-template>

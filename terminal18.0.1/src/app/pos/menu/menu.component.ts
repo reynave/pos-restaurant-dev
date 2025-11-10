@@ -49,6 +49,8 @@ export class Actor {
 export class MenuComponent implements OnInit, OnDestroy {
   @ViewChild('myInput') myInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('remarkInput') remarkInputRef!: ElementRef<HTMLInputElement>;
+  @ViewChild('modalInfoPrinting') modalInfoPrinting!: ElementRef<HTMLInputElement>;
+  
   loading: boolean = false;
   current: number = 0;
   checkboxAll: number = 0;
@@ -70,8 +72,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     subTotal: 0,
     sc: 0,
     tax: 0,
-    grandTotal: 0
-};
+    grandTotal: 0,
+  };
   modifiers: any = [];
   item: any = [];
   cart: any = [];
@@ -138,7 +140,15 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.screenWidth = window.innerWidth;
     });
   }
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    console.log('MENU EMIT : ngOnDestroy');
+    const data = {
+      terminalId: this.terminalId,
+      id: '',
+      tableId: this.table.id,
+    };
+    this.socketService.emit('message-from-client', data);
+  }
 
   fnCheckBoxAll() {
     if (this.checkBoxAll == false) {
@@ -196,10 +206,8 @@ export class MenuComponent implements OnInit, OnDestroy {
       }
     }
   }
- 
- 
+
   httpBillGrandTotal() {
-    
     this.http
       .get(this.api + 'payment/cart', {
         headers: this.configService.headers(),
@@ -210,14 +218,13 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           console.log('httpBill', data);
-          this.summary = data['data']['summary']; 
+          this.summary = data['data']['summary'];
           // data['data']['discountGroup'].forEach(
           //   (element: { [x: string]: any }) => {
           //     console.log(element);
           //     this.billDiscount += parseInt(element['amount'] || 0);
           //   }
           // );
-         
         },
         (error) => {
           console.log(error);
@@ -311,7 +318,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           this.loading = false;
-          this.items = data['items']; 
+          this.items = data['items'];
         },
         (error) => {
           console.log(error);
@@ -325,13 +332,13 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.http
       .get<any>(url, {
         headers: this.configService.headers(),
-        params: { 
+        params: {
           outletId: this.configService.getConfigJson()['outlet']['id'],
         },
       })
       .subscribe(
         (data) => {
-          this.loading = false; 
+          this.loading = false;
           this.discountGroup = data['items'];
         },
         (error) => {
@@ -362,7 +369,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   httpCart() {
-   
     this.loading = true;
     const url = this.api + 'menuItemPos/cart';
     this.http
@@ -400,7 +406,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   reload() {
-    this.checkBoxAll=false;
+    this.checkBoxAll = false;
     this.httpMenu();
     this.httpGetDiscountGroup();
     this.httpCart();
@@ -894,22 +900,26 @@ export class MenuComponent implements OnInit, OnDestroy {
     if (this.isChecked == false) {
       alert('Please check item first!');
     } else {
-    //  access = true;
+      //  access = true;
     }
 
     console.log(this.cart);
     outer: for (let i = 0; i < this.cart.length; i++) {
       const mods = this.cart[i]['modifier'] || [];
       for (let j = 0; j < mods.length; j++) {
-      if (mods[j]['applyDiscount'] == 1) {
-        // jika user menolak, keluar dari fungsi dan jangan jalankan if(access) di bawah
-        if (!confirm('A discount has already been applied. Do you want to proceed?')) {
-        return;
+        if (mods[j]['applyDiscount'] == 1) {
+          // jika user menolak, keluar dari fungsi dan jangan jalankan if(access) di bawah
+          if (
+            !confirm(
+              'A discount has already been applied. Do you want to proceed?'
+            )
+          ) {
+            return;
+          }
+          // jika user setuju, set access dan keluar dari kedua loop untuk melanjutkan ke if(access)
+          access = true;
+          break outer;
         }
-        // jika user setuju, set access dan keluar dari kedua loop untuk melanjutkan ke if(access)
-        access = true;
-        break outer;
-      }
       }
     }
 
@@ -921,49 +931,49 @@ export class MenuComponent implements OnInit, OnDestroy {
     if (access) {
       this.loading = true;
       const body = {
-      cart: this.cart,
-      remark: this.remark,
-      cartId: this.id,
-      discountGroup: a,
+        cart: this.cart,
+        remark: this.remark,
+        cartId: this.id,
+        discountGroup: a,
       };
       console.log(body);
       const url = this.api + 'menuItemPos/addDiscountGroup';
       this.http
-      .post<any>(url, body, {
-        headers: this.configService.headers(),
-      })
-      .subscribe(
-        (data) => {
-        this.remark = '';
-        this.modalService.dismissAll();
-        console.log(data);
-        this.reload();
-        this.results = data['results'];
-        this.logService.logAction(
-          'Apply Discount Group ' +
-          a['name'] +
-          '(' +
-          a['id'] +
-          ') @' +
-          a['discRate'] +
-          '%',
-          this.id
+        .post<any>(url, body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            this.remark = '';
+            this.modalService.dismissAll();
+            console.log(data);
+            this.reload();
+            this.results = data['results'];
+            this.logService.logAction(
+              'Apply Discount Group ' +
+                a['name'] +
+                '(' +
+                a['id'] +
+                ') @' +
+                a['discRate'] +
+                '%',
+              this.id
+            );
+          },
+          (error) => {
+            console.log(error);
+            this.logService.logAction(
+              'ERROR Apply Discount Group ' +
+                a['name'] +
+                '(' +
+                a['id'] +
+                ') @' +
+                a['discRate'] +
+                '%',
+              this.id
+            );
+          }
         );
-        },
-        (error) => {
-        console.log(error);
-        this.logService.logAction(
-          'ERROR Apply Discount Group ' +
-          a['name'] +
-          '(' +
-          a['id'] +
-          ') @' +
-          a['discRate'] +
-          '%',
-          this.id
-        );
-        }
-      );
     }
   }
 
@@ -985,12 +995,13 @@ export class MenuComponent implements OnInit, OnDestroy {
           (data) => {
             console.log(data);
             this.logService.logAction('Send Order & Print Queue', this.id);
-
-            if (this.autoBack) {
-              this.back();
+            if(data['printQueue'] && data['printQueue'].length > 0){ 
+           
+               this.tableCheckerDetail(data['sendOrder']);
+            }else{
+                this.back();
             }
-
-            //this.printQueue(data['sendOrder']);
+           
           },
           (error) => {
             console.log(error);
@@ -998,6 +1009,69 @@ export class MenuComponent implements OnInit, OnDestroy {
           }
         );
     }
+  }
+
+  tableCheckerDetail(so: string) {
+    this.http
+      .get(this.api + 'menuItemPos/tableCheckerDetail', {
+        params: {
+          so: so,
+        },
+        responseType: 'text',
+      })
+      .subscribe(
+        (data) => { 
+          this.fnDirectPrint(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+  
+
+
+ 
+  fnDirectPrint(htmlBill: string) {
+    const a = this.modalService.open(this.modalInfoPrinting, { size: 'md' });
+    a.result.finally(() => {
+      this.back();
+    });
+
+
+
+
+
+    this.printNote = "Printing, please wait...";
+    console.log("fnDirectPrint", htmlBill);
+    this.printLoading = true;
+    const config = this.configService.getConfigJson();
+    const body = {
+      message: htmlBill,
+      printer: config.printer,
+    };
+
+    this.http
+      .post(this.api + 'printing/print', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+             this.modalService.dismissAll();
+          this.printNote = 'Print Success';
+          this.printLoading = false;
+        },
+        (error) => {
+          this.printNoteError = true;
+          this.printLoading = false;
+          console.log(error);
+          this.printNote = 'ERROR ' + error.error.detail;
+          alert("ERROR Print: " + error.error.detail);
+          this.modalService.dismissAll();
+          this.back();
+        }
+      );
   }
 
   exitWithoutOrder() {
@@ -1321,7 +1395,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       this.logService.logAction(
         'Change table with ' + x.tableName + ' ?',
         this.id
-      ); 
+      );
       if (confirm('Change table with ' + x.tableName + ' ?')) {
         this.loading = true;
         const body = {
@@ -1340,7 +1414,7 @@ export class MenuComponent implements OnInit, OnDestroy {
           .subscribe(
             (data) => {
               console.log(data);
-            //  this.back();
+              //  this.back();
               this.logService.logAction(
                 'Change to table :' + x.tableName,
                 this.id
@@ -1388,7 +1462,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.modalService.open(content);
   }
 
-  onVoidItem(){
+  onVoidItem() {
     this.router.navigate(['menu/voidItem'], { queryParams: { id: this.id } });
   }
 }
