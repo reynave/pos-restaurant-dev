@@ -23,12 +23,14 @@ export class SettingComponent implements OnInit {
   terminal : any = [];
     keyLicense : any = {};
   api : string = '';
+  timerLogoff : number = 30;
   constructor(
     public configService: ConfigService,
     public logService: UserLoggerService,
     private http: HttpClient,
   ) { }
   ngOnInit(): void {
+    this.timerLogoff = parseInt(localStorage.getItem('pos3.inactivityTimeout') || '30000') /1000;
      this.api = this.configService.getApiUrl();
     this.config = this.configService.getConfigJson();
     this.httpCheckKey();
@@ -90,6 +92,12 @@ export class SettingComponent implements OnInit {
         }
       )
     }
+  }
+  note1: string = '';
+  update1(){
+    const timerdata =  this.timerLogoff * 1000;
+    localStorage.setItem("pos3.inactivityTimeout",timerdata.toString());
+     this.note1 = 'Saved';
   }
 
 }

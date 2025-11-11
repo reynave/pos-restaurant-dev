@@ -55,6 +55,26 @@
 
         <div class="col-6">
             <div class="order-panel">
+                <strong>TABLE LOGOUT TIME</strong>
+                <div>
+                     <small>
+                     <em>Untuk halaman TABLE jika tidak ada interaksi maka akan otomatis logout setiap {{timerLogoff}} detik</em>
+                   </small>
+                </div>
+                <div class="mb-3"> 
+                    <table class="table ">
+                        <tbody>
+                            <tr>
+                                <td>In Second</td>
+                                <td><input type="number" class="form-control form-control-sm" [(ngModel)]="timerLogoff">
+                                     <div>{{note1}}</div>
+                                </td>
+                                <td> <button type="button" class="btn btn-sm btn-primary" (click)="update1()">Update</button> </td>
+                            </tr> 
+                        </tbody> 
+                    </table>
+                   
+                </div>
                 <strong>TERMINAL KEY</strong>
                 <table class="table ">
                     <tbody>
