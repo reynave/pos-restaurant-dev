@@ -14,14 +14,18 @@ export class UserLoggerService {
   ) { }
 
   logAction(action: string, cartId : string = '') {
-    
+
+    const timezoneOffset = parseInt(localStorage.getItem("pos3.timezone") || '7'); // Set your desired timezone offset here
     const logData = {
-      timestamp: new Date(),
-      action,
-      cartId : cartId,
-      userId: this.configService.getTokenJson()['name'] + "(" + this.configService.getTokenJson()['id'] + ")", // opsional, bisa dari auth
-      outletId : this.configService.getConfigJson()['outlet']['name']+"("+this.configService.getConfigJson()['outlet']['id']+")",
-      terminalId : localStorage.getItem( this.configService.nameOfterminal()),
+      actionDate : new Date(new Date().getTime() + (timezoneOffset * 60 * 60 * 1000)).toISOString().slice(0, 19).replace('T', ' '),
+      bill : cartId,
+      action : action,
+      dailyCheckId : this.configService.getDailyCheck(),
+      actionBy : this.configService.getTokenJson()['name'],
+      actionId :  this.configService.getTokenJson()['id'],
+      actionRelated : '',
+      terminalId : localStorage.getItem( this.configService.nameOfterminal()), 
+      outletId : this.configService.getConfigJson()['outlet']['id'],  
       url: window.location.href
     };
 
