@@ -109,7 +109,7 @@
 
 
                      @if(checkBoxAllScTax && x.modifier.length > 0){
-                        <!-- for tax -->
+                     <!-- for tax -->
                      <tr *ngFor="let a of x.modifier; let i = index" [hidden]="a.modifier == 1">
                         <td>
                            @if(a.sendOrder == ''){
@@ -560,11 +560,12 @@
             </div>
 
             <div *ngIf="activeTab === 'discount'">
-                <div class="alert alert-danger" *ngIf="results.length > 0">
+               <div class="alert alert-danger" *ngIf="results.length > 0">
                   <ul>
                      <li *ngFor="let x of results">{{x.status}}</li>
                   </ul>
-                  <div class="text-center"><button class="btn btn-sm btn-warning" (click)="results = '' ">Close</button> </div>
+                  <div class="text-center"><button class="btn btn-sm btn-warning" (click)="results = '' ">Close</button>
+                  </div>
                </div>
 
 
@@ -587,7 +588,7 @@
                   }
                </div>
 
-              
+
             </div>
 
             <div *ngIf="activeTab === 'kitchen'">
@@ -1041,7 +1042,10 @@
       <div class="row g-3">
          <div class="col-4">
             <div *ngFor="let x of sendOrderItems" class="mb-2 d-grid">
-               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm btn-primary">
+               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm "
+               [ngClass]="{'btn-secondary': isSO == x.sendOrder,
+                           'btn-outline-dark': isSO != x.sendOrder
+                           }">
                   {{x.sendOrder}}</button>
             </div>
          </div>
@@ -1107,7 +1111,7 @@
 
 </ng-template>
 
-
+ 
 
 <ng-template #modalInfoPrinting let-modal>
    <div class="modal-header">
@@ -1115,9 +1119,15 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
-      {{printNote}}
-      {{printLoading}}
-      
+      <div class="text-center">
+
+         <img *ngIf="printLoading" src="./gif/printing.gif" class="mx-auto d-block" alt="Printing..." width="150"
+            height="150">
+         <div class="my-4">
+            {{printNote}}
+            {{printLoading}}</div>
+      </div>
+
    </div>
 
 </ng-template>

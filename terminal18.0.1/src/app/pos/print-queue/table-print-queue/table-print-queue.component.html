@@ -75,17 +75,17 @@
                 <tr>
                     <td>Input Time</td>
                     <th scope="row">{{item.inputDate | date:'HH:mm'}}</th>
-                </tr>
-                <tr>
-                    <td>Console Error</td>
-                    <td>{{item.consoleError}}</td>
-                </tr>
-
+                </tr> 
             </tbody>
         </table>
 
-        <div class="p-1 border bg-light">
+        <div class="p-1 border bg-light mb-3">
             <pre class="font-monospace" [innerHTML]="template"></pre>
+        </div>
+
+        <div *ngIf="item.consoleError != ''" class="p-2 border ">
+            <div><small>Console Error Log:</small></div>
+            <code>{{item.consoleError}}</code>
         </div>
 
     </div>

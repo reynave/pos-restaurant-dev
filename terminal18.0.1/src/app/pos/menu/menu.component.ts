@@ -1066,10 +1066,9 @@ export class MenuComponent implements OnInit, OnDestroy {
           this.printNoteError = true;
           this.printLoading = false;
           console.log(error);
-          this.printNote = 'ERROR ' + error.error.detail;
-          alert("ERROR Print: " + error.error.detail);
+          this.printNote = 'ERROR ' + error.error.detail; 
           this.modalService.dismissAll();
-          this.back();
+           
         }
       );
   }
@@ -1170,8 +1169,9 @@ export class MenuComponent implements OnInit, OnDestroy {
         }
       );
   }
-
+  isSO : string = '';
   printTableChecker(so: string) {
+    this.isSO = so;
     this.http
       .get(this.api + 'menuItemPos/tableCheckerDetail', {
         params: {
