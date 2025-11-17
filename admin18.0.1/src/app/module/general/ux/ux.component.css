@@ -1,0 +1,12 @@
+/* Highlight elemen saat di-drag */
+.ui-state-highlight {
+    min-height: 40px;
+    min-width: 800px;
+    background-color: #fadfdf;
+    border: 1px solid #ccc;
+ 
+}
+
+.tr-disable td { 
+            opacity: 0.9; /* Transparansi 90% */
+}

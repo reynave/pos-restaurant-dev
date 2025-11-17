@@ -1,0 +1,79 @@
+<div class="row">
+    <div class="col-12">
+        <div class="header py-2">
+            <div class="row">
+                <div class="col-4">
+                    <strong>DRAG AND DROP SORTING</strong>
+                    <span class="mx-1" *ngIf="loading">
+                        <img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30">
+                    </span>
+                </div>
+                <div class="col-8 text-end">
+                    <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary border me-2" (click)="onSave()">Save
+                        Status</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mainContent border">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped">
+                    <thead class="sticky-top">
+                        <tr>
+                            <th>#</th>
+                            <th><a href="javascript:;" (click)="checkAll();">
+                                    @if(checkboxAll == 1){
+                                    <i class="bi bi-check-square-fill"></i>
+                                    }@else {
+                                    <i class="bi bi-square"></i>
+                                    }
+                                </a></th>
+                            <th>Name</th>
+                            <th>Class Color Button</th>
+                            <th>Sorting</th>
+
+                        </tr>
+                    </thead>
+                    <tbody id="sortable">
+                        <tr *ngFor="let item of items; let i = index" [class]="item.status == 0 ? 'tr-disable' : ''">
+                            <td>{{ i + 1 }}</td>
+                            <td>
+                                <a href="javascript:;" (click)="item.status == 1 ? item.status = 0 : item.status = 1">
+                                    <i *ngIf="item.status == 1" class="bi bi-check-square-fill"></i>
+                                    <i *ngIf="item.status != 1" class="bi bi-square"></i>
+                                </a>
+
+                            </td>
+                            <td>
+
+                                <div class="d-grid btn btn-sm btn-{{item.class}}">
+                                    {{ item.name }} 
+                                </div>
+
+                            </td>
+                            <td>
+                                <select class="form-control form-control-sm py-1" [(ngModel)]="item.class">
+                                    <option [value]="'warning'"> warning </option>
+                                    <option [value]="'primary'"> primary </option>
+                                    <option [value]="'success'"> success </option>
+                                    <option [value]="'danger'"> danger </option>
+                                    <option [value]="'info'"> info </option>
+                                    <option [value]="'secondary'"> secondary </option>
+                                    <option [value]="'dark'"> dark </option>
+                                    <option [value]="'light'"> light </option>
+
+                                </select>
+                            </td>
+                            <td>
+                                <div class="handle btn btn-sm" [attr.data-id]="item.id">
+                                    <i class="bi bi-arrows-vertical"></i> <small>Move and draggable</small>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

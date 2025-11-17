@@ -68,6 +68,7 @@ import { TransactionDetailComponent } from './module/report/transaction/transact
 import { PrinterGroupComponent } from './module/workstation/printer-group/printer-group.component';
 import { CashbackComponent } from './module/general/cashback/cashback.component';
 import { CashbackDetailComponent } from './module/general/cashback/cashback-detail/cashback-detail.component';
+import { UxComponent } from './module/general/ux/ux.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -166,6 +167,9 @@ export const routes: Routes = [
 
   { path: 'cashback', component: CashbackComponent },
   { path: 'cashback/detail', component: CashbackDetailComponent },
+
+  { path: 'ux', component: UxComponent },
+ 
 
   { path: '**', component: PageNotFoundComponent },
 ];
