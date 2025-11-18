@@ -1,14 +1,12 @@
 <div class="row">
    <div class="col-12 ">
-
-
+ 
       <div class="header py-2">
          <div class="row">
             <div class="col-3">
                <strong>EMPLOYEE</strong> <span class="btn btn-sm me-2"> </span>
             </div>
-            <div class="col-9 text-end">
-
+            <div class="col-9 text-end"> 
                @if(disabled==false){
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
@@ -19,50 +17,11 @@
                }
                @else {
                <button type="button" class="btn btn-sm btn-light border me-2"
-                  (click)="disabled= false">Editable</button>
+                  (click)="disabled= false">Editable</button>  
+               }
 
-
-               <!-- <div ngbDropdown class="d-inline-block " container="body">
-                  <button type="button" class="btn btn-sm btn-light border me-2" id="dropdownBasic1" ngbDropdownToggle>
-                     Filter
-                  </button>
-                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                     <div class="px-3">
-                        <div class="mb-2">
-                           <label><small>Select Employee Dept</small></label>
-                           <select class="form-control form-control-sm  me-2" [(ngModel)]="filterDept">
-                              <option [value]="''"> - All -</option>
-                              <option *ngFor="let a of selectDept" [value]="a.empdept">{{a.desc1}}</option>
-                           </select>
-
-                        </div>
-
-                        <div class="mb-2">
-                           <label><small>Select authlevel</small></label>
-                           <select class="form-control form-control-sm  me-2" [(ngModel)]="filterAuthLevel">
-                              <option [value]="''"> - All -</option>
-                              <option *ngFor="let a of selectAuthLevel" [value]="a.authlevel">{{a.desc1}}</option>
-                           </select>
-
-                        </div>
-
-                        <div class="mb-2">
-                           <label><small>Select selectOrdLevel</small></label>
-                           <select class="form-control form-control-sm  me-2" [(ngModel)]="filterOrdLevel">
-                              <option [value]="''"> - All -</option>
-                              <option *ngFor="let a of selectOrdLevel" [value]="a.ordlevel">{{a.desc1}}</option>
-                           </select>
-
-                        </div>
-                     </div>
-
-
-
-                     <button ngbDropdownItem (click)="httpGet();">Filter</button>
-                  </div>
-               </div> -->
-
-
+               @if(authlevelId != null){
+               <a href="javascript:;" class="btn btn-sm btn-light" [routerLink]="['/employee/authLevel/accessRight']"  [queryParams]="{id:authlevelId}" > Modify Access Right</a>
                }
 
                <span class="mx-1" *ngIf="loading">

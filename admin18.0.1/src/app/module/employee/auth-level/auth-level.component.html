@@ -47,7 +47,8 @@
                            </a>
                         </th>
                         <th>#</th>
-                        <th>name</th>
+                        <th>Name</th>
+                        <th>Access Right</th>
                         <th>inputDate</th>
 
                      </tr>
@@ -65,7 +66,7 @@
                         <td>{{i+1}}</td>
                         <td><input type="text" class="form-control form-control-sm" [(ngModel)]="x.name"
                               [disabled]="disabled"> </td>
-
+                        <td> <a href="javascript:;" [routerLink]="['/employee/authLevel/accessRight']" [queryParams]="{id:x.id}" class="btn btn-sm btn-primary">Modify Access Right</a></td>
                         <td>{{ x.inputDate | date:'medium'}} </td>
 
                      </tr>

@@ -9,7 +9,7 @@ import {
   NgbDropdownModule,
   NgbModal,
 } from '@ng-bootstrap/ng-bootstrap';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 export class Actor {
   constructor(
     public username: string,
@@ -35,11 +35,12 @@ export class Hero {
     HttpClientModule,
     CommonModule,
     FormsModule,
+    RouterModule,
     NgbDropdownModule,
     NgbDatepickerModule,
   ],
   templateUrl: './employee.component.html',
-  styleUrl: './employee.component.css',
+  styleUrls: ['./employee.component.css'],
 })
 export class EmployeeComponent implements OnInit {
   loading: boolean = false;

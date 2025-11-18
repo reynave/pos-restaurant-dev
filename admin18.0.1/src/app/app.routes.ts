@@ -69,12 +69,14 @@ import { PrinterGroupComponent } from './module/workstation/printer-group/printe
 import { CashbackComponent } from './module/general/cashback/cashback.component';
 import { CashbackDetailComponent } from './module/general/cashback/cashback-detail/cashback-detail.component';
 import { UxComponent } from './module/general/ux/ux.component';
+import { AccessRightComponent } from './module/employee/auth-level/access-right/access-right.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'employee', component: EmployeeComponent },
   { path: 'employee/authLevel', component: AuthLevelComponent },
+  { path: 'employee/authLevel/accessRight', component: AccessRightComponent },
   { path: 'employee/dept', component: DeptEmployeeComponent },
   { path: 'employee/orderLevel', component: OrderLevelEmployeeComponent },
 
