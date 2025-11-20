@@ -341,7 +341,7 @@
          </div>
 
          <ul class="nav nav-pills mb-2">
-            <li class="nav-item" *ngIf="posMode != 'cashier'">
+            <li class="nav-item" *ngIf="posMode != 'cashier'" >
                <a class="nav-link" (click)="sendOrder();">
                   <i class="bi bi-fork-knife"></i> Send Order
                </a>
@@ -352,11 +352,15 @@
                </a>
             </li>
 
-            <li class="nav-item"><a class="nav-link" (click)="activeTab = 'info'">
-                  <i class="bi bi-question-circle"></i> INFO</a></li>
+            <li class="nav-item">
+               <a class="nav-link" (click)="activeTab = 'info'">
+                  <i class="bi bi-question-circle"></i> INFO</a>
+            </li>
 
-            <li class="nav-item"><a class="nav-link" (click)="openComponent(id);logService.logAction('Click BILL', id)">
-                  <i class="bi bi-receipt-cutoff"></i> Bill</a></li>
+            <li class="nav-item">
+               <a class="nav-link" (click)="openComponent(id);logService.logAction('Click BILL', id)">
+                  <i class="bi bi-receipt-cutoff"></i> Bill</a>
+            </li>
 
          </ul>
 
@@ -387,87 +391,134 @@
          <div class="tab-content px-2">
 
             <div *ngIf="activeTab === 'function'">
+ 
                <div class="row g-2">
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="btn-primary" [disabled]="cart.length < 1 || lock"
+
+                  @if(uxMenu['send_order']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['send_order'] ? uxMenu['send_order']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['send_order']['class']]" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
                         <i class="bi bi-fork-knife"></i> SEND ORDER</button>
                   </div>
-                  <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" class="btn-primary"
+                  }
+                  @if(uxMenu['bill']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['bill'] ? uxMenu['bill']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['bill']['class']]"
                         (click)="openComponent(id);logService.logAction('Click BILL', id)">
                         <i class="bi bi-receipt-cutoff"></i> BILL</button>
                   </div>
-                  <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" [disabled]="table.tableMapStatusId < 13 "
-                        class="btn-success" (click)="payment()">
+                  }
+                  @if(uxMenu['payment']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['payment'] ? uxMenu['payment']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]" [disabled]="table.tableMapStatusId < 13 "
+                        (click)="payment()">
                         <i class="bi bi-credit-card"></i>
                         PAYMENT</button>
 
                   </div>
+                  }
 
+                  @if(uxMenu['info']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['info'] ? uxMenu['info']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['info']['class']]" [disabled]="table.tableMapStatusId < 13 "
+                        (click)="openComponent(id);logService.logAction('Click INFO', id)">
+                        <i class="bi bi-question-circle"></i>
+                        INFO</button>
+                  </div>
+                  }
 
-                  <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" class="btn-danger" (click)="exitWithoutOrder();"><i
+                  @if(uxMenu['exit_without_order']){
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['exit_without_order'] ? uxMenu['exit_without_order']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['exit_without_order']['class']]" (click)="exitWithoutOrder();"><i
                            class="bi bi-trash"></i>
                         EXIT WITHOUT ORDER</button>
                   </div>
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [disabled]="lock" [class]="cssClass" class="btn-warning"
+                  }
+
+                  @if(uxMenu['transfer_items']){
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['transfer_items'] ? uxMenu['transfer_items']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_items']['class']]"
                         (click)="transferItemsGroup()"> <i class="bi bi-send-plus"></i>
                         TRANSFER ITEMS
                      </button>
                   </div>
+                  }
 
-                  <div class="col-3 d-grid">
-                     <button type="button" [disabled]="lock" [class]="cssClass" class="btn-light" (click)="takeOut()">
+                  @if(uxMenu['take_out']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['take_out'] ? uxMenu['take_out']['order'] : ''">
+                     <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['take_out']['class']]" (click)="takeOut()">
                         <i class="bi bi-bag-check"></i>
                         TAKE OUT</button>
                   </div>
+                  }
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="btn-light" (click)="openTables(modalMergeCheck)">
+                  @if(uxMenu['merger']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['merger'] ? uxMenu['merger']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger']['class']]" (click)="openTables(modalMergeCheck)">
                         <i class="bi bi-intersect"></i>
                         MERGE </button>
                   </div>
+                  }
 
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="btn-light"
+                  @if(uxMenu['change_cover']){
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['change_cover'] ? uxMenu['change_cover']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_cover']['class']]"
                         (click)="model.newQty = 0; openSm(modalChangeCover)">
                         <i class="bi bi-people"></i>
                         CHANGE COVER </button>
                   </div>
-
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="btn-light" (click)="openTables(modalChangeTable)">
+                  }
+                  @if(uxMenu['change_table']){
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['change_table'] ? uxMenu['change_table']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_table']['class']]" (click)="openTables(modalChangeTable)">
                         <i class="bi bi-arrow-repeat"></i>
                         CHANGE TABLE </button>
                   </div>
-
-
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="bg-white border" (click)="transferLog()">
+                  }
+                  @if(uxMenu['transfer_log']){ 
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['transfer_log'] ? uxMenu['transfer_log']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_log']['class']]" (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
                         TRANSFER LOG</button>
                   </div>
-                  <div class="col-3 d-grid" *ngIf="posMode != 'cashier'">
-                     <button type="button" [class]="cssClass" class="bg-white border" (click)="mergerLog()">
+                  }
+                  @if(uxMenu['merger_log']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['merger_log'] ? uxMenu['merger_log']['order'] : ''"
+                     *ngIf="posMode != 'cashier'">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger_log']['class']]" (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
                         MERGE LOG</button>
                   </div>
-
-                  <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" class="btn-danger" (click)="onVoidTransaction()">
+                  }
+                  @if(uxMenu['void_transaction']){
+                  <div class="col-3 d-grid"
+                     [style.order]="uxMenu['void_transaction'] ? uxMenu['void_transaction']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_transaction']['class']]" (click)="onVoidTransaction()">
                         <i class="bi bi-x-lg"></i> VOID TRANSCTION</button>
                   </div>
-
-                  <div class="col-3 d-grid">
-                     <button type="button" [class]="cssClass" class="btn-danger" (click)="onVoidItem()">
-                        <i class="bi bi-x-lg"></i> VOID ITEM</button>
+                  }
+                  @if(uxMenu['void_item']){
+                  <div class="col-3 d-grid" [style.order]="uxMenu['void_item'] ? uxMenu['void_item']['order'] : ''">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_item']['class']]" (click)="onVoidItem()">
+                        <i class="bi bi-x-lg"></i> VOID ITEM </button>
                   </div>
+                  }
                </div>
             </div>
+
+ 
 
             <div *ngIf="activeTab === 'menu'">
 
@@ -1042,8 +1093,7 @@
       <div class="row g-3">
          <div class="col-4">
             <div *ngFor="let x of sendOrderItems" class="mb-2 d-grid">
-               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm "
-               [ngClass]="{'btn-secondary': isSO == x.sendOrder,
+               <button type="button" (click)="printTableChecker(x.sendOrder)" class="btn btn-sm " [ngClass]="{'btn-secondary': isSO == x.sendOrder,
                            'btn-outline-dark': isSO != x.sendOrder
                            }">
                   {{x.sendOrder}}</button>
@@ -1111,7 +1161,7 @@
 
 </ng-template>
 
- 
+
 
 <ng-template #modalInfoPrinting let-modal>
    <div class="modal-header">

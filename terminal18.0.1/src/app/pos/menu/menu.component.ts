@@ -191,6 +191,8 @@ export class MenuComponent implements OnInit, OnDestroy {
       alert('ERROR, ngOnInit() id == undefined ');
       this.router.navigate(['error']);
     } else {
+      this.uxFunction();
+
       this.httpMenuLookUp(0);
       this.httpMenu();
       this.httpGetDiscountGroup();
@@ -206,6 +208,33 @@ export class MenuComponent implements OnInit, OnDestroy {
       }
     }
   }
+  uxMenu : any = [];
+  uxFunction(){
+    this.http
+      .get(this.api + 'ux', {
+        headers: this.configService.headers(), 
+      })
+      .subscribe(
+        (data: any) => {
+          const menu = data['menu']
+          console.log('uxFunction', data); 
+        
+          // Transformasi array menjadi objek
+        const transformedMenu = menu.reduce((acc : any, item :any) => {
+          acc[item.name.toLowerCase().replace(/\s+/g, "_")] = item;
+          return acc;
+        }, {});
+        this.uxMenu = transformedMenu;
+
+          console.log('uxFunction', this.uxMenu); 
+
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
+
 
   httpBillGrandTotal() {
     this.http
