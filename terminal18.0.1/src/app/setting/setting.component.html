@@ -7,10 +7,8 @@
         </div>
 
         <div class="col-6">
-            <div class="order-panel">
-
-
-                <strong>PRINTER</strong>
+            <div class="order-panel ">
+                <strong>LOCAL PRINTER</strong>
                 <table class="table table-bordered">
                     <tr>
                         <td class="align-self-center">Printer Connection</td>
@@ -37,43 +35,46 @@
                     </tr>
 
                     <tr>
-                        <td>Test Printing</td>
+                        <td>Note</td>
                         <td>
                             <div class="mb-1">
                                 <textarea class="form-control" rows="4" [(ngModel)]="printTest"></textarea>
                             </div>
                             <div class="d-grid ">
                                 <button type="button" (click)="onTestPrinting()" [disabled]="loading"
-                                    class="btn btn-lg btn-dark mx-1 ">TEST </button>
+                                    class="btn btn-lg btn-dark mx-1 ">TEST</button>
                             </div>
                         </td>
                     </tr>
                 </table>
                 <div class="alert alert-warning" *ngIf="restPrinter != ''">{{restPrinter}}</div>
-            </div>
+            </div> 
+           
         </div>
 
         <div class="col-6">
             <div class="order-panel">
                 <strong>TABLE LOGOUT TIME</strong>
                 <div>
-                     <small>
-                     <em>Untuk halaman TABLE jika tidak ada interaksi maka akan otomatis logout setiap {{timerLogoff}} detik</em>
-                   </small>
+                    <small>
+                        <em>Untuk halaman TABLE jika tidak ada interaksi maka akan otomatis logout setiap
+                            {{timerLogoff}} detik</em>
+                    </small>
                 </div>
-                <div class="mb-3"> 
+                <div class="mb-3">
                     <table class="table ">
                         <tbody>
                             <tr>
                                 <td>In Second</td>
                                 <td><input type="number" class="form-control form-control-sm" [(ngModel)]="timerLogoff">
-                                     <div>{{note1}}</div>
+                                    <div>{{note1}}</div>
                                 </td>
-                                <td> <button type="button" class="btn btn-sm btn-primary" (click)="update1()">Update</button> </td>
-                            </tr> 
-                        </tbody> 
+                                <td> <button type="button" class="btn btn-sm btn-primary"
+                                        (click)="update1()">Update</button> </td>
+                            </tr>
+                        </tbody>
                     </table>
-                   
+
                 </div>
                 <strong>TERMINAL KEY</strong>
                 <table class="table ">
@@ -97,6 +98,61 @@
                     </tbody>
 
                 </table>
+            </div>
+        </div>
+
+        <div class="col-12 mt-3">
+             <div class="order-panel">
+                <strong>GLOBAL PRINTER / PRINTER SERVICE</strong>
+
+              
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Group</th>
+                         
+                            <th>Name</th>
+                            <th>Con</th>
+                            <th>IP Address</th>
+                            <th>Port</th>
+                         
+                            <th>Name2</th>
+                            <th>Con 2</th>
+                            <th>IP Address 2</th>
+                            <th>Port 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let p of itemsPrinter">
+                            <td>{{p.group}}</td>
+                            
+                            <td>{{p.name}}</td>
+                            <td>{{p.printerTypeCon}}</td>
+                            <td>{{p.ipAddress}}</td>
+                            <td>{{p.port}}</td> 
+                            <td>{{p.name2}}</td>
+                            <td>{{p.printerTypeCon2}}</td>
+                            <td>{{p.ipAddress2}}</td>
+                            <td>{{p.port2}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+ 
+                <table class="table table-bordered"> 
+                    <tr>
+                        <td>Note</td>
+                        <td>
+                            <div class="mb-1">
+                                <textarea class="form-control" rows="4" [(ngModel)]="printTest"></textarea>
+                            </div>
+                            <div class="d-grid ">
+                                <button type="button"  [disabled]="loading"
+                                    class="btn btn-lg btn-dark mx-1 ">GLOBAL TEST</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="alert alert-warning" *ngIf="restPrinter != ''">{{restPrinter}}</div>
             </div>
         </div>
     </div>

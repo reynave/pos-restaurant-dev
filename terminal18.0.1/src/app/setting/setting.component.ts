@@ -33,12 +33,25 @@ export class SettingComponent implements OnInit {
     this.timerLogoff = parseInt(localStorage.getItem('pos3.inactivityTimeout') || '30000') /1000;
      this.api = this.configService.getApiUrl();
     this.config = this.configService.getConfigJson();
-    this.httpCheckKey();
+      this.httpCheckKey();
+    this.httpGetPrinters();
   }
   back() {
     history.back();
   }
-
+  itemsPrinter: any = [];
+  httpGetPrinters() {
+    const url = this.api + "printing/viewPrinters";
+    this.http.get<any>(url).subscribe(
+      data => {
+        console.log(data);
+        this.itemsPrinter = data;
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
 
   onUpdatePrinter() {
     this.logService.logAction('Update Printer')
