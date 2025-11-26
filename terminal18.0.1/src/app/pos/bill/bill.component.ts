@@ -81,7 +81,7 @@ export class BillComponent implements OnInit {
     this.httpCartBill();
     this.getCartCopyBill();
   }
-  summary : any = [];
+  summary: any = [];
   httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
@@ -243,12 +243,20 @@ export class BillComponent implements OnInit {
             console.log(data);
             this.printNote = 'Print Success';
             this.printLoading = false;
+            localStorage.removeItem('pos3.id');
+            setTimeout(() => {
+              history.back();
+            }, 1000);
           },
           (error) => {
             this.printNoteError = true;
             this.printLoading = false;
             console.log(error);
             this.printNote = 'ERROR ' + error.error.detail;
+            localStorage.removeItem('pos3.id');
+            setTimeout(() => {
+              history.back();
+            }, 1000);
           }
         );
     }
@@ -286,13 +294,14 @@ export class BillComponent implements OnInit {
         }
       );
   }
-
+  lockScreen: number = 0;
   printBill() {
+    this.lockScreen = 1;
     const body = {
       id: this.id,
       htmlBill: this.htmlBill,
       summary: this.summary,
-      groups : this.groups.length,
+      groups: this.groups.length,
     };
     console.log(body);
     this.http
@@ -307,7 +316,7 @@ export class BillComponent implements OnInit {
             this.createPayment();
           } else {
             this.reSendOrder();
-          } 
+          }
           console.log(data);
         },
         (error) => {
@@ -319,7 +328,7 @@ export class BillComponent implements OnInit {
   createTxtBill() {
     const body = {
       cartId: this.id,
-      htmlBill: this.htmlBill, 
+      htmlBill: this.htmlBill,
     };
     console.log(body);
     this.http

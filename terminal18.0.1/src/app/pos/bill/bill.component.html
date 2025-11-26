@@ -10,7 +10,7 @@
       <div class="col-6 bg-main rounded">
 
          <div class="p-3 text-end">
-            <button type="button" class="btn-close btn-lg " aria-label="Close"
+            <button type="button" [disabled]="lockScreen==1" class="btn-close btn-lg " aria-label="Close"
                (click)="activeModal.dismiss('Cross click')"></button>
          </div>
 
@@ -24,9 +24,9 @@
                   </div>
                }
                @else {
-                  <div class="text-center d-grid mx-5 mb-3">
+                  <!-- <div class="text-center d-grid mx-5 mb-3">
                      <button type="button" class="btn btn-lg btn-success py-3"   [disabled]="cart.paymentId === '' " (click)="payment()">PAYMENT</button>
-                  </div>
+                  </div> -->
                }
   
                <div class="text-center d-grid mx-5 mb-3"  *ngFor="let x of groups">

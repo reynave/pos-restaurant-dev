@@ -411,9 +411,8 @@ summary : any = {
             this.paymentIndex = -1;
           this.inputField = '';
           console.log(data);
-          this.httpCart();
-          this.httpPaid();
-          this.httpCartBill();
+       
+          this.reload();
           this.logService.logAction('Submit Payment', this.id);
         },
         (error) => {

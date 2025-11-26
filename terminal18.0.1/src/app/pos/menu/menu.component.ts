@@ -11,7 +11,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbDropdownModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
 import { BillComponent } from '../bill/bill.component';
@@ -134,11 +134,14 @@ export class MenuComponent implements OnInit, OnDestroy {
     private router: Router,
     private activeRouter: ActivatedRoute,
     public logService: UserLoggerService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    config: NgbModalConfig,
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
     });
+    config.backdrop = 'static';
+		config.keyboard = false;
   }
   ngOnDestroy(): void {
     console.log('MENU EMIT : ngOnDestroy');
@@ -640,12 +643,12 @@ export class MenuComponent implements OnInit, OnDestroy {
         // result berisi data yang dikirim dari BillComponent saat modal ditutup
         console.log('Data dari BillComponent:', result);
         this.id = this.activeRouter.snapshot.queryParams['id'];
-        this.reload();
+        //this.reload();
       },
       (reason) => {
         // modal ditutup tanpa data (dismiss)
         this.id = this.activeRouter.snapshot.queryParams['id'];
-        this.reload();
+       // this.reload();
         console.log('Modal dismissed:', reason);
       }
     );
@@ -677,6 +680,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         price: this.model.price,
         openPrice: openPrice,
       };
+      console.log(body);
       this.http
         .post<any>(this.api + 'menuItemPos/addToCart', body, {
           headers: this.configService.headers(),
@@ -1125,32 +1129,37 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onVoidTransaction() {
-    if (confirm('Are you sure  void this transaction ?')) {
-      const body = {
-        cartId: this.id,
-      };
-      const url = this.api + 'menuItemPos/voidTransacton';
-      this.http
-        .post<any>(url, body, {
-          headers: this.configService.headers(),
-        })
-        .subscribe(
-          (data) => {
-            this.logService.logAction('Exit Without Order', this.id);
-            console.log(data);
-            this.back();
-          },
-          (error) => {
-            console.log(error);
-            this.logService.logAction('ERROR Exit Without Order', this.id);
-          }
-        );
-    }
+    // if (confirm('Are you sure  void this transaction ?')) {
+    //   const body = {
+    //     cartId: this.id,
+    //   };
+    //   const url = this.api + 'menuItemPos/voidTransacton';
+    //   this.http
+    //     .post<any>(url, body, {
+    //       headers: this.configService.headers(),
+    //     })
+    //     .subscribe(
+    //       (data) => {
+    //         this.logService.logAction('Exit Without Order', this.id);
+    //         console.log(data);
+    //         this.back();
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //         this.logService.logAction('ERROR Exit Without Order', this.id);
+    //       }
+    //     );
+    // }
+    this.router
+      .navigate(['void'], { queryParams: { id: this.id , module:'menuItemPos', action:'voidTransaction'} })
+      .then(() => {
+        this.modalService.dismissAll();
+      });
   }
 
   payment() {
     this.logService.logAction('Click PAYMENT', this.id);
-    this.loading = true;
+    this.loading = true; 
     const body = {
       id: this.id,
     };
@@ -1161,17 +1170,15 @@ export class MenuComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (data) => {
+          this.modalService.dismissAll();
           console.log(data);
-
-          this.back();
-          setTimeout(() => {
-            this.router.navigate(['payment'], { queryParams: { id: this.id } });
-            this.logService.logAction('Update to payment', this.id);
-          }, 500);
+          //history.back();
+          //  setTimeout(() => {
+          this.router.navigate(['payment'], { queryParams: { id: this.id } });
+          // }, 500);
         },
         (error) => {
           console.log(error);
-          this.logService.logAction('ERROR Update to payment', this.id);
         }
       );
   }
@@ -1443,13 +1450,14 @@ export class MenuComponent implements OnInit, OnDestroy {
           .subscribe(
             (data) => {
               console.log(data);
-              //  this.back();
+              this.back();
               this.logService.logAction(
                 'Change to table :' + x.tableName,
                 this.id
               );
             },
             (error) => {
+              alert("ERROR changing table, please try again");
               console.log(error);
               this.logService.logAction(
                 'ERROR Change to table :' + x.tableName,

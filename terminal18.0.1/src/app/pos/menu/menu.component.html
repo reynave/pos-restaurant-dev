@@ -250,8 +250,7 @@
             </div>
          </div>
       </div>
-
-
+ 
       <!-- TABS / MENU -->
       <div class="col-7 col-lg-8 position-relative">
 
@@ -412,10 +411,9 @@
                   }
                   @if(uxMenu['payment']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['payment'] ? uxMenu['payment']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]" [disabled]="table.tableMapStatusId < 13 "
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]" [disabled]="table.paymentId == ''  "
                         (click)="payment()">
-                        <i class="bi bi-credit-card"></i>
-                        PAYMENT</button>
+                        <i class="bi bi-credit-card"></i> PAYMENT</button>
 
                   </div>
                   }
@@ -424,8 +422,7 @@
                   <div class="col-3 d-grid" [style.order]="uxMenu['info'] ? uxMenu['info']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['info']['class']]" [disabled]="table.tableMapStatusId < 13 "
                         (click)="openComponent(id);logService.logAction('Click INFO', id)">
-                        <i class="bi bi-question-circle"></i>
-                        INFO</button>
+                        <i class="bi bi-question-circle"></i>  INFO</button>
                   </div>
                   }
 
@@ -744,6 +741,7 @@
 
 
       </div>
+
    </div>
 </div>
 

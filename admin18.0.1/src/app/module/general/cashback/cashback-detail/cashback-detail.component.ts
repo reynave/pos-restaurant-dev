@@ -24,6 +24,7 @@ export class Actor {
     public status: number,
     public x1: number,
     public x2: number,
+    public outletId: number
   ) {}
 }
 @Component({
@@ -49,7 +50,7 @@ export class CashbackDetailComponent implements OnInit {
   outletSelect: any = [];
   api: string = environment.api;
   id: string = '';
-  model = new Actor('', '', '', '', '', '', '', 1,0,0);
+  model = new Actor('', '', '', '', '', '', '', 1,0,0,0);
   cashbackAmounts: any = [];
   paymentMethods: any;
   selectPaymentMethods : any = [];
@@ -87,7 +88,7 @@ export class CashbackDetailComponent implements OnInit {
         }
       );
   }
-
+  selectOutlet : any = [];
   getDetail() {
     this.loading = true;
     this.http
@@ -97,6 +98,7 @@ export class CashbackDetailComponent implements OnInit {
       })
       .subscribe(
         (data) => {
+          this.selectOutlet = data.selectOutlet;
           this.model = data.items;
           // tolong bukain format string date yyyy-mm-dd ke array date { year: yyyy, month: mm, day: dd }
           this.model.earningStartDate = this.model.earningStartDate

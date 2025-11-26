@@ -34,6 +34,7 @@ import { MenuLockComponent } from './pos/menu/menu-lock/menu-lock.component';
 import { CustomerDisplayComponent } from './customer-display/customer-display.component'; 
 import { CashierComponent } from './pos/cashier/cashier.component';
 import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.component';
+import { VoidComponent } from './pos/void/void.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -65,6 +66,10 @@ export const routes: Routes = [
 
     { path: 'payment', component: PaymentComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'printQueue', component: PrintQueueComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+
+
+     { path: 'void', component: VoidComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+   
 
     { path: 'items', component: ItemsComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'userLogs', component: UserLogsComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },

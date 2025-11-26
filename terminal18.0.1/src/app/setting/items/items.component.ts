@@ -113,7 +113,8 @@ export class ItemsComponent implements OnInit {
           );
           console.log(data);
           this.loading = false;
-          this.httpMenu();
+       
+          this.httpMenu( this.filterId );
         },
         (error) => {
           console.log(error);
@@ -196,6 +197,7 @@ export class ItemsComponent implements OnInit {
       );
   }
   lookupName: string = '';
+  filterId : number  = 0;
   onLookUpSelect(node: any) {
     this.loading = true;
     this.modalService.dismissAll();
@@ -207,8 +209,8 @@ export class ItemsComponent implements OnInit {
     //   queryParamsHandling: 'merge', // Merge with existing query params
     //   replaceUrl: true, // Replace the current history entry
     // });
-
-    this.httpMenu(node['id']);
+    this.filterId = node['id'];
+    this.httpMenu( this.filterId );
   }
 
   handleData(data: string) {
@@ -236,6 +238,7 @@ export class ItemsComponent implements OnInit {
   clear() {
     if (this.lookupName != '') {
       this.httpMenu();
+      this.filterId = 0;
       this.lookupName = '';
     }
   }

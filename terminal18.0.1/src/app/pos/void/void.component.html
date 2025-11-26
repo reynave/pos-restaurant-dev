@@ -1,0 +1,43 @@
+<div class="container my-2">
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-white p-3 border rounded shadow-sm">
+
+
+                <div class="modal-header mb-3">
+                    <strong class="modal-title">
+                        SELECT REASON FOR VOID {{titleLabel |uppercase}}
+                    </strong>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="back()"></button>
+                </div>
+                <div class="modal-body ">
+                    <div class="row g-1 mb-3">
+                        <div class="col-10">
+                            <input type="text" class="form-control form-control-lg" placeholder="Note Reason"
+                                [(ngModel)]="noteReasonVoid">
+                        </div>
+                        <div class="col-2 d-grid">
+                            <button type="button" class="btn btn-primary btn-lg" (click)="fnVoid(noteReasonVoid)"
+                                [disabled]="!noteReasonVoid">SUBMIT</button>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="text-center">Or</h4>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col d-grid" *ngFor="let x of voidReason" (click)="fnVoid(x.name)">
+                            <button type="button" class="btn btn-lg btn-primary m-1">
+                                {{x.name}}
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

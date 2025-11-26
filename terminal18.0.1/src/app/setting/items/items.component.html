@@ -3,20 +3,21 @@
    <div class="row g-3">
       <div class="col-12">
          <div class=" mb-3 ">
-            <div class="row">
+            <div class="row mb-2">
                <div class="col-12">
                   <div class="ms-2">Lookup Menu :  <span [hidden]="lookupName == '' " class="badge text-bg-secondary"> {{lookupName}}  </span></div>
                </div>
             </div>
             <div class="row g-2">
-               <div class="col-8">
+                 <div class="col-3 d-grid">
+                  <button type="button" class="btn btn-lg btn-primary"
+                     (click)="openLookUpModal(modalFilter)">Select Filter</button>
+               </div>
+               <div class="col-7">
                   <input type="text" class="form-control form-control-lg" [(ngModel)]="searchTerm"
                      (input)="searchByName()" placeholder="Search by Name" />
                </div>
-               <div class="col-2 d-grid">
-                  <button type="button" class="btn btn-lg btn-primary"
-                     (click)="openLookUpModal(modalFilter)">Filter</button>
-               </div>
+             
                <div class="col-2 d-grid">
                   <button type="button" class="btn btn-lg btn-light"
                      (click)="searchTerm = ''; searchByName(); clear()">Clear</button>

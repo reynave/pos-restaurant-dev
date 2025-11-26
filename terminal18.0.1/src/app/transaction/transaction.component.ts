@@ -103,25 +103,26 @@ export class TransactionComponent implements OnInit {
   }
 
   fnVoid(id: string){
-    if(confirm("Are you sure to void this transaction?")){
-      this.loading = true;
-      const url = this.api + "transaction/void";
-      this.http.post<any>(url, {
-        id: id,
-      }, {
-        headers: this.configService.headers(),
-      }).subscribe(
-        data => {
-          this.loading = false; 
-          history.back();
+    this.router.navigate(['void'], { queryParams : {id : id, module:'transaction', action: 'voidPaid'}})
+    // if(confirm("Are you sure to void this transaction?")){
+    //   this.loading = true;
+    //   const url = this.api + "transaction/void";
+    //   this.http.post<any>(url, {
+    //     id: id,
+    //   }, {
+    //     headers: this.configService.headers(),
+    //   }).subscribe(
+    //     data => {
+    //       this.loading = false; 
+    //       history.back();
            
-        },
-        error => {
-          this.loading = false;
-          console.log(error);
-        }
-      );
-    }
+    //     },
+    //     error => {
+    //       this.loading = false;
+    //       console.log(error);
+    //     }
+    //   );
+    // }
   }
   
   back(){
