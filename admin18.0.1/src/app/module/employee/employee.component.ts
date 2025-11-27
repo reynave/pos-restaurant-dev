@@ -176,6 +176,26 @@ export class EmployeeComponent implements OnInit {
     }
   }
 
+  onDuplicate() {
+    
+    this.loading = true;
+    const url = environment.api + 'employee/duplicate';
+    const body = this.items;
+    this.http
+      .post<any>(url, body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.httpGet();
+        },
+        (error) => {
+          console.log(error);
+        }
+      ); 
+  }
+
   warning: string = '';
   onSubmit() {
     this.loading = true;

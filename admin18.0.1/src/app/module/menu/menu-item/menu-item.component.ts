@@ -160,6 +160,31 @@ export class MenuItemComponent implements OnInit {
     }
   }
 
+  onDuplicate() {
+   
+    this.loading = true;
+    const url = environment.api + "menu/item/duplicate";
+    const body = [];
+
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i]['checkbox'] == 1) {
+        body.push(this.items[i]);
+      }  
+    }
+    console.log(body)
+    this.http.post<any>(url, body, {
+      headers: this.configService.headers(),
+    }).subscribe(
+      data => {
+        console.log(data);
+        this.httpGet();
+      },
+      error => {
+        console.log(error);
+      }
+    ) 
+  }
+
   onSubmit() {
     this.loading = true;
     const url = environment.api + "menu/item/create";

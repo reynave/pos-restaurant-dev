@@ -4,22 +4,30 @@
 
 
             <div class="row g-1">
-                <div class="col-3 align-content-center">
+                <div class="col-4 align-content-center">
                     <strong>MENU ITEMS</strong>
                     <span class="mx-1" *ngIf="loading">
                         <img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30">
                     </span>
                 </div>
 
-                <div class="col-5 text-end">
+
+                <!-- <div class="col-1 ">
+                    <button class="btn btn-sm btn-light border" (click)=" search ==false ? search= true : search = false">Search </button>
+                </div> -->
+                
+
+                <div class="col-6 text-end">
+                   
                     @if(disabled==false){
+                    <button type="button" class="btn btn-sm btn-light border me-2" (click)="onDuplicate()">Duplicate</button>
+                   
+
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
-                    <button type="button" class="btn btn-sm btn-dark border me-2"
-                        (click)="open(content);">Create</button>
-                    <button type="button" class="btn btn-sm btn-danger border me-2"
-                        (click)="onDelete();">Delete</button>
+                    <button type="button" class="btn btn-sm btn-dark border me-2" (click)="open(content);">Create</button>
+                    <button type="button" class="btn btn-sm btn-danger border me-2"  (click)="onDelete();">Delete</button>
 
                     }
                     @else {
@@ -29,21 +37,19 @@
                     }
 
                 </div>
-                <!-- <div class="col-1 ">
-                    <button class="btn btn-sm btn-light border" (click)=" search ==false ? search= true : search = false">Search </button>
-                </div> -->
-                <div class="col-1 text-end align-content-center">
-                    Price
-                </div>
                 <div class="col-2">
-                    <select class="form-control form-control-sm" [(ngModel)]="priceNumber">
-                        <option [value]="1">1</option>
-                        <option [value]="2">2</option>
-                        <option [value]="3">3</option>
-                        <option [value]="4">4</option>
-                        <option [value]="5">5</option>
-                    </select>
+                     <div class="input-group input-group-sm">
+                        <span class="input-group-text">Price Level</span>
+                        <select class="form-control" [(ngModel)]="priceNumber">
+                            <option [value]="1">1</option>
+                            <option [value]="2">2</option>
+                            <option [value]="3">3</option>
+                            <option [value]="4">4</option>
+                            <option [value]="5">5</option>
+                        </select>
+                    </div>
                 </div>
+               
             </div>
 
             @if(search){ 
@@ -75,6 +81,7 @@
                                 </th>
                                 <th>#</th>
                                 <th></th>
+                                <th>PLU</th>
                                 <th>Menu Set</th>
                                 <th>Name</th>
                                 <th>Look Up</th>
@@ -114,7 +121,10 @@
                                     <a class="btn btn-sm text-primary" (click)="goToDetail(x,i);"><i
                                             class="bi bi-pencil-square"></i></a>
                                 </Td>
-
+                                <Td>
+                                    <input type="text" class="form-control form-control-sm" [(ngModel)]="x.plu"
+                                        (focus)="onHere(x)" [disabled]="disabled">
+                                </Td>
                                 <Td>
                                     {{x.menuSet}}
                                 </Td>

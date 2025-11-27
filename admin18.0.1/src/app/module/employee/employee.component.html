@@ -8,6 +8,10 @@
             </div>
             <div class="col-9 text-end"> 
                @if(disabled==false){
+
+                  <button type="button" class="btn btn-sm btn-light border me-2" (click)="onDuplicate();">Duplicate</button>
+
+
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
