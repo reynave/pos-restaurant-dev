@@ -1,6 +1,6 @@
 <app-header-menu></app-header-menu>
 <div class="container">
-    <div class="row g-3">
+    <div class="row g-3 mb-3">
 
         <div class="col-12">
             <h4>SETTING</h4>
@@ -48,8 +48,8 @@
                     </tr>
                 </table>
                 <div class="alert alert-warning" *ngIf="restPrinter != ''">{{restPrinter}}</div>
-            </div> 
-           
+            </div>
+
         </div>
 
         <div class="col-6">
@@ -100,59 +100,101 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="row g-3 mb-3">
 
-        <div class="col-12 mt-3">
-             <div class="order-panel">
+        <div class="col-7 ">
+            <div class="order-panel">
                 <strong>GLOBAL PRINTER / PRINTER SERVICE</strong>
 
-              
+
                 <table class="table table-sm table-bordered">
                     <thead>
                         <tr>
+                            <th (click)="checkBoxAll()">
+                                @if( isCheckAll != 0){
+                                <i class="bi bi-check-square-fill "></i>
+                                }
+                                @else{
+                                <i class="bi bi-square"></i>
+                                }
+                            </th>
                             <th>Group</th>
-                         
-                            <th>Name</th>
-                            <th>Con</th>
-                            <th>IP Address</th>
-                            <th>Port</th>
-                         
-                            <th>Name2</th>
-                            <th>Con 2</th>
-                            <th>IP Address 2</th>
-                            <th>Port 2</th>
+
+                            <th>Printer 1</th>
+                            <th>Connection 1</th>
+
+                            <th>Printer 2</th>
+                            <th>Connection 2</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let p of itemsPrinter">
+                        <tr *ngFor="let p of itemsPrinter; let i = index" (click)="fnCheck(i)"
+                            [ngClass]="{'bg-light': p.checkBox == 1}">
+                            <td>
+                                @if(p.checkBox != 0){
+                                <i class="bi bi-check-square-fill "></i>
+                                }
+                                @else{
+                                <i class="bi bi-square"></i>
+                                }
+                            </td>
                             <td>{{p.group}}</td>
-                            
                             <td>{{p.name}}</td>
-                            <td>{{p.printerTypeCon}}</td>
-                            <td>{{p.ipAddress}}</td>
-                            <td>{{p.port}}</td> 
+                            <td>{{p.printerTypeCon}} {{p.ipAddress}}:{{p.port}}</td>
                             <td>{{p.name2}}</td>
-                            <td>{{p.printerTypeCon2}}</td>
-                            <td>{{p.ipAddress2}}</td>
-                            <td>{{p.port2}}</td>
+                            <td>{{p.printerTypeCon2}} {{p.ipAddress2}}:{{p.port2}}</td>
                         </tr>
                     </tbody>
                 </table>
- 
-                <table class="table table-bordered"> 
+
+                <table class="table table-bordered">
                     <tr>
                         <td>Note</td>
                         <td>
                             <div class="mb-1">
-                                <textarea class="form-control" rows="4" [(ngModel)]="printTest"></textarea>
+                                <textarea class="form-control" rows="4" [(ngModel)]="printTestGlobal"></textarea>
                             </div>
                             <div class="d-grid ">
-                                <button type="button"  [disabled]="loading"
+                                <button type="button" (click)="globalPrinter()" [disabled]="loading || checkTotal < 1"
                                     class="btn btn-lg btn-dark mx-1 ">GLOBAL TEST</button>
                             </div>
                         </td>
                     </tr>
                 </table>
-                <div class="alert alert-warning" *ngIf="restPrinter != ''">{{restPrinter}}</div>
+                <div class="alert alert-warning" *ngIf="restPrinterGlobal != ''">{{restPrinterGlobal}}</div>
+            </div>
+        </div>
+        <div class="col-5">
+
+            <div class="order-panel">
+                <strong> Logs onTestPrinting / globalPrinter:</strong>
+                <div style="height: 400px; overflow-y: scroll; ">
+                    <div *ngFor="let log of printerGlobalLogs">
+
+                        <div class="lh-1">
+                            <small>Printer 1 
+                                <i *ngIf="log.status == 1" class="bi bi-check text-primary"></i>
+                                <i *ngIf="log.status == 2" class="bi bi-check-all text-primary"></i>
+                                <i *ngIf="log.status == -1" class="bi bi-x text-danger"></i> 
+                                : {{log.printer1}}
+                            </small>
+
+                        </div>
+                        <div class="lh-1"> <small>Printer 2
+                            
+                               <i *ngIf="log.status2 == 1" class="bi bi-check text-primary"></i>
+                                <i *ngIf="log.status2 == 2" class="bi bi-check-all text-primary"></i>
+                                <i *ngIf="log.status2 == -1" class="bi bi-x text-danger"></i> 
+
+                            : {{log.printer2}} {{log.status2}}</small></div>
+                        <div class="lh-1"> <small>{{log.updateDate | date:'short'}} {{log.consoleError}}</small></div>
+                        <div class="lh-1">
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

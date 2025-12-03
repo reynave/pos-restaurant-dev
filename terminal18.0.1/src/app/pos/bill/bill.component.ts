@@ -253,10 +253,8 @@ export class BillComponent implements OnInit {
             this.printLoading = false;
             console.log(error);
             this.printNote = 'ERROR ' + error.error.detail;
-            localStorage.removeItem('pos3.id');
-            setTimeout(() => {
-              history.back();
-            }, 1000);
+           // localStorage.removeItem('pos3.id');
+            
           }
         );
     }

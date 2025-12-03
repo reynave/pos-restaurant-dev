@@ -1067,13 +1067,10 @@ export class MenuComponent implements OnInit, OnDestroy {
  
   fnDirectPrint(htmlBill: string) {
     const a = this.modalService.open(this.modalInfoPrinting, { size: 'md' });
-    a.result.finally(() => {
-      this.back();
-    });
-
-
-
-
+    // a.result.finally(() => {
+    //   this.back();
+    // });
+ 
 
     this.printNote = "Printing, please wait...";
     console.log("fnDirectPrint", htmlBill);
@@ -1094,6 +1091,7 @@ export class MenuComponent implements OnInit, OnDestroy {
              this.modalService.dismissAll();
           this.printNote = 'Print Success';
           this.printLoading = false;
+           this.back();
         },
         (error) => {
           this.printNoteError = true;
