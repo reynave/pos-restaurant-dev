@@ -413,6 +413,10 @@ export class MenuComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (data) => {
+          if(data['table'].length == 0){
+            alert("ERROR / EMPTY SESSION");
+            this.router.navigate(['/']);
+          }
           console.log('httpCart', data);
           this.cart = data['items'];
           this.totalCard = data['totalItem'];
@@ -1047,6 +1051,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   tableCheckerDetail(so: string) {
     this.http
       .get(this.api + 'menuItemPos/tableCheckerDetail', {
+           headers: this.configService.headers(),
         params: {
           so: so,
         },

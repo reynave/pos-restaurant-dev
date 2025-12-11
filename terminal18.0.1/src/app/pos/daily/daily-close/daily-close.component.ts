@@ -57,7 +57,7 @@ export class DailyCloseComponent implements OnInit {
           console.log(data);
           this.activeModal.dismiss();
           this.config.removeToken().subscribe(() => {
-            this.router.navigate(['/']);
+            this.router.navigate(['/login']);
           });
         },
         (error) => {

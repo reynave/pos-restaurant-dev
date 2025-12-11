@@ -106,11 +106,18 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           console.log(data);
+     
+     
           this.warning = '';
           this.modalService.dismissAll();
           this.configService.isLogin();
           this.router.navigate(['tables']);
           this.logService.logAction('Log In Success');
+          const a = data as any;
+          const dailyCheck : any = a['dailyCheck'][0]['id'] || '';
+          const token : any = a['token'] || ''; 
+          localStorage.setItem('pos3.dailyCheck.mitralink', dailyCheck);
+          localStorage.setItem('pos3.tokenKey.mitralink', token);
         },
         (error) => {
           console.log(error);

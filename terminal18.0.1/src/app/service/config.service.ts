@@ -58,6 +58,16 @@ export class ConfigService {
       return null;
     }
   }
+
+  acceesRight() {
+    const tokenJson = this.getTokenJson();
+    if (tokenJson && tokenJson['accessRight']) {
+      return tokenJson['accessRight'];  
+    } else {
+      return null;
+    }
+  }
+
   getConfigJson() {
     const data: any = localStorage.getItem(this.configJson);
     const obj = JSON.parse(data);

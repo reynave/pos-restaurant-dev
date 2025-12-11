@@ -14,7 +14,6 @@ import { UserLoggerService } from '../../service/user-logger.service';
 import { InactivityService } from '../../service/inactivity.service';
 import { Subscription } from 'rxjs';
 
-
 export class Actor {
   constructor(
     public outletTableMapId: number,
@@ -38,7 +37,7 @@ export class Actor {
   styleUrl: './tables.component.css',
 })
 export class TablesComponent implements OnInit, OnDestroy {
-   private inactivitySubscription!: Subscription;
+  private inactivitySubscription!: Subscription;
 
   loading: boolean = false;
   lock: boolean = true;
@@ -68,7 +67,7 @@ export class TablesComponent implements OnInit, OnDestroy {
   currentTime: Date = new Date();
 
   server: string = '';
-
+  accessRight: any = {};
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -89,22 +88,21 @@ export class TablesComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngOnInit() { 
-     this.inactivityService.startMonitoring();
+  ngOnInit() {
+    this.inactivityService.startMonitoring();
 
     // Berlangganan ke event ketidakaktifan
-    this.inactivitySubscription = this.inactivityService.inactivityDetected$.subscribe(() => {
-      //alert('Tidak ada aktivitas selama 10 detik!');
-      this.logOff();
-    });
+    this.inactivitySubscription =
+      this.inactivityService.inactivityDetected$.subscribe(() => {
+        //alert('Tidak ada aktivitas selama 10 detik!');
+        this.logOff();
+      });
 
     localStorage.removeItem('pos3.id');
 
-
-    if( this.configService.getConfigJson()['outlet']['posMode'] == "cashier"){
+    if (this.configService.getConfigJson()['outlet']['posMode'] == 'cashier') {
       this.router.navigate(['/cashier']);
     }
-
 
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
@@ -135,15 +133,21 @@ export class TablesComponent implements OnInit, OnDestroy {
         this.httpGet();
         this.httpDailyCheck();
       });
+    this.accessRight = this.configService.acceesRight();
+
+    console.log('Access Right', this.configService.acceesRight());
   }
+
   sendMessage() {
     console.log('TABLE EMIT');
     this.socketService.emit('message-from-client', 'reload');
   }
+
   onZoomChange() {
     console.log(this.zoom);
     localStorage.setItem('pos3.zoom', this.zoom.toString());
   }
+
   handleData(data: string) {
     let cover = this.model.cover;
     if (data == 'b') {
@@ -154,27 +158,23 @@ export class TablesComponent implements OnInit, OnDestroy {
     this.model.cover = cover; // fallback kalau cover kosong
   }
 
-
-  fnClearLock(){
-  
-        this.logService.logAction('Clear Lock Table');
-        const body = { terminalId: this.terminalId };
-        this.http
-          .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
-            headers: this.configService.headers(),
-          })
-          .subscribe(
-            (data) => {
-              this.sendMessage(); 
-              console.log(data);
-            },
-            (error) => {
-              console.log(error);
-            }
-          );
-      }
-  
-
+  fnClearLock() {
+    this.logService.logAction('Clear Lock Table');
+    const body = { terminalId: this.terminalId };
+    this.http
+      .post<any>(this.api + 'menuItemPos/clearLockTable', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.sendMessage();
+          console.log(data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
 
   httpOutlet() {
     this.loading = true;
@@ -247,70 +247,79 @@ export class TablesComponent implements OnInit, OnDestroy {
   item: any = [];
   capacity: string = '';
   open(content: any, x: any, current: number, i: number) {
-    console.log(x);
-    let allow = true;
-    if (typeof x.lockBy !== 'undefined' && x.lockBy !== '') {
-      if (x.lockBy !== this.terminalId) {
-        alert('Table Locked by Terminal ' + x.lockBy);
-        history.back();
-        allow = false;
-      }
-    }
-
-    if (allow == true) {
-      this.capacity = '';
-      if (this.items[current]['maps'][i]['active'] == 1) {
-        if (x.cover <= 0 || x.cover == '') {
-          this.logService.logAction('Select Table ' + x.tableName);
-          this.tableSelect = x;
-          this.model.cover = '';
-          this.capacity = x.capacity;
-          this.model.outletTableMapId = x.id;
-          this.model.outletFloorPlandId = x.outletFloorPlandId;
-
-          if (this.lock == false) {
-            this.modalService.open(content, { size: 'sm' });
-          } else {
-            alert('Daily Close Requirement!');
-          }
-        } else {
-          this.gotTo(x);
+    console.log(this.accessRight.menu);
+    if (this.accessRight.menu) {
+      console.log(x);
+      let allow = true;
+      if (typeof x.lockBy !== 'undefined' && x.lockBy !== '') {
+        if (x.lockBy !== this.terminalId) {
+          alert('Table Locked by Terminal ' + x.lockBy);
+          history.back();
+          allow = false;
         }
       }
 
-      //  console.log(x.id, x, current, i);
-      this.currentTable = x;
+      if (allow == true) {
+        this.capacity = '';
+        if (this.items[current]['maps'][i]['active'] == 1) {
+          if (x.cover <= 0 || x.cover == '') {
+            this.logService.logAction('Select Table ' + x.tableName);
+            this.tableSelect = x;
+            this.model.cover = '';
+            this.capacity = x.capacity;
+            this.model.outletTableMapId = x.id;
+            this.model.outletFloorPlandId = x.outletFloorPlandId;
 
-      for (let i = 0; i < this.items.length; i++) {
-        this.items[i]['maps'].forEach((row: any) => {
-          row['active'] = 0;
-        });
-      }
-
-      this.items[current]['maps'][i]['active'] = 1;
-      console.log(this.items[current]['maps'][i]);
-      this.item = this.items[current]['maps'][i];
-      this.item['indexed'] = {
-        current: current,
-        i: i,
-      };
-      this.http
-        .get<any>(this.api + 'tableMap/detail', {
-          headers: this.configService.headers(),
-          params: {
-            cartId: this.item.cardId,
-          },
-        })
-        .subscribe(
-          (data) => {
-            console.log(data);
-            this.item['detail'] = data['detail'];
-            this.item['cart'] = data['cart'];
-          },
-          (error) => {
-            console.log(error);
+            if (this.lock == false) {
+              if (this.accessRight.menuOpenNewTable) {
+                this.modalService.open(content, { size: 'sm' });
+              }else {
+                alert('Anda tidak memiliki akses ke menu ini.');
+              }
+            } else {
+              alert('Daily Close Requirement!');
+            }
+          } else {
+            this.gotTo(x);
           }
-        );
+        }
+
+        //  console.log(x.id, x, current, i);
+        this.currentTable = x;
+
+        for (let i = 0; i < this.items.length; i++) {
+          this.items[i]['maps'].forEach((row: any) => {
+            row['active'] = 0;
+          });
+        }
+
+        this.items[current]['maps'][i]['active'] = 1;
+        console.log(this.items[current]['maps'][i]);
+        this.item = this.items[current]['maps'][i];
+        this.item['indexed'] = {
+          current: current,
+          i: i,
+        };
+        this.http
+          .get<any>(this.api + 'tableMap/detail', {
+            headers: this.configService.headers(),
+            params: {
+              cartId: this.item.cardId,
+            },
+          })
+          .subscribe(
+            (data) => {
+              console.log(data);
+              this.item['detail'] = data['detail'];
+              this.item['cart'] = data['cart'];
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
+      }
+    } else {
+      alert('Anda tidak memiliki akses ke menu ini.');
     }
   }
 
@@ -340,8 +349,6 @@ export class TablesComponent implements OnInit, OnDestroy {
           localStorage.setItem('pos3.id', x.cardId);
           this.router.navigate(['/menu'], { queryParams: { id: x.cardId } });
           this.logService.logAction('Go to Menu', x.cardId);
-
-              
         },
         (error) => {
           console.log(error);
@@ -403,7 +410,7 @@ export class TablesComponent implements OnInit, OnDestroy {
       .subscribe(
         (data) => {
           if (data['error'] != true) {
-              localStorage.setItem('pos3.id', data['cardId']);
+            localStorage.setItem('pos3.id', data['cardId']);
             this.router.navigate(['/menu'], {
               queryParams: { id: data['cardId'] },
             });
