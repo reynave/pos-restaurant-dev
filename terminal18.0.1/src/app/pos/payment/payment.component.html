@@ -4,7 +4,7 @@
 
          <div class="row g-1 mb-2">
             <div class="col-12">
-               <strong class="fw-bold ms-2"> Bill {{id}} </strong>
+               <strong class="fw-bold ms-2"> {{lang.get('Bill')}} {{id}} </strong>
             </div>
  
          </div>
@@ -17,15 +17,15 @@
         
                   <table class="table table-sm"> 
                      <tr>
-                        <td>Grand Total</td>
+                        <td>{{lang.get('Grand Total')}}</td>
                         <td class="text-end">{{cartPayment.grandTotal | number}}</td>
                      </tr>
                      <tr>
-                        <td>Paid</td>
+                        <td>{{lang.get('Paid')}}</td>
                         <td class="text-end">{{cartPayment.paid  | number}}</td>
                      </tr>
                      <tr>
-                        <td>Unpaid</td>
+                        <td>{{lang.get('Unpaid')}}</td>
                         <td class="text-end"><h4 class="text-danger">{{cartPayment.unpaid | number}}</h4></td>
                      </tr>
                   </table>
@@ -34,7 +34,7 @@
 
          <div class="d-grid">
             <button type="button" class="btn  btn-warning" (click)="back()">
-               <i class="bi bi-arrow-left"></i> BACK
+               <i class="bi bi-arrow-left"></i> {{lang.get('BACK')}}
             </button>
          </div>
 
@@ -47,10 +47,10 @@
                <table class="table table-sm">
                   <thead class="sticky-top bg-white">
                      <tr>
-                        <th>Payment</th>
-                        <th class="text-end">Amount</th>
-                        <th class="text-end">Tips</th>
-                        <th class="text-center">Paid</th>
+                        <th>{{lang.get('Payment')}}</th>
+                        <th class="text-end">{{lang.get('Amount')}}</th>
+                        <th class="text-end">{{lang.get('Tips')}}</th>
+                        <th class="text-center">{{lang.get('Paid')}}</th>
                         <th class="text-center"><i class="bi bi-trash3-fill"></i></th>
                      </tr>
                   </thead>
@@ -108,10 +108,10 @@
                      <div class="row g-1 mt-1">
                         <div class="col-4 d-grid">
                            <button class="btn btn-warning btn-lg  rounded shadow-sm"
-                              (click)="clearCurrentValue()">CE</button>
+                                (click)="clearCurrentValue()">{{lang.get('CE')}}</button>
                         </div>
                         <div class="col-8 d-grid">
-                           <button class="btn btn-success btn-lg rounded shadow-sm" (click)="addPaid()">SUBMIT</button>
+                              <button class="btn btn-success btn-lg rounded shadow-sm" (click)="addPaid()">{{lang.get('SUBMIT')}}</button>
 
                         </div>
                      </div>
@@ -126,11 +126,11 @@
       </div>
       <div class="col-2 ">
          <div class="my-2 text-center">
-            <strong>SELECT PAYMENT</strong>
+            <strong>{{lang.get('SELECT PAYMENT')}}</strong>
          </div>
          <div *ngFor="let x of paymentGroups" class="d-grid">
             <button type="button" (click)="open(modalPayment, x)" class="btn btn-lg bg-primary mb-1">{{x.name |
-               uppercase}}</button>
+                  uppercase}}</button>
          </div>
       </div>
    </div>
@@ -139,7 +139,7 @@
 
 <ng-template #modalPayment let-modal>
    <div class="modal-header">
-      <strong class="modal-title">SELECT {{paymentGroup.name | uppercase}}</strong>
+      <strong class="modal-title">{{lang.get('SELECT')}} {{paymentGroup.name | uppercase}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
@@ -158,15 +158,15 @@
 
 <ng-template #myModal let-modal>
    <div class="modal-header">
-      <strong class="modal-title">Close Payment</strong>
+      <strong class="modal-title">{{lang.get('Close Payment')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
       <div class="row">
 
          <div class="col-12 text-center my-4">
-            <h4>PAYMENT FINISH</h4>
-            <strong> CHANGE : {{data['change'] | number}} </strong>
+            <h4>{{lang.get('PAYMENT FINISH')}}</h4>
+            <strong> {{lang.get('CHANGE')}} : {{data['change'] | number}} </strong>
          </div>
       </div>
       <div class="row g-2 mb-3">
@@ -177,13 +177,13 @@
                <h1>
                   <i class="bi bi-check2"></i>
                </h1>
-               Finish
+               {{lang.get('Finish')}}
             </button>
          </div>
          <div class="col-6 d-grid">
             <button type="button" [disabled]="this.cart.printBill == 0" class="btn btn-lg btn-warning py-3"
                (click)="modal.close('OK click');logService.logAction('Finish Payment And Print Copy Bill', id);">
-               <h1> <i class="bi bi-printer"></i> </h1> Print Copy Bill
+               <h1> <i class="bi bi-printer"></i> </h1> {{lang.get('Print Copy Bill')}}
 
             </button>
          </div>

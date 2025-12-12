@@ -5,12 +5,12 @@
 
          <div class="order-panel  mb-2">
             <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i class="bi bi-exclamation-triangle"></i>
-               Overdue: {{table.overTime}} min</span>
+               {{lang.get('Overdue')}}: {{table.overTime}} {{lang.get('min')}}</span>
             <div class="d-flex justify-content-between align-items-center">
-               <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? 'Order' : 'Bill'}}
+               <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? lang.get('Order') : lang.get('Bill')}}
                   {{table.id}} | {{table.startDate | date:'yyyy-mm-dd HH:mm:ss'}} </strong>
             </div>
-            <div class="mb-2">Cover: {{table.cover}}, Table {{table.tableName}}, Waiter: {{table.inputBy}}</div>
+            <div class="mb-2">{{lang.get('Cover')}}: {{table.cover}}, {{lang.get('Table')}} {{table.tableName}}, {{lang.get('Waiter')}}: {{table.inputBy}}</div>
 
             <div style="height: 44vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
@@ -21,10 +21,10 @@
                            <i *ngIf="checkBoxAll == true " class="bi bi-check-square-fill"></i>
                         </td>
                         <td class="align-content-center text-center">
-                           Qty
+                           {{lang.get('Qty')}}
                         </td>
                         <td colspan="2" class="align-content-center">
-                           List Menu Ordered
+                           {{lang.get('List Menu Ordered')}}
                         </td>
                         <td>
 
@@ -63,7 +63,7 @@
                            </div>
                            <div class="lh-2">
                               <small class="font-monospace">&#64;{{x.price | number}}</small>
-                              <span *ngIf="x.ta > 0 " class="badge text-bg-warning  ms-2">TA</span>
+                              <span *ngIf="x.ta > 0 " class="badge text-bg-warning  ms-2">{{lang.get('TA')}}</span>
                            </div>
                         </td>
 
@@ -167,17 +167,17 @@
                   <table class="table table-sm table-xs">
                      <tbody>
                         <tr>
-                           <td>Item Total :</td>
+                           <td>{{lang.get('Item Total')}} :</td>
                            <td class="text-end">{{summary.itemTotal | number}}</td>
                         </tr>
 
                         <tr>
-                           <td>Discount :</td>
+                           <td>{{lang.get('Discount')}} :</td>
                            <td class="text-end">{{summary.discount | number}}</td>
                         </tr>
 
                         <tr>
-                           <td>Sub Total :</td>
+                           <td>{{lang.get('Sub Total')}} :</td>
                            <td class="text-end">{{summary.subTotal | number}}</td>
                         </tr>
 
@@ -190,16 +190,16 @@
                      <tbody>
 
                         <tr>
-                           <td>Sc :</td>
+                           <td>{{lang.get('Sc')}} :</td>
                            <td class="text-end">{{summary.sc | number}}</td>
                         </tr>
                         <tr>
-                           <td>Tax :</td>
+                           <td>{{lang.get('Tax')}} :</td>
                            <td class="text-end"> {{summary.tax | number}}</td>
                         </tr>
 
                         <tr>
-                           <td>Total :</td>
+                           <td>{{lang.get('Total')}} :</td>
                            <td class="text-end"><span class="fw-bold">{{ summary.grandTotal | number}}</span></td>
                         </tr>
 
@@ -216,7 +216,7 @@
                <button class="btn btn-light  text-start"
                   (click)="checkBoxAllModifier == false ? checkBoxAllModifier = true : checkBoxAllModifier = false">
                   <i *ngIf="checkBoxAllModifier == false " class="bi bi-square"></i>
-                  <i *ngIf="checkBoxAllModifier == true " class="bi bi-check-square-fill"></i> Modifier
+                  <i *ngIf="checkBoxAllModifier == true " class="bi bi-check-square-fill"></i> {{lang.get('Modifier')}}
                </button>
             </div>
             <div class="col-5 d-grid">
@@ -224,7 +224,7 @@
                <button class="btn btn-light  text-start"
                   (click)="checkBoxAllScTax == false ? checkBoxAllScTax = true : checkBoxAllScTax = false">
                   <i *ngIf="checkBoxAllScTax == false " class="bi bi-square"></i>
-                  <i *ngIf="checkBoxAllScTax == true " class="bi bi-check-square-fill"></i> Sc & Tax
+                  <i *ngIf="checkBoxAllScTax == true " class="bi bi-check-square-fill"></i> {{lang.get('Sc & Tax')}}
                </button>
             </div>
             <div class="col-2 d-grid">
@@ -238,14 +238,14 @@
             <div class="col-6 d-grid">
 
                <button type="button" class="btn btn-danger" (click)="exitWithoutOrder();">
-                  <i class="bi bi-trash"></i> EXIT WITHOUT ORDER
+                  <i class="bi bi-trash"></i> {{lang.get('EXIT WITHOUT ORDER')}}
                </button>
 
             </div>
 
             <div class="col-6 d-grid" *ngIf="posMode != 'cashier'">
                <button type="button" class="btn btn-primary" (click)="sendOrder();">
-                  <i class="bi bi-fork-knife"></i> SEND ORDER
+                  <i class="bi bi-fork-knife"></i> {{lang.get('SEND ORDER')}}
                </button>
             </div>
          </div>
@@ -257,39 +257,38 @@
          <div class="inline-modal" *ngIf="selectedItem">
             <div class="card shadow-sm">
                <div class="card-header">
-                  <button type="button" class="btn btn-light btn-sm" (click)="selectedItem = null">Back</button> Item
-                  Information
+                  <button type="button" class="btn btn-light btn-sm" (click)="selectedItem = null">{{lang.get('Back')}}</button> {{lang.get('Item Information')}}
                </div>
                <div class="card-body">
 
                   <table class="table table-sm">
                      <tbody>
                         <tr>
-                           <th>ID</th>
+                           <th>{{lang.get('ID')}}</th>
                            <td width="50%" class="text-primary">{{selectedItem?.id}}</td>
                         </tr>
                         <tr>
-                           <th>Description</th>
+                           <th>{{lang.get('Description')}}</th>
                            <td class="text-primary">{{selectedItem?.name}}</td>
                         </tr>
                         <tr>
-                           <th>send Order</th>
+                           <th>{{lang.get('Send Order')}}</th>
                            <td class="text-primary"><span
                                  class="badge text-bg-primary">{{selectedItem?.sendOrder}}</span></td>
                         </tr>
                         <tr>
-                           <th>Order By and Time</th>
+                           <th>{{lang.get('Order By and Time')}}</th>
                            <td>{{selectedItem?.employeeName}} ,
                               {{selectedItem?.inputDate | date:'yyyy-MM-dd hh:mm:ss a'}}</td>
                         </tr>
 
                         <tr>
-                           <th>Item Price</th>
+                           <th>{{lang.get('Item Price')}}</th>
                            <td>{{selectedItem?.price | number}}</td>
                         </tr>
 
                         <tr>
-                           <th colspan="2">Modifier, Tax and Service</th>
+                           <th colspan="2">{{lang.get('Modifier, Tax and Service')}}</th>
 
                         </tr>
                         <tr *ngFor="let mod of selectedItem?.modifier">
@@ -299,15 +298,15 @@
                            </td>
                         </tr>
                         <tr>
-                           <th>Item Actual Price</th>
+                           <th>{{lang.get('Item Actual Price')}}</th>
                            <td class="fw-bold text-primary">{{selectedItem?.grandTotalAmount | number}}</td>
                         </tr>
                         <tr>
-                           <th>Sales Type / Floor Name</th>
+                           <th>{{lang.get('Sales Type / Floor Name')}}</th>
                            <td class="text-primary">{{table?.floorName}}</td>
                         </tr>
                         <tr>
-                           <th>Printer</th>
+                           <th>{{lang.get('Printer')}}</th>
                            <td class="text-primary"> </td>
                         </tr>
 
@@ -327,7 +326,7 @@
                         <tr>
                            <td colspan="4" class="text-end">
                               <button type="button" class="btn btn-dark btn-sm px-5"
-                                 (click)="selectedItem = null">Back</button>
+                                 (click)="selectedItem = null">{{lang.get('Back')}}</button>
                            </td>
                         </tr>
                      </tbody>
@@ -342,23 +341,23 @@
          <ul class="nav nav-pills mb-2">
             <li class="nav-item" *ngIf="posMode != 'cashier'" >
                <a class="nav-link" (click)="sendOrder();">
-                  <i class="bi bi-fork-knife"></i> Send Order
+                     <i class="bi bi-fork-knife"></i> {{lang.get('Send Order')}}
                </a>
             </li>
             <li class="nav-item" *ngIf="posMode != 'cashier'">
                <a class="nav-link" (click)="fnTableChecker(contentGuestPrinting)">
-                  <i class="bi bi-receipt-cutoff"></i> Table Checker
+                     <i class="bi bi-receipt-cutoff"></i> {{lang.get('Table Checker')}}
                </a>
             </li>
 
             <li class="nav-item">
                <a class="nav-link" (click)="activeTab = 'info'">
-                  <i class="bi bi-question-circle"></i> INFO</a>
+                     <i class="bi bi-question-circle"></i> {{lang.get('INFO')}}</a>
             </li>
 
             <li class="nav-item">
                <a class="nav-link" (click)="openComponent(id);logService.logAction('Click BILL', id)">
-                  <i class="bi bi-receipt-cutoff"></i> Bill</a>
+                     <i class="bi bi-receipt-cutoff"></i> {{lang.get('Bill')}}</a>
             </li>
 
          </ul>
@@ -366,23 +365,23 @@
          <ul class="nav category-tabs mb-3">
             <li class="nav-item ms-2">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'function'"
-                  (click)="activeTab = 'function'"><i class="bi bi-gear"></i> FUNCTION</a>
+                  (click)="activeTab = 'function'"><i class="bi bi-gear"></i> {{lang.get('FUNCTION')}}</a>
             </li>
             <li class="nav-item">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'"><i
-                     class="bi bi-cup-straw"></i> MENU</a>
+                     class="bi bi-cup-straw"></i> {{lang.get('MENU')}}</a>
             </li>
             <li class="nav-item">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'modifier'"
-                  (click)="activeTab = 'modifier'"><i class="bi bi-pencil"></i> MODIFIER</a>
+                  (click)="activeTab = 'modifier'"><i class="bi bi-pencil"></i> {{lang.get('MODIFIER')}}</a>
             </li>
             <li class="nav-item">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'discount'"
-                  (click)="activeTab = 'discount'"><i class="bi bi-percent"></i> ITEM DISCOUNT</a>
+                  (click)="activeTab = 'discount'"><i class="bi bi-percent"></i> {{lang.get('ITEM DISCOUNT')}}</a>
             </li>
             <li class="nav-item">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'kitchen'"
-                  (click)="activeTab = 'kitchen'"><i class="bi bi-fire"></i> KITCHEN</a>
+                  (click)="activeTab = 'kitchen'"><i class="bi bi-fire"></i> {{lang.get('KITCHEN')}}</a>
             </li>
 
          </ul>
@@ -399,21 +398,21 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['send_order']['class']]" [disabled]="cart.length < 1 || lock"
                         (click)="sendOrder();">
-                        <i class="bi bi-fork-knife"></i> SEND ORDER</button>
+                        <i class="bi bi-fork-knife"></i> {{lang.get('SEND ORDER')}}</button>
                   </div>
                   }
                   @if(uxMenu['bill']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['bill'] ? uxMenu['bill']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['bill']['class']]"
                         (click)="openComponent(id);logService.logAction('Click BILL', id)">
-                        <i class="bi bi-receipt-cutoff"></i> BILL</button>
+                        <i class="bi bi-receipt-cutoff"></i> {{lang.get('BILL')}}</button>
                   </div>
                   }
                   @if(uxMenu['payment']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['payment'] ? uxMenu['payment']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]" [disabled]="table.paymentId == ''  "
                         (click)="payment()">
-                        <i class="bi bi-credit-card"></i> PAYMENT</button>
+                        <i class="bi bi-credit-card"></i> {{lang.get('PAYMENT')}}</button>
 
                   </div>
                   }
@@ -422,7 +421,7 @@
                   <div class="col-3 d-grid" [style.order]="uxMenu['info'] ? uxMenu['info']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['info']['class']]" [disabled]="table.tableMapStatusId < 13 "
                         (click)="openComponent(id);logService.logAction('Click INFO', id)">
-                        <i class="bi bi-question-circle"></i>  INFO</button>
+                        <i class="bi bi-question-circle"></i>  {{lang.get('INFO')}}</button>
                   </div>
                   }
 
@@ -431,7 +430,7 @@
                      [style.order]="uxMenu['exit_without_order'] ? uxMenu['exit_without_order']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['exit_without_order']['class']]" (click)="exitWithoutOrder();"><i
                            class="bi bi-trash"></i>
-                        EXIT WITHOUT ORDER</button>
+                        {{lang.get('EXIT WITHOUT ORDER')}}</button>
                   </div>
                   }
 
@@ -441,7 +440,7 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_items']['class']]"
                         (click)="transferItemsGroup()"> <i class="bi bi-send-plus"></i>
-                        TRANSFER ITEMS
+                        {{lang.get('TRANSFER ITEMS')}}
                      </button>
                   </div>
                   }
@@ -450,7 +449,7 @@
                   <div class="col-3 d-grid" [style.order]="uxMenu['take_out'] ? uxMenu['take_out']['order'] : ''">
                      <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['take_out']['class']]" (click)="takeOut()">
                         <i class="bi bi-bag-check"></i>
-                        TAKE OUT</button>
+                        {{lang.get('TAKE OUT')}}</button>
                   </div>
                   }
 
@@ -459,7 +458,7 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger']['class']]" (click)="openTables(modalMergeCheck)">
                         <i class="bi bi-intersect"></i>
-                        MERGE </button>
+                        {{lang.get('MERGE')}} </button>
                   </div>
                   }
 
@@ -470,7 +469,7 @@
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_cover']['class']]"
                         (click)="model.newQty = 0; openSm(modalChangeCover)">
                         <i class="bi bi-people"></i>
-                        CHANGE COVER </button>
+                        {{lang.get('CHANGE COVER')}} </button>
                   </div>
                   }
                   @if(uxMenu['change_table']){
@@ -479,7 +478,7 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_table']['class']]" (click)="openTables(modalChangeTable)">
                         <i class="bi bi-arrow-repeat"></i>
-                        CHANGE TABLE </button>
+                        {{lang.get('CHANGE TABLE')}} </button>
                   </div>
                   }
                   @if(uxMenu['transfer_log']){ 
@@ -488,7 +487,7 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_log']['class']]" (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
-                        TRANSFER LOG</button>
+                        {{lang.get('TRANSFER LOG')}}</button>
                   </div>
                   }
                   @if(uxMenu['merger_log']){
@@ -496,20 +495,20 @@
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger_log']['class']]" (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
-                        MERGE LOG</button>
+                        {{lang.get('MERGE LOG')}}</button>
                   </div>
                   }
                   @if(uxMenu['void_transaction']){
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['void_transaction'] ? uxMenu['void_transaction']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_transaction']['class']]" (click)="onVoidTransaction()">
-                        <i class="bi bi-x-lg"></i> VOID TRANSCTION</button>
+                        <i class="bi bi-x-lg"></i> {{lang.get('VOID TRANSCTION')}}</button>
                   </div>
                   }
                   @if(uxMenu['void_item']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['void_item'] ? uxMenu['void_item']['order'] : ''">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_item']['class']]" (click)="onVoidItem()">
-                        <i class="bi bi-x-lg"></i> VOID ITEM </button>
+                        <i class="bi bi-x-lg"></i> {{lang.get('VOID ITEM')}} </button>
                   </div>
                   }
                </div>
@@ -521,15 +520,15 @@
 
                <div class="row g-1 mb-3">
                   @if(menuLookUpParent.length> 0){
-                  <div>Lookup Menu : <strong class="text-uppercase">{{menuLookUpParent[0]['name'] }} </strong> </div>
+                  <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{menuLookUpParent[0]['name'] }} </strong> </div>
 
                   }
                   @else {
-                  <div>Lookup Menu : <strong class="text-uppercase">MENU</strong> </div>
+                  <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{lang.get('MENU')}}</strong> </div>
                   }
                   <div class="col-3 mb-1 d-grid" *ngIf="menuLookUpParent.length > 0">
                      <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
-                           class="bi bi-arrow-left"></i> BACK</button>
+                           class="bi bi-arrow-left"></i> {{lang.get('BACK')}}</button>
                   </div>
 
                   <div class="col-3 mb-1 d-grid" *ngFor="let x of menuLookUp; let i= index">
@@ -579,7 +578,7 @@
                         {{x.name}}</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" (click)="modal(modalAddMemo,'md');"><i class="bi bi-pen"></i> Custom Notes</a>
+                       <a class="nav-link" (click)="modal(modalAddMemo,'md');"><i class="bi bi-pen"></i> {{lang.get('Custom Notes')}}</a>
                   </li>
                </ul>
 
@@ -612,7 +611,7 @@
                   <ul>
                      <li *ngFor="let x of results">{{x.status}}</li>
                   </ul>
-                  <div class="text-center"><button class="btn btn-sm btn-warning" (click)="results = '' ">Close</button>
+                     <div class="text-center"><button class="btn btn-sm btn-warning" (click)="results = '' ">{{lang.get('Close')}}</button>
                   </div>
                </div>
 
@@ -650,28 +649,28 @@
                         <table class="table table-sm">
                            <tbody>
                               <tr>
-                                 <th>ID</th>
+                                    <th>{{lang.get('ID')}}</th>
                                  <td>{{table?.id}}</td>
                               </tr>
                               <tr>
-                                 <th>Daily Check ID</th>
+                                    <th>{{lang.get('Daily Check ID')}}</th>
                                  <td>{{table?.dailyCheckId}}</td>
                               </tr>
                               <tr>
-                                 <th>Outlet ID</th>
+                                    <th>{{lang.get('Outlet ID')}}</th>
                                  <td>{{table?.outletId}}</td>
                               </tr>
 
                               <tr>
-                                 <th>Table Name / ID </th>
+                                    <th>{{lang.get('Table Name / ID')}}</th>
                                  <td>{{table?.tableName}} / {{table?.outletTableMapId}} </td>
                               </tr>
                               <tr>
-                                 <th>Cover</th>
+                                    <th>{{lang.get('Cover')}}</th>
                                  <td>{{table?.cover}}</td>
                               </tr>
                               <tr>
-                                 <th>Status / ID</th>
+                                    <th>{{lang.get('Status / ID')}}</th>
                                  <td> {{table?.status}} / {{table?.tableMapStatusId}}</td>
                               </tr>
 
@@ -685,28 +684,28 @@
                            <tbody>
 
                               <tr>
-                                 <th>Start Date</th>
+                                 <th>{{lang.get('Start Date')}}</th>
                                  <td>{{table?.startDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                               </tr>
 
                               <tr>
-                                 <th>Over Time</th>
+                                 <th>{{lang.get('Over Time')}}</th>
                                  <td>{{table.overTime > 0 ? table.overTime : ''}}</td>
                               </tr>
                               <tr>
-                                 <th>Input Date</th>
+                                 <th>{{lang.get('Input Date')}}</th>
                                  <td>{{table?.inputDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                               </tr>
                               <tr>
-                                 <th>Input By</th>
+                                 <th>{{lang.get('Input By')}}</th>
                                  <td>{{table?.inputBy}}</td>
                               </tr>
                               <tr>
-                                 <th>Update Date</th>
+                                 <th>{{lang.get('Update Date')}}</th>
                                  <td>{{table?.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                               </tr>
                               <tr>
-                                 <th>Update By</th>
+                                 <th>{{lang.get('Update By')}}</th>
                                  <td>{{table?.updateBy}}</td>
                               </tr>
 
@@ -725,13 +724,13 @@
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'menu' && menuLookUpParent.length > 0">
                   <button type="button" class="btn btn-success py-3"
                      (click)="btnFinish(); menuLookupId = 0; results = '' ">
-                     <i class="bi bi-check2"></i> FINISH
+                     <i class="bi bi-check2"></i> {{lang.get('FINISH')}}
                   </button>
                </div>
 
                <div class="col-3 mb-1 d-grid" *ngIf="activeTab === 'modifier'">
                   <button type="button" class="btn btn-primary py-3" (click)="fnSubmitModifier();  results = '' ">
-                     <i class="bi bi-check2"></i> SUBMIT
+                     <i class="bi bi-check2"></i> {{lang.get('SUBMIT')}}
                   </button>
                </div>
 
@@ -750,7 +749,7 @@
 
 <ng-template #modalQty let-modal>
    <div class="modal-header">
-      <strong>Change Quantity Item</strong>
+      <strong>{{lang.get('Change Quantity Item')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
@@ -759,14 +758,14 @@
          <div class="mb-3">
             <div class="row g-1">
                <div class="col-5">
-                  <div class="mb-1"><strong for="newQty">Current </strong></div>
+                  <div class="mb-1"><strong for="newQty">{{lang.get('Current')}}</strong></div>
                   <div class="form-control form-control-lg bg-light">{{item.total}}</div>
                </div>
                <div class="col-1">
                   <i class="bi bi-arrow-right"></i>
                </div>
                <div class="col-6">
-                  <div class="mb-1"><strong for="newQty">Change to</strong></div>
+                  <div class="mb-1"><strong for="newQty">{{lang.get('Change to')}}</strong></div>
                   <input type="number" class="form-control form-control-lg" id="newQty" required
                      [(ngModel)]="model.newQty" name="newQty" #newQty="ngModel">
                </div>
@@ -779,11 +778,11 @@
 
          <div class="row g-1">
             <div class="col d-grid">
-               <button type="button" class="btn btn-lg btn-warning" (click)="model.newQty=0">CE</button>
+               <button type="button" class="btn btn-lg btn-warning" (click)="model.newQty=0">{{lang.get('CE')}}</button>
             </div>
             <div class="col  d-grid">
                <button type="submit" class="btn btn-lg btn-dark"
-                  [disabled]="!actorForm.form.valid ||  model.newQty == 0">OK</button>
+                  [disabled]="!actorForm.form.valid ||  model.newQty == 0">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -795,7 +794,7 @@
 
 <ng-template #modalAddMemo let-modal>
    <div class="modal-header">
-      <strong>Add Custom Notes </strong>
+      <strong>{{lang.get('Add Custom Notes')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
@@ -805,17 +804,17 @@
             <input type="text" class="form-control form-control-lg" #myInput id="note" required [(ngModel)]="model.note"
                name="note" #note="ngModel" autofocus>
             <div [hidden]="note.valid || note.pristine" class="text-danger">
-               Note is required
+               {{lang.get('Note is required')}}
             </div>
          </div>
 
          <div class="row g-1">
             <div class="col-6 d-grid">
                <button type="button" class="btn btn-lg btn-outline-secondary"
-                  (click)="modal.close('Save click')">Cancel</button>
+                  (click)="modal.close('Save click')">{{lang.get('Cancel')}}</button>
             </div>
             <div class="col-6 d-grid">
-               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">OK</button>
+               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -872,7 +871,7 @@
    </div>
    <div class="modal-body bg-main rounded-bottom">
 
-      <div> <strong>Merger Table</strong></div>
+      <div> <strong>{{lang.get('Merger Table')}}</strong></div>
       <div class="map">
 
          <div style="height: 75vh; zoom:{{zoom}}% ">
@@ -933,7 +932,7 @@
    </div>
    <div class="modal-body bg-main rounded-bottom">
 
-      <div> <strong>Change Table</strong></div>
+      <div> <strong>{{lang.get('Change Table')}}</strong></div>
       <div class="map">
 
          <div style="height: 75vh; zoom:{{zoom}}% ">
@@ -973,7 +972,7 @@
 
 <ng-template #modalChangeCover let-modal>
    <div class="modal-header">
-      <strong>Change Cover </strong>
+      <strong>{{lang.get('Change Cover')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
@@ -984,14 +983,14 @@
 
             <div class="row g-1">
                <div class="col-5">
-                  <div class="mb-1"><label for="newQty">Current Cover</label></div>
+                  <div class="mb-1"><label for="newQty">{{lang.get('Current Cover')}}</label></div>
                   <div class="form-control form-control-lg">{{table['cover']}}</div>
                </div>
                <div class="col-1">
                   <i class="bi bi-arrow-right"></i>
                </div>
                <div class="col-6">
-                  <div class="mb-1"><label for="newQty">Change Cover</label></div>
+                  <div class="mb-1"><label for="newQty">{{lang.get('Change Cover')}}</label></div>
                   <input type="number" class="form-control form-control-lg" id="newQty" required
                      [(ngModel)]="model.newQty" name="newQty" #newQty="ngModel">
                </div>
@@ -1004,10 +1003,10 @@
 
          <div class="row g-1">
             <div class="col d-grid">
-               <button type="button" class="btn btn-lg btn-warning" (click)="model.newQty=0">CE</button>
+               <button type="button" class="btn btn-lg btn-warning" (click)="model.newQty=0">{{lang.get('CE')}}</button>
             </div>
             <div class="col  d-grid">
-               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">OK</button>
+               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -1018,17 +1017,17 @@
 
 <ng-template #modalMenuSet let-modal>
    <div class="modal-header">
-      <strong>Menu Set</strong>
+      <strong>{{lang.get('Menu Set')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
       <table class="table">
          <thead>
             <tr>
-               <th>#</th>
-               <th>Name</th>
-               <th>Qty</th>
-               <th>Select</th>
+               <th>{{lang.get('#')}}</th>
+               <th>{{lang.get('Name')}}</th>
+               <th>{{lang.get('Qty')}}</th>
+               <th>{{lang.get('Select')}}</th>
             </tr>
          </thead>
          <tbody>
@@ -1053,7 +1052,7 @@
 
    <div class="modal-body">
       <div class="d-grid">
-         <button type="button" (click)="onSubmitMenuSet()" class="btn btn-lg btn-primary">SUBMIT</button>
+         <button type="button" (click)="onSubmitMenuSet()" class="btn btn-lg btn-primary">{{lang.get('SUBMIT')}}</button>
       </div>
 
    </div>
@@ -1062,19 +1061,19 @@
 
 <ng-template #contentRemark let-modal>
    <div class="modal-header">
-      <strong>Discount Remark</strong>
+      <strong>{{lang.get('Discount Remark')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
 
    <div class="modal-body">
-      <label>Note*</label>
+      <label>{{lang.get('Note*')}}</label>
       <input type="text" class="form-control form-control-lg" [(ngModel)]="remark" name="remark"
-         placeholder="Add Remark" #remarkInput autofocus>
+         [placeholder]="lang.get('Add Remark')" #remarkInput autofocus>
    </div>
    <div class="modal-body">
       <div class="d-grid">
          <button type="button" (click)="addDiscountGroup(this.discountGroupSelect)" [disabled]="remark == '' "
-            class="btn btn-lg btn-dark">SUBMIT</button>
+            class="btn btn-lg btn-dark">{{lang.get('SUBMIT')}}</button>
       </div>
 
    </div>
@@ -1083,7 +1082,7 @@
 
 <ng-template #contentGuestPrinting let-modal>
    <div class="modal-header">
-      <strong>Table Checker Print</strong>
+      <strong>{{lang.get('Table Checker Print')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
 
@@ -1103,14 +1102,14 @@
 
                <textarea class="form-control form-control-sm font-monospace" disabled rows="20"
                   [(ngModel)]="questCheckTemp" name="guestPrintingNote"
-                  placeholder="Please select Send Order"></textarea>
+                    [placeholder]="lang.get('Please select Send Order')"></textarea>
             </div>
             <div class="mb-3 alert alert-warning" [ngClass]="{'alert-danger': printNoteError}" *ngIf="printNote != ''">
                {{printNote}}
             </div>
             <div class="d-grid">
                <button type="button" [disabled]="questCheckTemp == '' || printLoading" class="btn btn-lg btn-dark"
-                  (click)="fnPrint()">Print</button>
+                    (click)="fnPrint()">{{lang.get('Print')}}</button>
             </div>
 
          </div>
@@ -1120,7 +1119,7 @@
 
 <ng-template #modalOpenPriceContent let-modal>
    <div class="modal-header">
-      <strong>Open Price</strong>
+      <strong>{{lang.get('Open Price')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
@@ -1129,7 +1128,7 @@
          <div class="mb-3">
             <div class="row g-1">
                <div class="col-12 mb-2">
-                  Please enter the price for "open Price item"<br>Items : <strong>{{selectItemOpenPrice.name}}</strong>
+                  {{lang.get('Please enter the price for "open Price item"')}}<br>{{lang.get('Items')}} : <strong>{{selectItemOpenPrice.name}}</strong>
                </div>
 
                <div class="col-12">
@@ -1146,11 +1145,11 @@
 
          <div class="row g-1">
             <div class="col d-grid">
-               <button type="button" class="btn btn-lg btn-warning" (click)="model.price=0 ">CE</button>
+               <button type="button" class="btn btn-lg btn-warning" (click)="model.price=0 ">{{lang.get('CE')}}</button>
             </div>
             <div class="col  d-grid">
                <button type="submit" class="btn btn-lg btn-dark"
-                  [disabled]="!actorForm.form.valid ||  model.price == 0">OK</button>
+                  [disabled]="!actorForm.form.valid ||  model.price == 0">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -1163,7 +1162,7 @@
 
 <ng-template #modalInfoPrinting let-modal>
    <div class="modal-header">
-      <strong>Printing</strong>
+      <strong>{{lang.get('Printing')}}</strong>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">

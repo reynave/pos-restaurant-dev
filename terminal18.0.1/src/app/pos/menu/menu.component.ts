@@ -22,6 +22,7 @@ import { MergerLogComponent } from './merger-log/merger-log.component';
 import { TablePrintQueueComponent } from '../print-queue/table-print-queue/table-print-queue.component';
 import { SocketService } from '../../service/socket.service';
 import { NgxCurrencyDirective } from 'ngx-currency';
+import { LanguageService } from '../../service/language.service';
 export class Actor {
   constructor(
     public newQty: number,
@@ -136,6 +137,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     public logService: UserLoggerService,
     private socketService: SocketService,
     config: NgbModalConfig,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;

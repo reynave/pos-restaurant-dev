@@ -3,46 +3,46 @@
     <div class="row g-3 mb-3">
 
         <div class="col-12">
-            <h4>SETTING</h4>
+            <h4>{{lang.get('SETTING')}}</h4>
         </div>
 
         <div class="col-6">
             <div class="order-panel ">
-                <strong>LOCAL PRINTER</strong>
+                <strong>{{lang.get('LOCAL PRINTER')}}</strong>
                 <table class="table table-bordered">
                     <tr>
-                        <td class="align-self-center">Printer Connection</td>
+                        <td class="align-self-center">{{lang.get('PRINTER CONNECTION')}}</td>
                         <td> <select class="form-control" [(ngModel)]="config['printer']['con']">
-                                <option value="ip">IP</option>
-                                <option value="com">SERIAL/COM</option>
+                                <option value="ip">{{lang.get('IP')}}</option>
+                                <option value="com">{{lang.get('SERIAL/COM')}}</option>
                             </select>
                         </td>
                     </tr>
 
                     <tr>
-                        <td class="align-self-center">Printer Address</td>
+                        <td class="align-self-center">{{lang.get('PRINTER ADDRESS')}}</td>
                         <td><input type="text" class="form-control" [(ngModel)]="config['printer']['address']"> </td>
                     </tr>
 
                     <tr>
-                        <td class="align-self-center">Printer port</td>
+                        <td class="align-self-center">{{lang.get('PRINTER PORT')}}</td>
                         <td><input type="text" class="form-control" [(ngModel)]="config['printer']['port']"> </td>
                     </tr>
 
                     <tr>
-                        <td class="align-self-center">Name</td>
+                        <td class="align-self-center">{{lang.get('NAME')}}</td>
                         <td><input type="text" class="form-control" [(ngModel)]="config['printer']['name']"> </td>
                     </tr>
 
                     <tr>
-                        <td>Note</td>
+                        <td>{{lang.get('NOTE')}}</td>
                         <td>
                             <div class="mb-1">
                                 <textarea class="form-control" rows="4" [(ngModel)]="printTest"></textarea>
                             </div>
                             <div class="d-grid ">
                                 <button type="button" (click)="onTestPrinting()" [disabled]="loading"
-                                    class="btn btn-lg btn-dark mx-1 ">TEST</button>
+                                    class="btn btn-lg btn-dark mx-1 ">{{lang.get('TEST')}}</button>
                             </div>
                         </td>
                     </tr>
@@ -54,44 +54,81 @@
 
         <div class="col-6">
             <div class="order-panel">
-                <strong>TABLE LOGOUT TIME</strong>
-                <div>
-                    <small>
-                        <em>Untuk halaman TABLE jika tidak ada interaksi maka akan otomatis logout setiap
-                            {{timerLogoff}} detik</em>
-                    </small>
+                <div class="mb-3">
+                    <strong>{{lang.get('TABLE LOGOUT TIME')}}</strong>
+                    <div>
+                      
+                            <small>{{lang.get('logout info')}}
+                                {{timerLogoff}} {{lang.get('second')}}</small>
+                    </div>
                 </div>
+
+
                 <div class="mb-3">
                     <table class="table ">
                         <tbody>
                             <tr>
-                                <td>In Second</td>
+                                <td>{{lang.get('IN SECOND')}}</td>
                                 <td><input type="number" class="form-control form-control-sm" [(ngModel)]="timerLogoff">
                                     <div>{{note1}}</div>
                                 </td>
                                 <td> <button type="button" class="btn btn-sm btn-primary"
-                                        (click)="update1()">Update</button> </td>
+                                        (click)="update1()">{{lang.get('UPDATE')}}</button> </td>
                             </tr>
                         </tbody>
                     </table>
 
                 </div>
-                <strong>TERMINAL KEY</strong>
+
+
+                <div class="mb-3">
+
+                    <table class="table table-bordered">
+                        <tr>
+                            <td class="align-self-center"><strong>{{lang.get('Current Language')}}</strong></td>
+                            <td>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-secondary mx-1"
+                                        [class]="{'btn-primary': getSelectLanguage() == 'en'}"
+                                        (click)="setLanguage('en')">
+                                        <i *ngIf="getSelectLanguage() == 'en'" class="bi bi-check-square-fill"></i>
+                                        <i *ngIf="getSelectLanguage() != 'en'" class="bi bi-square"></i>
+                                        {{lang.get('ENGLISH')}}</button>
+                                    <button type="button" class="btn btn-sm btn-secondary mx-1"
+                                        [class]="{'btn-primary': getSelectLanguage() == 'id'}"
+                                        (click)="setLanguage('id')">
+                                        <i *ngIf="getSelectLanguage() == 'id'" class="bi bi-check-square-fill"></i>
+                                        <i *ngIf="getSelectLanguage() != 'id'" class="bi bi-square"></i>
+                                        {{lang.get('BAHASA INDONESIA')}}
+                                    </button>
+                                    <div *ngIf="langLoading">
+                                        <small>{{lang.get('LOAD DATA FROM SERVER...')}}</small>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+
+                </div>
+
+
+                <strong>{{lang.get('TERMINAL KEY')}}</strong>
                 <table class="table ">
                     <tbody>
                         <tr>
-                            <td>KEY</td>
+                            <td>{{lang.get('KEY')}}</td>
                             <td>: {{keyLicense.terminalId}}</td>
                         </tr>
                         <tr>
-                            <td>Exp</td>
+                            <td>{{lang.get('EXP')}}</td>
                             <td>: {{keyLicense.expired}}</td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>
                                 <div class="d-grid">
-                                    <a class="btn btn-lg btn-warning" [routerLink]="['/login/terminal']">EDIT</a>
+                                    <a class="btn btn-lg btn-warning" [routerLink]="['/login/terminal']">{{lang.get('EDIT')}}</a>
                                 </div>
                             </td>
                         </tr>
@@ -105,7 +142,7 @@
 
         <div class="col-7 ">
             <div class="order-panel">
-                <strong>GLOBAL PRINTER / PRINTER SERVICE</strong>
+                <strong>{{lang.get('GLOBAL PRINTER / PRINTER SERVICE')}}</strong>
 
 
                 <table class="table table-sm table-bordered">
@@ -119,13 +156,13 @@
                                 <i class="bi bi-square"></i>
                                 }
                             </th>
-                            <th>Group</th>
+                            <th>{{lang.get('GROUP')}}</th>
 
-                            <th>Printer 1</th>
-                            <th>Connection 1</th>
+                            <th>{{lang.get('PRINTER 1')}}</th>
+                            <th>{{lang.get('CONNECTION 1')}}</th>
 
-                            <th>Printer 2</th>
-                            <th>Connection 2</th>
+                            <th>{{lang.get('PRINTER 2')}}</th>
+                            <th>{{lang.get('CONNECTION 2')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -150,14 +187,14 @@
 
                 <table class="table table-bordered">
                     <tr>
-                        <td>Note</td>
+                        <td>{{lang.get('NOTE')}}</td>
                         <td>
                             <div class="mb-1">
                                 <textarea class="form-control" rows="4" [(ngModel)]="printTestGlobal"></textarea>
                             </div>
                             <div class="d-grid ">
                                 <button type="button" (click)="globalPrinter()" [disabled]="loading || checkTotal < 1"
-                                    class="btn btn-lg btn-dark mx-1 ">GLOBAL TEST</button>
+                                    class="btn btn-lg btn-dark mx-1 ">{{lang.get('GLOBAL TEST')}}</button>
                             </div>
                         </td>
                     </tr>
@@ -168,26 +205,26 @@
         <div class="col-5">
 
             <div class="order-panel">
-                <strong> Logs onTestPrinting / globalPrinter:</strong>
+                <strong>{{lang.get('LOGS ONTESTPRINTING / GLOBALPRINTER:')}}</strong>
                 <div style="height: 400px; overflow-y: scroll; ">
                     <div *ngFor="let log of printerGlobalLogs">
 
                         <div class="lh-1">
-                            <small>Printer 1 
+                            <small>{{lang.get('PRINTER 1')}}
                                 <i *ngIf="log.status == 1" class="bi bi-check text-primary"></i>
                                 <i *ngIf="log.status == 2" class="bi bi-check-all text-primary"></i>
-                                <i *ngIf="log.status == -1" class="bi bi-x text-danger"></i> 
+                                <i *ngIf="log.status == -1" class="bi bi-x text-danger"></i>
                                 : {{log.printer1}}
                             </small>
 
                         </div>
-                        <div class="lh-1"> <small>Printer 2
-                            
-                               <i *ngIf="log.status2 == 1" class="bi bi-check text-primary"></i>
-                                <i *ngIf="log.status2 == 2" class="bi bi-check-all text-primary"></i>
-                                <i *ngIf="log.status2 == -1" class="bi bi-x text-danger"></i> 
+                        <div class="lh-1"> <small>{{lang.get('PRINTER 2')}
 
-                            : {{log.printer2}} {{log.status2}}</small></div>
+                                <i *ngIf="log.status2 == 1" class="bi bi-check text-primary"></i>
+                                <i *ngIf="log.status2 == 2" class="bi bi-check-all text-primary"></i>
+                                <i *ngIf="log.status2 == -1" class="bi bi-x text-danger"></i>
+
+                                : {{log.printer2}} {{log.status2}}</small></div>
                         <div class="lh-1"> <small>{{log.updateDate | date:'short'}} {{log.consoleError}}</small></div>
                         <div class="lh-1">
                             <hr>

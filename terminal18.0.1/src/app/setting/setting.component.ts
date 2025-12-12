@@ -7,6 +7,7 @@ import { HeaderMenuComponent } from '../header/header-menu/header-menu.component
 import { UserLoggerService } from '../service/user-logger.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
+import { LanguageService } from '../service/language.service';
 
 @Component({
   selector: 'app-setting',
@@ -35,7 +36,8 @@ export class SettingComponent implements OnInit, OnDestroy {
   constructor(
     public configService: ConfigService,
     public logService: UserLoggerService,
-    private http: HttpClient
+    private http: HttpClient,
+    public lang: LanguageService
   ) {}
   ngOnDestroy(): void {
     clearInterval(this.printerLogIntervalId);
@@ -210,5 +212,33 @@ export class SettingComponent implements OnInit, OnDestroy {
           this.loading = false;
         }
       );
+  }
+
+  getSelectLanguage() {
+    return this.lang.getSelectLanguage();
+  }
+  langLoading: boolean = false;
+  setLanguage(lang: string) {
+    this.langLoading = true;
+    this.http
+      .get<any>(this.api + 'language', {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          // json to stringify
+          const languages = JSON.stringify(data);
+          localStorage.setItem('pos3.languageData', languages);
+          this.langLoading = false;
+        },
+        (error) => {
+          console.log(error);
+          this.langLoading = false;
+          alert('Error loading language data');
+        }
+      );
+    this.lang.updateLanguage(lang);
+    localStorage.setItem('pos3.language', lang);
   }
 }

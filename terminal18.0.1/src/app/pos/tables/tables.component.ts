@@ -13,6 +13,7 @@ import { UserLoggerService } from '../../service/user-logger.service';
 
 import { InactivityService } from '../../service/inactivity.service';
 import { Subscription } from 'rxjs';
+import { LanguageService } from '../../service/language.service';
 
 export class Actor {
   constructor(
@@ -75,7 +76,8 @@ export class TablesComponent implements OnInit, OnDestroy {
     private router: Router,
     private socketService: SocketService,
     public logService: UserLoggerService,
-    private inactivityService: InactivityService
+    private inactivityService: InactivityService,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
@@ -133,9 +135,7 @@ export class TablesComponent implements OnInit, OnDestroy {
         this.httpGet();
         this.httpDailyCheck();
       });
-    this.accessRight = this.configService.acceesRight();
-
-    console.log('Access Right', this.configService.acceesRight());
+    this.accessRight = this.configService.acceesRight(); 
   }
 
   sendMessage() {
@@ -167,8 +167,7 @@ export class TablesComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (data) => {
-          this.sendMessage();
-          console.log(data);
+          this.sendMessage(); 
         },
         (error) => {
           console.log(error);
@@ -203,8 +202,7 @@ export class TablesComponent implements OnInit, OnDestroy {
         },
       })
       .subscribe(
-        (data) => {
-          console.log(data);
+        (data) => { 
           this.loading = false;
           this.items = data['items'];
           this.totalCart = data['cart'].length;
@@ -224,7 +222,7 @@ export class TablesComponent implements OnInit, OnDestroy {
       })
       .subscribe(
         (data) => {
-          console.log(data);
+      
           this.totalOpenTable = data['items'].length;
         },
         (error) => {
@@ -247,13 +245,13 @@ export class TablesComponent implements OnInit, OnDestroy {
   item: any = [];
   capacity: string = '';
   open(content: any, x: any, current: number, i: number) {
-    console.log(this.accessRight.menu);
-    if (this.accessRight.menu) {
-      console.log(x);
+    console.log('open this.accessRight.menu : ',this.accessRight['menu'], this.accessRight['menuNewTable']);
+    if (this.accessRight['menu'] === true) {
+      
       let allow = true;
       if (typeof x.lockBy !== 'undefined' && x.lockBy !== '') {
         if (x.lockBy !== this.terminalId) {
-          alert('Table Locked by Terminal ' + x.lockBy);
+          alert(this.lang.get('Table Locked by Terminal') + ' ' + x.lockBy);
           history.back();
           allow = false;
         }
@@ -271,20 +269,19 @@ export class TablesComponent implements OnInit, OnDestroy {
             this.model.outletFloorPlandId = x.outletFloorPlandId;
 
             if (this.lock == false) {
-              if (this.accessRight.menuOpenNewTable) {
+              if (this.accessRight['menuNewTable'] === true) {
                 this.modalService.open(content, { size: 'sm' });
               }else {
-                alert('Anda tidak memiliki akses ke menu ini.');
+                alert(this.lang.get('You do not have access to this menu.'));
               }
             } else {
-              alert('Daily Close Requirement!');
+              alert(this.lang.get('Daily Close Requirement!'));
             }
           } else {
             this.gotTo(x);
           }
         }
-
-        //  console.log(x.id, x, current, i);
+ 
         this.currentTable = x;
 
         for (let i = 0; i < this.items.length; i++) {
@@ -293,8 +290,7 @@ export class TablesComponent implements OnInit, OnDestroy {
           });
         }
 
-        this.items[current]['maps'][i]['active'] = 1;
-        console.log(this.items[current]['maps'][i]);
+        this.items[current]['maps'][i]['active'] = 1; 
         this.item = this.items[current]['maps'][i];
         this.item['indexed'] = {
           current: current,
@@ -308,8 +304,7 @@ export class TablesComponent implements OnInit, OnDestroy {
             },
           })
           .subscribe(
-            (data) => {
-              console.log(data);
+            (data) => { 
               this.item['detail'] = data['detail'];
               this.item['cart'] = data['cart'];
             },
@@ -319,7 +314,7 @@ export class TablesComponent implements OnInit, OnDestroy {
           );
       }
     } else {
-      alert('Anda tidak memiliki akses ke menu ini.');
+        alert(this.lang.get('You do not have access to this menu.'));
     }
   }
 
@@ -335,15 +330,13 @@ export class TablesComponent implements OnInit, OnDestroy {
     const body = {
       cartId: x.cardId,
       terminalId: this.terminalId,
-    };
-    console.log('gotTo', body);
+    }; 
 
     //localStorage.setItem('pos3.lockTableId', x.outletTableMapId);
     this.http
       .post<any>(url, body, { headers: this.configService.headers() })
       .subscribe(
-        (data) => {
-          console.log(data);
+        (data) => { 
           this.sendMessage();
           this.loading = false;
           localStorage.setItem('pos3.id', x.cardId);
@@ -418,7 +411,7 @@ export class TablesComponent implements OnInit, OnDestroy {
             this.logService.logAction('Go to Menu', data['cardId']);
             this.socketService.emit('message-from-client', 'reload');
           } else {
-            alert('Table Used');
+            alert(this.lang.get('Table Used'));
             this.logService.logAction('ERROR Table Used');
             this.reload();
           }
@@ -474,8 +467,7 @@ export class TablesComponent implements OnInit, OnDestroy {
         headers: this.configService.headers(),
       })
       .subscribe(
-        (data) => {
-          console.log(data);
+        (data) => { 
 
           if (data['items'].length > 0) {
             this.logService.logAction(
@@ -484,7 +476,13 @@ export class TablesComponent implements OnInit, OnDestroy {
                 data['items'].length +
                 ' tables!'
             );
-            alert('Please close ' + data['items'].length + ' tables!');
+            alert(
+              this.lang.get('Please close') +
+                ' ' +
+                data['items'].length +
+                ' ' +
+                this.lang.get('tables!')
+            );
           } else {
             this.modalService.open(DailyCloseComponent, { size: 'sm' });
             this.logService.logAction('Confirm Daily Close');

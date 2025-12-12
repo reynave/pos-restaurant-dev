@@ -18,10 +18,10 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { NgxCurrencyDirective } from 'ngx-currency';
-import { BillTableComponent } from '../bill/bill-table/bill-table.component';
 import { KeyNumberComponent } from '../../keypad/key-number/key-number.component';
 import { UserLoggerService } from '../../service/user-logger.service';
 import { SocketService } from '../../service/socket.service';
+import { LanguageService } from '../../service/language.service';
 export class Actor {
   constructor(public newQty: number) {}
 }
@@ -35,7 +35,6 @@ export class Actor {
     NgbDropdownModule,
     RouterModule,
     NgxCurrencyDirective,
-    BillTableComponent,
     KeyNumberComponent,
   ],
   templateUrl: './payment.component.html',
@@ -90,7 +89,8 @@ closePayment : number = 0;
     private activeRouter: ActivatedRoute,
     public logService: UserLoggerService,
     config: NgbModalConfig,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public lang: LanguageService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
