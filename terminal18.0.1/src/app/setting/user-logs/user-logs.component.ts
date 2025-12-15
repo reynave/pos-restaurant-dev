@@ -7,6 +7,7 @@ import { NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfigService } from '../../service/config.service';
 import { environment } from '../../../environments/environment';
 import { UserLoggerService } from '../../service/user-logger.service';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-user-logs',
@@ -35,7 +36,8 @@ export class UserLogsComponent implements OnInit {
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
@@ -124,15 +126,15 @@ export class UserLogsComponent implements OnInit {
           this.items = data['log'];
           this.loading = false;
           this.logService.logAction(
-            `Search log from ${startDate} to ${endDate}`
+            `${this.lang.get('Search log from')} ${startDate} ${this.lang.get('to')} ${endDate}`
           );
         },
         (error) => {
           console.log(error);
-          alert(error['error']['error']);
+          alert(this.lang.get('Error') + ': ' + error['error']['error']);
           this.loading = false;
           this.logService.logAction(
-            `ERROR Search log / not found from ${startDate} to ${endDate}`
+            `${this.lang.get('ERROR Search log / not found from')} ${startDate} ${this.lang.get('to')} ${endDate}`
           );
         }
       );

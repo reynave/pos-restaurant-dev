@@ -4,6 +4,7 @@ import { ConfigService } from '../../../service/config.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { CommonModule } from '@angular/common';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-merger-log',
@@ -21,6 +22,7 @@ export class MergerLogComponent implements OnInit {
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
+    public lang: LanguageService,
   ) { }
 
   ngOnInit(): void {

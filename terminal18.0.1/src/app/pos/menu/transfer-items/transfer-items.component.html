@@ -8,8 +8,8 @@
                         <tr>
                             <th>#</th>
                             <th></th>
-                            <th>Menu</th>
-                            <th class="text-center">Current Table</th>
+                            <th>{{lang.get('Menu')}}</th>
+                            <th class="text-center">{{lang.get('Current Table')}}</th>
                             
                         </tr>
                     </thead>
@@ -32,7 +32,7 @@
                 </table>
 
                 <div class="d-grid m-2 sticky-bottom">
-                    <button type="button" class="btn btn-lg btn-dark" (click)="open(content)">SELECT TABLES</button>
+                    <button type="button" class="btn btn-lg btn-dark" (click)="open(content)">{{lang.get('SELECT TABLES')}}</button>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
 
 <ng-template #content let-modal>
     <div class="modal-header">
-        <strong class="modal-title" id="modal-basic-title">Select Tables for Transfer</strong>
+        <strong class="modal-title" id="modal-basic-title">{{lang.get('Select Tables for Transfer')}}</strong>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">

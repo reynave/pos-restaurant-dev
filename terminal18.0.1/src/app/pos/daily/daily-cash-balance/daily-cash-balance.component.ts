@@ -9,6 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgxCurrencyDirective } from 'ngx-currency';
 import { HeaderMenuComponent } from "../../../header/header-menu/header-menu.component";
 import { UserLoggerService } from '../../../service/user-logger.service';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-daily-cash-balance',
@@ -34,7 +35,8 @@ export class DailyCashBalanceComponent implements OnInit {
     private config: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +61,10 @@ export class DailyCashBalanceComponent implements OnInit {
       },
       error => {
         console.log(error);
-        this.logService.logAction('ERROR httpGet ' + this.api + "daily/cashBalance ");
+        const message = this.lang
+          .get('ERROR httpGet {0}')
+          .replace('{0}', this.api + 'daily/cashBalance');
+        this.logService.logAction(message);
       }
     )
   }
@@ -73,7 +78,10 @@ export class DailyCashBalanceComponent implements OnInit {
       },
       error => {
         console.log(error);
-        this.logService.logAction('ERROR httpGetCashType ' + this.api + "daily/checkCashType ");
+        const message = this.lang
+          .get('ERROR httpGetCashType {0}')
+          .replace('{0}', this.api + 'daily/checkCashType');
+        this.logService.logAction(message);
       }
     )
   }
@@ -101,11 +109,15 @@ export class DailyCashBalanceComponent implements OnInit {
         this.cashIn = '0';
         this.modalService.dismissAll();
         this.httpGet(); 
-        this.logService.logAction('addCashIn ' + tempCash + " dailyCheckId : " + (this.config.getDailyCheck() ?? ''));
+        const message = this.lang
+          .get('addCashIn {0} dailyCheckId : {1}')
+          .replace('{0}', tempCash)
+          .replace('{1}', this.config.getDailyCheck() ?? '');
+        this.logService.logAction(message);
       },
       error => {
         console.log(error);
-        this.logService.logAction('ERROR addCashIn');
+        this.logService.logAction(this.lang.get('ERROR addCashIn'));
       }
     )
   }
@@ -115,7 +127,7 @@ export class DailyCashBalanceComponent implements OnInit {
 
   note: string = '';
   openCashDrawer(){
-    this.note = 'Opening cash drawer...';
+    this.note = this.lang.get('Opening cash drawer...');
      this.modalService.open(this.infoCashDrawer);
      const config = this.config.getConfigJson();
       const body = { 
@@ -128,11 +140,14 @@ export class DailyCashBalanceComponent implements OnInit {
       data => {
          this.note = data['message'] + '<br>' + data['error'];
         console.log('Cash drawer opened', data);
-        this.logService.logAction('openCashDrawer ' + JSON.stringify(body.printer));
+        const message = this.lang
+          .get('openCashDrawer {0}')
+          .replace('{0}', JSON.stringify(body.printer));
+        this.logService.logAction(message);
       },
       error => {
         console.log(error);
-        this.logService.logAction('ERROR openCashDrawer');
+        this.logService.logAction(this.lang.get('ERROR openCashDrawer'));
       } 
     )
   }

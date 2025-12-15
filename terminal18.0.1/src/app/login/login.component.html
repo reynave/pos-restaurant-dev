@@ -6,7 +6,7 @@
          <img src="./img/logo.png" width="80%" class="img-fluid mb-3" alt="Logo">
       </div>
       <div class="text-center text-secondary mb-3" style="font-size: 1rem;">
-      <i>From the moment customers order to the time they pay, we make every step seamless and efficient.</i>
+      <i>{{lang.get('From the moment customers order to the time they pay, we make every step seamless and efficient.')}}</i>
       </div>
       <form (ngSubmit)="onSubmit()" #actorForm="ngForm">
          <div class="mb-2">
@@ -23,21 +23,21 @@
          <div class="mb-2">
             <div class="input-group">
                <span class="input-group-text bg-light border border-end-0"> <i class="bi bi-person-circle"></i> </span>
-               <input type="email" class="form-control form-control-lg bg-white" placeholder="Username" id="username"
+               <input type="email" class="form-control form-control-lg bg-white" [attr.placeholder]="lang.get('Username')" id="username"
                   required [(ngModel)]="model.username" name="username" #username="ngModel">
             </div>
             <label [hidden]="username.valid || username.pristine" class="text-danger">
-               User ID is required
+               {{lang.get('User ID is required')}}
             </label>
          </div>
          <div class="mb-2">
             <div class="input-group">
                <span class="input-group-text bg-light border border-end-0"><i class="bi bi-lock-fill"></i></span>
-               <input type="password" class="form-control form-control-lg bg-white" placeholder="Password" required
+               <input type="password" class="form-control form-control-lg bg-white" [attr.placeholder]="lang.get('Password')" required
                  [(ngModel)]="model.password" name="password" #password="ngModel">
             </div>
             <label [hidden]="password.valid || password.pristine" class="text-danger">
-               Password is required
+               {{lang.get('Password is required')}}
             </label>
          </div>
 
@@ -47,16 +47,16 @@
          <div class="row">
             <div class="col-12 d-grid">
                <button type="submit" [disabled]="!actorForm.form.valid || !model.outletId"
-                  class="btn btn-primary btn-lg">LOG IN</button>
+                  class="btn btn-primary btn-lg">{{lang.get('LOG IN')}}</button>
             </div>
          </div>
       </form>
      <div class="text-center mt-4">
          <a href="javascript:;" class="btn btn-sm btn-warning" [routerLink]="['/']">
-            <i class="bi bi-gear"></i> Back To Setup</a>
+            <i class="bi bi-gear"></i> {{lang.get('Back To Setup')}}</a>
       </div>
       <div class="text-center mt-1">
-         <strong><small> Ver {{ver}} |  PT MITRALINK</small></strong>
+         <strong><small> {{lang.get('Ver')}} {{ver}} |  PT MITRALINK</small></strong>
       </div>
    </div>
 </div> 

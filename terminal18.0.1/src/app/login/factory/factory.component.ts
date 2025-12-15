@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-factory',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 export class FactoryComponent {
   constructor(
       private router: Router,
+      public lang: LanguageService,
     ) { }
     
   resetdata() {

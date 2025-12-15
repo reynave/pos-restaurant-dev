@@ -5,9 +5,9 @@
 
          <div class="col-12">
             <div class="text-center mt-5">
-               <h1>Welcome to</h1> 
+               <h1>{{lang.get('Welcome to')}}</h1> 
                <img src="./img/logo.png" class="img-fluid mt-3" />
-               <h3 class="mt-3">Please wait for your order</h3>
+               <h3 class="mt-3">{{lang.get('Please wait for your order')}}</h3>
             </div>
          </div>
 
@@ -30,11 +30,11 @@
                      <table>
                         <tbody>
                            <tr>
-                              <td> Order </td>
+                              <td> {{lang.get('Order')}} </td>
                               <td> : #{{id}} </td>
                            </tr>
                            <tr>
-                              <td> Date </td>
+                              <td> {{lang.get('Date')}} </td>
                               <td> : {{cart.inputDate | date:'short'}} </td>
                            </tr>
 
@@ -46,11 +46,11 @@
                         <tbody>
 
                            <tr>
-                              <td> Terminal </td>
+                              <td> {{lang.get('Terminal')}} </td>
                               <td> : {{terminalId}} </td>
                            </tr>
                            <tr>
-                              <td> Employee </td>
+                              <td> {{lang.get('Employee')}} </td>
                               <td> : {{cart.inputBy}} </td>
                            </tr>
                         </tbody>
@@ -59,7 +59,7 @@
                </div>
                <hr>
                <!-- Bill Table Component -->
-               <app-bill-table [data]="data" [showApplyDiscount]="showModifier">Loading...</app-bill-table>
+               <app-bill-table [data]="data" [showApplyDiscount]="showModifier">{{lang.get('Loading...')}}</app-bill-table>
             </div>
          </div>
          }

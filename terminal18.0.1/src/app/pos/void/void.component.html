@@ -6,25 +6,25 @@
 
                 <div class="modal-header mb-3">
                     <strong class="modal-title">
-                        SELECT REASON FOR VOID {{titleLabel |uppercase}}
+                        {{lang.get('Select Reason for Void')}} {{titleLabel | uppercase}}
                     </strong>
-                    <button type="button" class="btn-close" aria-label="Close" (click)="back()"></button>
+                    <button type="button" class="btn-close" [attr.aria-label]="lang.get('Close')" (click)="back()"></button>
                 </div>
                 <div class="modal-body ">
                     <div class="row g-1 mb-3">
                         <div class="col-10">
-                            <input type="text" class="form-control form-control-lg" placeholder="Note Reason"
+                            <input type="text" class="form-control form-control-lg" [attr.placeholder]="lang.get('Note Reason')"
                                 [(ngModel)]="noteReasonVoid">
                         </div>
                         <div class="col-2 d-grid">
                             <button type="button" class="btn btn-primary btn-lg" (click)="fnVoid(noteReasonVoid)"
-                                [disabled]="!noteReasonVoid">SUBMIT</button>
+                                [disabled]="!noteReasonVoid">{{lang.get('SUBMIT')}}</button>
 
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <h4 class="text-center">Or</h4>
+                            <h4 class="text-center">{{lang.get('Or')}}</h4>
                         </div>
                     </div>
                     <div class="row g-2">

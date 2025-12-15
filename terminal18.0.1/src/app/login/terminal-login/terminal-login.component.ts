@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 import { JwtVerifyService } from '../../service/jwt-verify.service';
 import { SocketService } from '../../service/socket.service';
 import { HeaderMenuComponent } from "../../header/header-menu/header-menu.component";
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-terminal-login',
@@ -29,6 +30,7 @@ export class TerminalLoginComponent {
     private http: HttpClient,
     private jwtService: JwtVerifyService,
     private socketService: SocketService,
+    public lang: LanguageService,
   ) { }
 
 

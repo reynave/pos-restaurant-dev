@@ -37,7 +37,7 @@
             </td>
         </tr>
         <tr>
-            <td class="text-end" colspan="2"> Item total : </td>
+            <td class="text-end" colspan="2"> {{lang.get('Item Total')}} : </td>
             <td class="text-end "> {{data['itemTotal'] | number}} </td>
         </tr>
         <tr>
@@ -54,7 +54,7 @@
 
 
         <tr>
-            <td class="text-end" colspan="2"> Sub Total : </td>
+            <td class="text-end" colspan="2"> {{lang.get('Sub Total')}} : </td>
             <td class="text-end "> {{data['subTotal'] | number}} </td>
         </tr>
 
@@ -71,8 +71,7 @@
         </tr> 
 
         <tr>
-            <td colspan="2" class="text-end"><strong class="font-monospace" style="font-size: 1.2rem;">Grand
-                    Total :</strong></td>
+                <td colspan="2" class="text-end"><strong class="font-monospace" style="font-size: 1.2rem;">{{lang.get('Grand Total')}} :</strong></td>
             <td class="text-end "><strong class="font-monospace" style="font-size: 1.2rem;">{{data['grandTotal'] |
                     number}}</strong></td>
         </tr>
@@ -84,7 +83,7 @@
         </tr>
 
         <Tr *ngIf="data['change'] > 0">
-            <td colspan="2" class="text-end">Change :</td>
+            <td colspan="2" class="text-end">{{lang.get('CHANGE')}} :</td>
             <td class="text-end">{{data['change'] | number}}</td>
         </Tr>
     </tbody>
@@ -96,7 +95,7 @@
             </td>
         </tr>
         <tr>
-            <td colspan="2" class="text-end"><strong class="text-danger"> UNPAID : </strong></td>
+            <td colspan="2" class="text-end"><strong class="text-danger"> {{lang.get('Unpaid') | uppercase}} : </strong></td>
             <td class="text-end"><strong class="text-danger">{{data['unpaid'] | number}} </strong></td>
         </tr>
     </tfoot>

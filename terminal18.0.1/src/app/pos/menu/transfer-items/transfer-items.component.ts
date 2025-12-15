@@ -7,6 +7,7 @@ import { ConfigService } from '../../../service/config.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../environments/environment.development';
 import { UserLoggerService } from '../../../service/user-logger.service';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-transfer-items',
@@ -31,7 +32,8 @@ export class TransferItemsComponent implements OnInit {
     public modalService: NgbModal,
     private router: Router,
     private activeRouter: ActivatedRoute,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
 
   ) { }
   ngOnInit(): void {
@@ -53,7 +55,7 @@ export class TransferItemsComponent implements OnInit {
 
 
     if (this.id == undefined) {
-      alert("ERROR, ngOnInit() id == undefined ");
+      alert(this.lang.get('ERROR, ngOnInit() id == undefined '));
       this.router.navigate(['tables'])
     } else {
       this.httpGet();
@@ -119,7 +121,7 @@ export class TransferItemsComponent implements OnInit {
   fnTransferItems(table: any) {
 
     if (this.table['outletTableMapId'] == table.id) {
-      alert("Select other table");
+      alert(this.lang.get('Select other table'));
       this.logService.logAction('WARNING fnTransferItems - Select other table', this.id)
     } else {
       this.logService.logAction('fnTransferItems', this.id)

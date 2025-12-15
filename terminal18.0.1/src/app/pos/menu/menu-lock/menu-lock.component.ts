@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-menu-lock',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrl: './menu-lock.component.css'
 })
 export class MenuLockComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, public lang: LanguageService) {}
 
   back(){
     this.router.navigate(['tables']);

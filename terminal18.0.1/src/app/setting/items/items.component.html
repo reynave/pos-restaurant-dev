@@ -5,22 +5,22 @@
          <div class=" mb-3 ">
             <div class="row mb-2">
                <div class="col-12">
-                  <div class="ms-2">Lookup Menu :  <span [hidden]="lookupName == '' " class="badge text-bg-secondary"> {{lookupName}}  </span></div>
+                  <div class="ms-2">{{lang.get('Lookup Menu')}} :  <span [hidden]="lookupName == '' " class="badge text-bg-secondary"> {{lookupName}}  </span></div>
                </div>
             </div>
             <div class="row g-2">
                  <div class="col-3 d-grid">
                   <button type="button" class="btn btn-lg btn-primary"
-                     (click)="openLookUpModal(modalFilter)">Select Filter</button>
+                     (click)="openLookUpModal(modalFilter)">{{lang.get('Select Filter')}}</button>
                </div>
                <div class="col-7">
                   <input type="text" class="form-control form-control-lg" [(ngModel)]="searchTerm"
-                     (input)="searchByName()" placeholder="Search by Name" />
+                     (input)="searchByName()" [attr.placeholder]="lang.get('Search by Name')" />
                </div>
              
                <div class="col-2 d-grid">
                   <button type="button" class="btn btn-lg btn-light"
-                     (click)="searchTerm = ''; searchByName(); clear()">Clear</button>
+                     (click)="searchTerm = ''; searchByName(); clear()">{{lang.get('Clear')}}</button>
                </div>
             </div>
 
@@ -38,12 +38,12 @@
                         <i class="bi bi-square"></i>
                         }
                      </th>
-                     <th>#</th>
-                     <th>Name</th>
-                     <th>Adjust Id</th>
-                     <th class="text-end">Qty</th>
-                     <th>Start Date</th>
-                     <th>Exp Date</th>
+                     <th>{{lang.get('#')}}</th>
+                     <th>{{lang.get('Name')}}</th>
+                     <th>{{lang.get('Adjust Id')}}</th>
+                     <th class="text-end">{{lang.get('Qty')}}</th>
+                     <th>{{lang.get('Start Date')}}</th>
+                     <th>{{lang.get('Exp Date')}}</th>
                   </tr>
                </thead>
 
@@ -77,11 +77,11 @@
          <div class="row g-2">
             <div class="col-6 d-grid">
                <button type="button" class="btn btn-lg  btn-warning " [disabled]="this.checkTotal < 1"
-                  (click)="onResetAdjust()">REMOVE ADJUST / UNLIMITED</button>
+                  (click)="onResetAdjust()">{{lang.get('Remove Adjust / Unlimited') | uppercase}}</button>
             </div>
             <div class="col-6 d-grid">
                <button type="button" class="btn btn-lg  btn-primary" [disabled]="this.checkTotal < 1"
-                  (click)="addQty = 0 ; open(contentAddQty)">ADJUST QTY</button>
+                  (click)="addQty = 0 ; open(contentAddQty)">{{lang.get('Adjust Qty') | uppercase}}</button>
             </div>
 
 
@@ -94,19 +94,19 @@
 
 <ng-template #contentAdjust let-modal>
    <div class="modal-header">
-      <strong>Reset Adjustment</strong>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      <strong>{{lang.get('Reset Adjustment')}}</strong>
+      <button type="button" class="btn-close" [attr.aria-label]="lang.get('Close')" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
       <form>
          <div class="mb-3">
-            <label for="qty">New Qty</label>
+            <label for="qty">{{lang.get('New Qty')}}</label>
             <input type="number" class="form-control form-control-lg" id="qty" [(ngModel)]="newQty" name="newQty">
          </div>
       </form>
    </div>
    <div class="modal-footer">
-      <button type="button" class="btn btn-dark" (click)="onResetAdjust()">Submit</button>
+      <button type="button" class="btn btn-dark" (click)="onResetAdjust()">{{lang.get('SUBMIT')}}</button>
    </div>
 </ng-template>
 
@@ -114,13 +114,13 @@
 
 <ng-template #contentAddQty let-modal>
    <div class="modal-header">
-      <strong>Adjustment Qty</strong>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      <strong>{{lang.get('Adjustment Qty')}}</strong>
+      <button type="button" class="btn-close" [attr.aria-label]="lang.get('Close')" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body">
       <form>
          <div class="mb-3">
-            <label for="qty">New Qty</label>
+            <label for="qty">{{lang.get('New Qty')}}</label>
             <input type="number" class="form-control form-control-lg text-end" id="qty" [(ngModel)]="addQty"
                name="newQty">
          </div>
@@ -131,11 +131,11 @@
             </div>
             <div class="col-6">
                <div class="d-grid mb-2">
-                  <button class="btn btn-warning btn-lg py-4 rounded shadow-sm" (click)="addQty= 0">CE</button>
+                  <button class="btn btn-warning btn-lg py-4 rounded shadow-sm" (click)="addQty= 0">{{lang.get('CE')}}</button>
                </div>
                <div class="d-grid mb-2">
                   <button type="button" class="btn btn-dark btn-lg py-4 rounded shadow-sm"
-                     (click)="onAddQty()">Submit</button>
+                     (click)="onAddQty()">{{lang.get('SUBMIT')}}</button>
                </div>
             </div>
          </div>
@@ -148,8 +148,8 @@
 
 <ng-template #modalFilter let-modal>
    <div class="modal-header">
-      <strong>Look Up Menu Filter</strong>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      <strong>{{lang.get('Look Up Menu Filter')}}</strong>
+      <button type="button" class="btn-close" [attr.aria-label]="lang.get('Close')" (click)="modal.dismiss('Cross click')"></button>
    </div>
    <div class="modal-body"> 
 
@@ -179,6 +179,6 @@
       </ng-template>
    </div>
    <div class="modal-footer">
-      <button type="button" class="btn btn-dark" (click)="onResetAdjust()">Submit</button>
+      <button type="button" class="btn btn-dark" (click)="onResetAdjust()">{{lang.get('SUBMIT')}}</button>
    </div>
 </ng-template>

@@ -7,37 +7,37 @@
         <div class="row">
             <div class="col-12 border-bottom">
                 <!-- bisa buatkan form startdate dan endDate untuk filter tanggal -->
-                <h5 class="mt-2 mb-2">Closed Transaction</h5>
+                <h5 class="mt-2 mb-2">{{lang.get('Closed Transaction')}}</h5>
                 <form class="row g-2">
                     <div class="col-auto">
-                        <label for="startDate" class="col-form-label">Start Date</label>
+                        <label for="startDate" class="col-form-label">{{lang.get('Start Date')}}</label>
                     </div>
                     <div class="col-auto">
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" id="startDate" [(ngModel)]="startDate"
-                                name="startDate" ngbDatepicker #d="ngbDatepicker">
+                                name="startDate" ngbDatepicker #d="ngbDatepicker" [attr.placeholder]="lang.get('yyyy-mm-dd')">
                             <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button">
                                 <i class="bi bi-calendar-date"></i>
                             </button>
                         </div>
                     </div>
                     <div class="col-auto">
-                        <label for="endDate" class="col-form-label">End Date</label>
+                        <label for="endDate" class="col-form-label">{{lang.get('End Date')}}</label>
                     </div>
                     <div class="col-auto">
                         <div class="input-group input-group-sm">
                             <input type="text" class="form-control" id="endDate" [(ngModel)]="endDate" name="endDate"
-                                ngbDatepicker #d2="ngbDatepicker" [minDate]="startDate">
+                                ngbDatepicker #d2="ngbDatepicker" [minDate]="startDate" [attr.placeholder]="lang.get('yyyy-mm-dd')">
                             <button class="btn btn-outline-secondary" (click)="d2.toggle()" type="button">
                                 <i class="bi bi-calendar-date"></i>
                             </button>
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button type="button" class="btn btn-sm btn-primary mb-3" (click)="loadItems()">Filter</button>
+                        <button type="button" class="btn btn-sm btn-primary mb-3" (click)="loadItems()">{{lang.get('Filter')}}</button>
                     </div>
                     <div class="col-auto">
-                          <div class="text-center" *ngIf="loading">loading...</div>
+                          <div class="text-center" *ngIf="loading">{{lang.get('Loading')}}...</div>
                     </div>
                 </form>
             </div>
@@ -46,17 +46,17 @@
                 <table class="table  table-xs">
                     <thead class="sticky-top">
                         <tr>
-                            <th>ID</th>
-                            <th>Date</th>
-                            <th>Start Time</th>
-                            <th>End Time</th>
-                            <th>Table Name</th>
-                            <th>Payment</th>
-                            <th class="text-end">Cover</th> 
-                            <th class="text-end">grand Total</th>
-                            <th>User</th> 
-                            <th>Void</th>
-                            <th>Bill</th>
+                            <th>{{lang.get('ID')}}</th>
+                            <th>{{lang.get('Date')}}</th>
+                            <th>{{lang.get('Start Time')}}</th>
+                            <th>{{lang.get('End Time')}}</th>
+                            <th>{{lang.get('Table Name')}}</th>
+                            <th>{{lang.get('Payment')}}</th>
+                            <th class="text-end">{{lang.get('Cover')}}</th> 
+                            <th class="text-end">{{lang.get('Grand Total')}}</th>
+                            <th>{{lang.get('User')}}</th> 
+                            <th>{{lang.get('Void')}}</th>
+                            <th>{{lang.get('Bill')}}</th>
 
                         </tr>
                     </thead>

@@ -9,6 +9,7 @@ import { environment } from '../../../../environments/environment';
 import { UserLoggerService } from '../../../service/user-logger.service';
 import { HeaderMenuComponent } from '../../../header/header-menu/header-menu.component';
 import { KeyNumberComponent } from '../../../keypad/key-number/key-number.component';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-transfer-items-group',
@@ -48,7 +49,8 @@ export class TransferItemsGroupComponent implements OnInit {
     public modalService: NgbModal,
     private router: Router,
     private activeRouter: ActivatedRoute,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
@@ -71,7 +73,7 @@ export class TransferItemsGroupComponent implements OnInit {
     }
 
     if (this.id == undefined) {
-      alert('ERROR, ngOnInit() id == undefined ');
+      alert(this.lang.get('ERROR, ngOnInit() id == undefined '));
       this.router.navigate(['tables']);
     } else {
       this.httpGet();
@@ -138,7 +140,7 @@ export class TransferItemsGroupComponent implements OnInit {
 
   fnTransferItems(table: any) {
     if (this.table['outletTableMapId'] == table.id) {
-      alert('Select other table');
+      alert(this.lang.get('Select other table'));
       this.logService.logAction(
         'WARNING fnTransferItems - Select other table',
         this.id

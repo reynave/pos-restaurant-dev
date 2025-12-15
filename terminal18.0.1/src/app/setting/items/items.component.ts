@@ -9,6 +9,7 @@ import { KeyNumberComponent } from '../../keypad/key-number/key-number.component
 import { ConfigService } from '../../service/config.service';
 import { environment } from '../../../environments/environment';
 import { UserLoggerService } from '../../service/user-logger.service';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-items',
@@ -40,7 +41,8 @@ export class ItemsComponent implements OnInit {
     public modalService: NgbModal,
     public logService: UserLoggerService,
     private activeRouter: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public lang: LanguageService
   ) {}
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
@@ -124,7 +126,7 @@ export class ItemsComponent implements OnInit {
   }
 
   onResetAdjust() {
-    if (confirm('Remove Adjustment item will be unlimited qty?')) {
+    if (confirm(this.lang.get('Remove adjustment item will be unlimited qty?'))) {
       const items: any[] = [];
       this.items.forEach((el: any) => {
         if (el['checkBox'] == 1) {

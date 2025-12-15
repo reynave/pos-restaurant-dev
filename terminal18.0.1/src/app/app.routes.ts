@@ -6,7 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { authGuard } from './guard/auth.guard';
 import { TablesComponent } from './pos/tables/tables.component';
 import { MenuComponent } from './pos/menu/menu.component';
-import { MenuModifierComponent } from './pos/menu/menu-modifier/menu-modifier.component';
+//import { MenuModifierComponent } from './pos/menu/menu-modifier-DEL/menu-modifier.component';
 import { BillComponent } from './pos/bill/bill.component';
 import { PaymentComponent } from './pos/payment/payment.component';
 import { TransactionComponent } from './transaction/transaction.component';
@@ -55,7 +55,7 @@ export const routes: Routes = [
     // DAILYSTARTGUARD REQUREMENT
     { path: 'tables', component: TablesComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu', component: MenuComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
-    { path: 'menu/modifier', component: MenuModifierComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+    //{ path: 'menu/modifier', component: MenuModifierComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItems', component: TransferItemsComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItemsGroup', component: TransferItemsGroupComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/lock', component: MenuLockComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },

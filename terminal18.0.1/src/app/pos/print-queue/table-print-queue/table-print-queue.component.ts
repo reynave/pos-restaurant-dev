@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { environment } from '../../../../environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-table-print-queue',
@@ -30,7 +31,8 @@ export class TablePrintQueueComponent implements OnInit {
     private socketService: SocketService,
     public logService: UserLoggerService,
     private activatedRoute: ActivatedRoute,
-    public modalService: NgbModal
+    public modalService: NgbModal,
+    public lang: LanguageService
   ) {}
   ngOnInit() { 
     this.api = this.configService.getApiUrl();

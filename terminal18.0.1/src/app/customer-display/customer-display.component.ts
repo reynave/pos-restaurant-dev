@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BillTableComponent } from '../pos/bill/bill-table/bill-table.component';
 import { SocketService } from '../service/socket.service';
 import { CommonModule } from '@angular/common';
+import { LanguageService } from '../service/language.service';
 
 @Component({
   selector: 'app-customer-display',
@@ -42,7 +43,8 @@ export class CustomerDisplayComponent
     public modalService: NgbModal,
     private socketService: SocketService,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
+    public lang: LanguageService
   ) {}
 
   ngOnInit(): void {

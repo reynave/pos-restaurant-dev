@@ -7,6 +7,7 @@ import { UserLoggerService } from '../../service/user-logger.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-print-queue',
@@ -26,7 +27,8 @@ export class PrintQueueComponent implements OnInit {
     private http: HttpClient,
     private socketService: SocketService,
     public logService: UserLoggerService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    public lang: LanguageService
   ) { }
   ngOnInit() {
     

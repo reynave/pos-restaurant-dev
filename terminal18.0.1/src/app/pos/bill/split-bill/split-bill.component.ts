@@ -8,6 +8,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../../environments/environment';
 import { HeaderMenuComponent } from '../../../header/header-menu/header-menu.component';
 import { KeyNumberComponent } from '../../../keypad/key-number/key-number.component';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-split-bill',
@@ -40,7 +41,8 @@ export class SplitBillComponent implements OnInit {
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
-    private activeRouter: ActivatedRoute
+    private activeRouter: ActivatedRoute,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;

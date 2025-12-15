@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { DailyCloseComponent } from '../daily/daily-close/daily-close.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-cashier',
@@ -34,7 +35,8 @@ export class CashierComponent implements OnInit {
     private router: Router,
     public logService: UserLoggerService,
     private socketService: SocketService,
-    public modalService: NgbModal
+    public modalService: NgbModal,
+    public lang: LanguageService
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
@@ -104,7 +106,8 @@ export class CashierComponent implements OnInit {
   }
 
   deleteOrder(id: string) {
-    if (confirm('Are you sure to delete this order #' + id + '?')) {
+    const confirmMessage = `${this.lang.get('Are you sure to delete this order')} #${id}?`;
+    if (confirm(confirmMessage)) {
       const body = {
         id: id,
       };
@@ -114,7 +117,7 @@ export class CashierComponent implements OnInit {
         })
         .subscribe(
           (data) => {
-            this.logService.logAction('Delete Order', id);
+            this.logService.logAction(this.lang.get('Delete Order'), id);
             this.httpGet();
             this.socketService.emit('message-from-client', 'reload');
           },
@@ -148,7 +151,7 @@ export class CashierComponent implements OnInit {
   }
 
   signOff() {
-    this.logService.logAction('Sign Off');
+    this.logService.logAction(this.lang.get('Sign Off'));
     this.configService.removeToken().subscribe(() => {
       this.router.navigate(['login']);
     });
@@ -163,10 +166,11 @@ export class CashierComponent implements OnInit {
         (data) => {
           console.log(data);
           if (data['items'].length > 0) {
-            alert('Please close ' + data['items'].length + ' tables!');
-            this.logService.logAction(
-              'please close ' + data['items'].length + ' tables!'
-            );
+            const warning = this.lang
+              .get('Please close {0} tables!')
+              .replace('{0}', data['items'].length);
+            alert(warning);
+            this.logService.logAction(warning);
           } else {
             this.logService.logAction('WARNING Daily Close ?');
             this.modalService.open(DailyCloseComponent, { size: 'sm' });

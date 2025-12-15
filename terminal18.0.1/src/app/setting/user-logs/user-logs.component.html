@@ -3,13 +3,13 @@
     <div class="d-flex flex-row-reverse">
         <div class="p-1">
             <button class="btn btn-light btn-sm border" [disabled]="items.length < 1" (click)="download()"
-                type="button">Download *<div class="csv"></div></button>
+                type="button">{{lang.get('Download')}} *<div class="csv"></div></button>
         </div>
-        <div class="p-1"><button class="btn btn-dark btn-sm" (click)="onSearch()" type="button">Search</button></div>
+        <div class="p-1"><button class="btn btn-dark btn-sm" (click)="onSearch()" type="button">{{lang.get('Search')}}</button></div>
         <div class="p-1">
             <div class="input-group align-items-center">
-                <label class="me-2">Start date:</label>
-                <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp1" [(ngModel)]="startDate" ngbDatepicker
+                <label class="me-2">{{lang.get('Start Date')}}:</label>
+                <input class="form-control form-control-sm" [attr.placeholder]="lang.get('yyyy-mm-dd')" name="dp1" [(ngModel)]="startDate" ngbDatepicker
                     #d1="ngbDatepicker" />
                 <button class="btn btn-outline-dark btn-sm bi bi-calendar3" (click)="d1.toggle()" type="button"></button>
             </div>
@@ -18,8 +18,8 @@
 
         <div class="p-1">
            <div class="input-group align-items-center">
-                <label class="me-2">End date:</label>
-                <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp2" [(ngModel)]="endDate" ngbDatepicker
+                <label class="me-2">{{lang.get('End Date')}}:</label>
+                <input class="form-control form-control-sm" [attr.placeholder]="lang.get('yyyy-mm-dd')" name="dp2" [(ngModel)]="endDate" ngbDatepicker
                     #d2="ngbDatepicker" />
                 <button class="btn btn-outline-dark btn-sm bi bi-calendar3" (click)="d2.toggle()" type="button"></button>
             </div>
@@ -33,14 +33,14 @@
                     <table class="table table-sm">
                         <thead class="sticky-top">
                             <tr>
-                                <th>NO</th>
-                                <th>TIME</th>
-                                <th>OUTLET</th>
-                                <th>TERMINAL</th>
-                                <th>USER</th>
-                                <th>BILL</th>
-                                <th>ACTION</th>
-                                <th>FROM</th>
+                                <th>{{lang.get('No')}}</th>
+                                <th>{{lang.get('Time')}}</th>
+                                <th>{{lang.get('Outlet')}}</th>
+                                <th>{{lang.get('Terminal')}}</th>
+                                <th>{{lang.get('User')}}</th>
+                                <th>{{lang.get('Bill')}}</th>
+                                <th>{{lang.get('Action')}}</th>
+                                <th>{{lang.get('From')}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -57,7 +57,7 @@
                         </tbody>
                     </table>
 
-                    <div class="text-center my-5" *ngIf="loading">Loading</div>
+                    <div class="text-center my-5" *ngIf="loading">{{lang.get('Loading')}}</div>
              
             </div>
         </div>

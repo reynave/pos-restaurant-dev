@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ConfigService } from '../../service/config.service';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserLoggerService } from '../../service/user-logger.service';
+import { LanguageService } from '../../service/language.service';
 @Component({
   selector: 'app-void',
   standalone: true,
@@ -20,14 +21,15 @@ export class VoidComponent implements OnInit {
   voidReason: any = [];
   noteReasonVoid: string = '';
   action : string = '';
-  titleLabel : string = 'Void Transaction';
+  titleLabel : string = '';
   module : string = '';
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     private router: Router,
     private activeRouter: ActivatedRoute,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
   ) {}
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
@@ -35,13 +37,15 @@ export class VoidComponent implements OnInit {
 
     this.id = this.activeRouter.snapshot.queryParams['id'];
     this.action = this.activeRouter.snapshot.queryParams['action'];
- this.module = this.activeRouter.snapshot.queryParams['module'];
+    this.module = this.activeRouter.snapshot.queryParams['module'];
+
+    this.titleLabel = this.lang.get('Void Transaction');
 
     if(this.action == 'cart'){
-      this.titleLabel = 'Transaction';
+      this.titleLabel = this.lang.get('Transaction');
     }
     else if(this.action == 'payment'){
-      this.titleLabel = 'Void Payment';
+      this.titleLabel = this.lang.get('Void Payment');
     }
 
 
@@ -65,7 +69,7 @@ export class VoidComponent implements OnInit {
   }
 
   fnVoid(reason : string) {
-    if(confirm('Are you sure to void this transaction?')){
+    if(confirm(this.lang.get('Are you sure to void this transaction?'))){
     
       const body = {
         id: this.id,

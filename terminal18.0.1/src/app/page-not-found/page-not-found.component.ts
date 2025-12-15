@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { LanguageService } from '../service/language.service';
 
 @Component({
   selector: 'app-page-not-found',
@@ -9,5 +10,5 @@ import { RouterModule } from '@angular/router';
   styleUrl: './page-not-found.component.css'
 })
 export class PageNotFoundComponent {
-
+  constructor(public lang: LanguageService) {}
 }

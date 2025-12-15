@@ -7,6 +7,7 @@ import { ConfigService } from '../../../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserLoggerService } from '../../../service/user-logger.service';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { LanguageService } from '../../../service/language.service';
 
 @Component({
   selector: 'app-daily-start',
@@ -28,7 +29,8 @@ export class DailyStartComponent implements OnInit {
     private router: Router,
     private http: HttpClient, 
     public offcanvasService: NgbOffcanvas,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
   ) { }
 
   ngOnInit() {
@@ -68,7 +70,7 @@ export class DailyStartComponent implements OnInit {
   }
 
   logOff() {
-    this.logService.logAction('Sign Off')
+    this.logService.logAction(this.lang.get('Sign Off'))
     this.offcanvasService.dismiss();
     this.configService.removeToken().subscribe(
       () => {

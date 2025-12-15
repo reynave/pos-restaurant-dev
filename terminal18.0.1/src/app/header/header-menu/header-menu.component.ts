@@ -8,6 +8,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserLoggerService } from '../../service/user-logger.service';
 import { DailyCloseComponent } from '../../pos/daily/daily-close/daily-close.component';
 import { SocketService } from '../../service/socket.service';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-header-menu',
@@ -34,7 +35,8 @@ export class HeaderMenuComponent implements OnInit, OnDestroy {
     public modalService: NgbModal,
     private activeRouter: ActivatedRoute,
     public logService: UserLoggerService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    public lang: LanguageService
   ) {}
 
   ngOnInit(): void {

@@ -20,7 +20,7 @@
             @if(close == 0){ 
                @if(posMode == 'cashier') {
                   <div class="text-center d-grid mx-5 mb-3">
-                     <button type="button" class="btn btn-lg btn-success py-3"   (click)="payment()">PAYMENT</button>
+                     <button type="button" class="btn btn-lg btn-success py-3"   (click)="payment()">{{lang.get('PAYMENT')}}</button>
                   </div>
                }
                @else {
@@ -31,17 +31,17 @@
   
                <div class="text-center d-grid mx-5 mb-3"  *ngFor="let x of groups">
                   <button type="button" class="btn btn-lg  btn-warning py-3" *ngIf="x > 1"  
-                  [disabled]="printLoading" (click)="splitBill(x)">SPLIT BILL #{{x}}</button>
+                  [disabled]="printLoading" (click)="splitBill(x)">{{lang.get('SPLIT BILL')}} #{{x}}</button>
                </div>
              
                <div class="text-center d-grid mx-5 mb-3" >
                   <button type="button" class="btn btn-lg  btn-warning py-3" 
-                  [disabled]="printLoading" (click)="splitBill(groups.length + 1)">NEW SPLIT BILL</button>
+                  [disabled]="printLoading" (click)="splitBill(groups.length + 1)">{{lang.get('NEW SPLIT BILL')}}</button>
                </div>
                 
                <div class="text-center d-grid mx-5 mb-3">
                   <button type="button" class="btn btn-lg   btn-primary py-3"  
-                  [disabled]="printLoading" (click)="printBill()"> PRINT BILL</button>
+                  [disabled]="printLoading" (click)="printBill()"> {{lang.get('PRINT BILL')}}</button>
                </div>
 
                <div class="mb-3 alert alert-warning" [ngClass]="{'alert-danger': printNoteError}" *ngIf="printNote != ''">
@@ -51,14 +51,14 @@
             }
             @if(close == 1) {
 
-               <h4 class="mb-5 text-center">Total Copied : {{cartCopyBill.length}}</h4>
+               <h4 class="mb-5 text-center">{{lang.get('Total Copied')}} : {{cartCopyBill.length}}</h4>
                <div class="text-center" *ngIf="isPrinting == true">
-                  Checking <img src="./gif/ellipsis.gif" width="50">
+                  {{lang.get('Checking')}} <img src="./gif/ellipsis.gif" width="50">
                </div>
                <div class="text-center d-grid mx-5 mb-3">
                   <button type="button" [disabled]="isPrinting" (click)="printCopyBill();"
                      class="btn btn-lg bg-white py-3 rounded shadow-sm border">
-                     <i class="bi bi-printer"></i> PRINT
+                     <i class="bi bi-printer"></i> {{lang.get('PRINT')}}
                   </button>
                </div>
             }

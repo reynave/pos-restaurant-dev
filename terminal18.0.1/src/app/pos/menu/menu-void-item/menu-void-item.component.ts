@@ -8,6 +8,7 @@ import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { UserLoggerService } from '../../../service/user-logger.service';
 import { HeaderMenuComponent } from '../../../header/header-menu/header-menu.component';
 import { KeyNumberComponent } from '../../../keypad/key-number/key-number.component';
+import { LanguageService } from '../../../service/language.service';
 @Component({
   selector: 'app-menu-void-item',
   standalone: true,
@@ -42,6 +43,7 @@ voidReason : any = [];
     private router: Router,
     private activeRouter: ActivatedRoute,
     public logService: UserLoggerService,
+    public lang: LanguageService,
     
   ) {
     // customize default values of modals used by this component tree
@@ -59,7 +61,7 @@ voidReason : any = [];
     this.modalService.dismissAll();
      this.httpVoidReason();
     if (this.id == undefined) {
-      alert('ERROR, ngOnInit() id == undefined ');
+      alert(this.lang.get('ERROR, ngOnInit() id == undefined '));
       this.router.navigate(['tables']);
     } else {
       this.httpGet();
@@ -116,7 +118,7 @@ voidReason : any = [];
 
   fnTransferItems(table: any) {
     if (this.table['outletTableMapId'] == table.id) {
-      alert('Select other table');
+      alert(this.lang.get('Select other table'));
       this.logService.logAction(
         'WARNING fnTransferItems - Select other table',
         this.id
@@ -264,7 +266,7 @@ voidReason : any = [];
   }
 
   fnVoid(reason : string) {
-    if(confirm('Are you sure to void this transfer item?')){
+    if(confirm(this.lang.get('Are you sure to void this transfer item?'))){
       console.log(reason);
       const body = {
         id: this.id,

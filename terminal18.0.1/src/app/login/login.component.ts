@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { ConfigService } from '../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { KeyNumberComponent } from '../keypad/key-number/key-number.component';
+import { LanguageService } from '../service/language.service';
 
 export class Actor {
   constructor(
@@ -40,7 +41,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private config: ConfigService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    public lang: LanguageService
   ) {}
 
   ngOnDestroy(): void {}

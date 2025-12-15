@@ -4,7 +4,7 @@
         <div class="row g-3">
             <div class="col-6 align-content-center text-center">
                 <img src="./img/keylogin.png" class="img-fluid" />
-                <small>KEY TERMINAL</small>
+                <small>{{lang.get('KEY TERMINAL')}}</small>
             </div>
             <div class="col-6">
                 <div class="mb-3">
@@ -15,7 +15,7 @@
                 </div>
                 <div class="mb-2">
                     <input type="text" class="form-control form-control-lg text-end bg-light"
-                        placeholder="POS / TERMINAL ID" [(ngModel)]="terminalId">
+                        [attr.placeholder]="lang.get('POS / TERMINAL ID')" [(ngModel)]="terminalId">
                 </div>
                 <div class="mb-1">
                     <app-key-number (dataEmitted)="handleData($event)"></app-key-number>
@@ -25,11 +25,11 @@
                         <button type="button" class="btn btn-warning" (click)="terminalId=''">CE</button>
                     </div>
                     <div class="col-6 d-grid">
-                        <button type="button" class="btn btn-primary" (click)="onSubmit()">SUBMIT</button>
+                        <button type="button" class="btn btn-primary" (click)="onSubmit()">{{lang.get('SUBMIT')}}</button>
                     </div>
                 </div>
                 <div class="text-center">
-                     <a href="javascript:;" (click)="back()">Back</a>
+                     <a href="javascript:;" (click)="back()">{{lang.get('Back')}}</a>
                 </div>
             </div>
            

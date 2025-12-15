@@ -8,6 +8,7 @@ import { NgbDatepickerModule, NgbDropdownModule, NgbModal } from '@ng-bootstrap/
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderMenuComponent } from "../header/header-menu/header-menu.component";
 import { BillComponent } from '../pos/bill/bill.component';
+import { LanguageService } from '../service/language.service';
 
 @Component({
   selector: 'app-transaction',
@@ -44,7 +45,8 @@ export class TransactionComponent implements OnInit {
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
-    private activeRouter: ActivatedRoute
+    private activeRouter: ActivatedRoute,
+    public lang: LanguageService
   ) { 
      window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;

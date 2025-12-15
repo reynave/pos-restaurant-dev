@@ -10,10 +10,10 @@
                         <tr>
                             <th>#</th>
 
-                            <th>Bill</th>
-                            <th class="text-end">Cash In</th>
-                            <th class="text-end">Cash Out</th>
-                            <th>Date</th>
+                            <th>{{lang.get('Bill')}}</th>
+                            <th class="text-end">{{lang.get('Cash In')}}</th>
+                            <th class="text-end">{{lang.get('Cash Out')}}</th>
+                            <th>{{lang.get('Date')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,7 +42,7 @@
                         <tr>
                             <th></th>
                             
-                            <td class="text-end"><strong>BALANCE</strong></td>
+                            <td class="text-end"><strong>{{lang.get('Balance') | uppercase}}</strong></td>
                           
                             <th class="text-end font-monospace">{{total['balance'] | number}}</th>
                             <th></th>
@@ -57,13 +57,13 @@
     <div class="row g-2">
         <div class="col-6">
             <div class="d-grid">
-                <button class="btn btn-lg btn-warning" (click)="openCashDrawer()">OPEN CASH DRAWER</button>
+                <button class="btn btn-lg btn-warning" (click)="openCashDrawer()">{{lang.get('Open Cash Drawer') | uppercase}}</button>
             </div>
         </div>
         <div class="col-6">
             <div class="d-grid">
                 <button class="btn btn-lg btn-primary" (click)="open(contentOpenCash)">{{ total['balance'] != null ?
-                    'CASH IN':'OPENING BALANCE'}}</button>
+                    (lang.get('Cash In') | uppercase):(lang.get('Opening Balance') | uppercase)}}</button>
             </div>
 
         </div>
@@ -72,7 +72,7 @@
  
 <ng-template #contentOpenCash let-modal>
     <div class="modal-header">
-        <strong class="modal-title">{{ total['balance'] != null ? 'CASH IN':'OPENING BALANCE'}}</strong>
+        <strong class="modal-title">{{ total['balance'] != null ? (lang.get('Cash In') | uppercase):(lang.get('Opening Balance') | uppercase)}}</strong>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -105,7 +105,7 @@
         <div class="row">
             <div class="col-12 d-grid">
                 <button type="button" class="btn btn-lg btn-primary py-3" [disabled]="cashIn == '0'"
-                    (click)="addCashIn()">SUBMIT</button>
+                    (click)="addCashIn()">{{lang.get('SUBMIT')}}</button>
 
             </div>
         </div>
@@ -116,7 +116,7 @@
 
 <ng-template #infoCashDrawer let-modal>
 	<div class="modal-header">
-		<strong class="modal-title" id="modal-basic-title">Open Cash Drawer</strong>
+		<strong class="modal-title" id="modal-basic-title">{{lang.get('Open Cash Drawer')}}</strong>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
@@ -125,6 +125,6 @@
          </div>
 	</div>
 	<div class="modal-footer">
-		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">close</button>
+		<button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')">{{lang.get('Close')}}</button>
 	</div>
 </ng-template>

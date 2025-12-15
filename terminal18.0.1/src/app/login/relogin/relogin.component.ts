@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UserLoggerService } from '../../service/user-logger.service';
 import { Router } from '@angular/router';
 import { ConfigService } from '../../service/config.service';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-relogin',
@@ -15,7 +16,8 @@ export class ReloginComponent {
   constructor(
     public configService: ConfigService,
     private router: Router,
-    public logService: UserLoggerService
+    public logService: UserLoggerService,
+    public lang: LanguageService
 
   ) { }
   logOff() {

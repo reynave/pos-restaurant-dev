@@ -1,11 +1,11 @@
 <div class="modal-header">
-    <strong class="modal-title">DAILY CLOSE </strong>
+    <strong class="modal-title">{{lang.get('DAILY CLOSE')}}</strong>
     <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-12 text-center">
-            <strong>Do Daily Close now ?</strong>
+            <strong>{{lang.get('Do Daily Close now ?')}}</strong>
         </div>
 
     </div>
@@ -13,7 +13,7 @@
 <div class="modal-body">
     <div class="row g-1"> 
         <div class="col-12 text-center  d-grid">
-            <button type="button" class="btn btn-lg btn-primary" (click)="onClose()">Yes</button>
+            <button type="button" class="btn btn-lg btn-primary" (click)="onClose()">{{lang.get('Yes')}}</button>
         </div>
     </div>
 </div>

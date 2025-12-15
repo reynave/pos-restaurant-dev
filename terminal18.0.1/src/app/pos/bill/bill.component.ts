@@ -11,6 +11,7 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BillTableComponent } from './bill-table/bill-table.component';
+import { LanguageService } from '../../service/language.service';
 
 @Component({
   selector: 'app-bill',
@@ -70,7 +71,8 @@ export class BillComponent implements OnInit {
     private http: HttpClient,
     public modalService: NgbModal,
     private router: Router,
-    private activeRouter: ActivatedRoute
+    private activeRouter: ActivatedRoute,
+    public lang: LanguageService
   ) {}
 
   ngOnInit() {
