@@ -70,6 +70,7 @@ import { CashbackComponent } from './module/general/cashback/cashback.component'
 import { CashbackDetailComponent } from './module/general/cashback/cashback-detail/cashback-detail.component';
 import { UxComponent } from './module/general/ux/ux.component';
 import { AccessRightComponent } from './module/employee/auth-level/access-right/access-right.component';
+import { LanguageComponent } from './module/general/language/language.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -171,6 +172,7 @@ export const routes: Routes = [
   { path: 'cashback/detail', component: CashbackDetailComponent },
 
   { path: 'ux', component: UxComponent },
+ { path: 'language', component: LanguageComponent },
  
 
   { path: '**', component: PageNotFoundComponent },

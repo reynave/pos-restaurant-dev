@@ -1,0 +1,90 @@
+<div class="row">
+	<div class="col-12">
+		<div class="header py-2">
+			<div class="row align-items-center">
+				<div class="col-6">
+					<strong>LANGUAGE TRANSLATION</strong>
+					<span class="mx-1" *ngIf="loading">
+						<img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30" alt="Loading" />
+					</span>
+				</div>
+				<div class="col-6 text-end">
+					<button type="button" class="btn btn-sm btn-light border me-2" (click)="httpGet()" [disabled]="loading">
+						Refresh
+					</button>
+					<button type="button" class="btn btn-sm btn-dark border" (click)="disabled = !disabled">
+						@if(disabled){ Enable Editing }
+						@else { View Only }
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="mainContent border">
+			<div class="table-responsive">
+				<table class="table table-hover table-striped mb-0">
+					<thead class="sticky-top">
+						<tr>
+							<th width="60">#</th> 
+							<th>Language 1</th>
+							<th>Language 2</th>
+							<th>Language 3</th>
+						</tr>
+					</thead>
+					<tbody>
+						@if(loading){
+						<tr>
+							<td colspan="5" class="text-center py-4">
+								<div class="d-flex justify-content-center align-items-center gap-2">
+									<span class="spinner-border spinner-border-sm" role="status"></span>
+									<small>Loading language data...</small>
+								</div>
+							</td>
+						</tr>
+						}
+						@else {
+						@if(items.length > 0){
+						<tr *ngFor="let item of items; let i = index">
+							<td class="align-middle">{{ i + 1 }}</td>
+						 
+							<td>
+								<input
+									type="text"
+									class="form-control form-control-sm"
+									[(ngModel)]="item.lang1"
+									[readonly]="disabled" 
+										(keydown)="onFieldKeydown($event, item)"	/>
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control form-control-sm"
+									[(ngModel)]="item.lang2"
+									[readonly]="disabled"
+							
+										(keydown)="onFieldKeydown($event, item)"	/>
+							</td>
+							<td>
+								<input
+									type="text"
+									class="form-control form-control-sm"
+									[(ngModel)]="item.lang3"
+									[readonly]="disabled"
+								
+										(keydown)="onFieldKeydown($event, item)"/>
+							</td>
+						</tr>
+						}
+						@else {
+						<tr>
+							<td colspan="5" class="text-center py-4 text-muted">No language data available.</td>
+						</tr>
+						}
+									 
+						}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
