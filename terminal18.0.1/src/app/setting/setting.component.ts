@@ -241,4 +241,35 @@ export class SettingComponent implements OnInit, OnDestroy {
     this.lang.updateLanguage(lang);
     localStorage.setItem('pos3.language', lang);
   }
+
+  parseLogMessage(msg: string): any {
+    if (!msg || typeof msg !== 'string') return null;
+    try {
+      // trim to avoid noise
+      const trimmed = msg.trim();
+      // sometimes logs prefix with something like "message: {...}" - try to find first brace
+      const firstBrace = trimmed.indexOf('{');
+      const firstBracket = trimmed.indexOf('[');
+      if (firstBrace === -1 && firstBracket === -1) {
+        // not JSON
+        return null;
+      }
+
+      // prefer object if brace found, else bracket
+      let jsonStr = trimmed;
+      if (firstBrace !== -1) jsonStr = trimmed.substring(firstBrace);
+      else if (firstBracket !== -1) jsonStr = trimmed.substring(firstBracket);
+
+      const parsed = JSON.parse(jsonStr);
+      return parsed;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  objectKeys(obj: any): string[] {
+    return obj && typeof obj === 'object' && !Array.isArray(obj)
+      ? Object.keys(obj)
+      : [];
+  }
 }

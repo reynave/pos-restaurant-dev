@@ -49,7 +49,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       menu: [],
     },
   ];
-  note : string = 'Thank you for finish payment!';
+  note: string = 'Thank you for finish payment!';
   item: any = [];
   paymentType: any = [];
   cart: any = [];
@@ -66,7 +66,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   grandTotal: number = 0;
   closePaymentAmount: number = 1;
   unpaid: number = 0;
-closePayment : number = 0;
+  closePayment: number = 0;
   paymentIndex: number = -1;
   inputField: string = '';
   discountGroup: any = [];
@@ -81,6 +81,11 @@ closePayment : number = 0;
   terminalId: any = localStorage.getItem('pos3.terminal.mitralink');
   showPrintBill: boolean = false;
   checkCashType: any = [];
+  cartPayment: any = {
+    grandTotal: 0,
+    paid: 0,
+    unpaid: 0,
+  };
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -121,12 +126,11 @@ closePayment : number = 0;
   }
 
   ngOnInit() {
- 
     this.api = this.configService.getApiUrl();
 
     this.id = this.activeRouter.snapshot.queryParams['id'];
 
-    if(this.id != localStorage.getItem('pos3.id')){
+    if (this.id != localStorage.getItem('pos3.id')) {
       console.log('Payment Guard Blocked');
       this.router.navigate(['/error']);
       return;
@@ -167,11 +171,7 @@ closePayment : number = 0;
         parseInt(x.value) + parseInt(this.paid[this.paymentIndex].tips);
     }
   }
-cartPayment : any = {
-  grandTotal :0,
-  paid :0,
-  unpaid :0,
-};
+
   httpPaid() {
     this.loading = true;
     const url = this.api + 'payment/paid';
@@ -179,7 +179,7 @@ cartPayment : any = {
       .get<any>(url, {
         headers: this.configService.headers(),
         params: {
-          id: this.activeRouter.snapshot.queryParams['id'], 
+          id: this.activeRouter.snapshot.queryParams['id'],
           dailyCheckId: this.configService.getDailyCheck(),
         },
       })
@@ -199,22 +199,21 @@ cartPayment : any = {
           this.cartPayment = data['cartPayment'];
           this.closePayment = data['closePayment'];
           this.httpCartBill();
-          
         },
         (error) => {
           console.log(error);
         }
       );
   }
-  httpCreateTxt(){
+  httpCreateTxt() {
     const url = this.api + 'payment/createTxt';
     const body = {
       id: this.id,
-      htmlBill: this.htmlBill, 
+      htmlBill: this.htmlBill,
     };
     this.http
       .post<any>(url, body, {
-        headers: this.configService.headers(), 
+        headers: this.configService.headers(),
       })
       .subscribe(
         (data) => {
@@ -243,7 +242,7 @@ cartPayment : any = {
           this.data = data['data'];
           this.discountGroup = data['data']['discountGroup'];
           this.closePaymentAmount = data['data']['closePaymentAmount'];
-        
+
           this.grandTotal = data['data']['grandTotal'];
           this.httpPaid();
 
@@ -255,13 +254,13 @@ cartPayment : any = {
         }
       );
   }
-summary : any = {
-  grandTotal : 0,
-  itemTotal : 0,
-  tax : 0,
-  sc : 0,
-  discount : 0, 
-};
+  summary: any = {
+    grandTotal: 0,
+    itemTotal: 0,
+    tax: 0,
+    sc: 0,
+    discount: 0,
+  };
   httpCartBill() {
     this.loading = true;
     const url = this.api + 'payment/bill';
@@ -282,9 +281,7 @@ summary : any = {
           this.groups = data['groups'];
           this.loading = false;
           if (this.closePayment == 1) {
-      
             this.openModal();
-           
           }
         },
         (error) => {
@@ -292,8 +289,7 @@ summary : any = {
         }
       );
   }
-  
- 
+
   httpPaymentType() {
     this.loading = true;
     const url = this.api + 'payment/paymentGroup';
@@ -311,7 +307,6 @@ summary : any = {
       );
   }
 
-  
   reload() {
     this.httpCart();
   }
@@ -322,7 +317,6 @@ summary : any = {
       cartId: this.id,
       payment: payment,
       unpaid: this.unpaid,
- 
     };
     console.log(body);
     this.http
@@ -408,10 +402,10 @@ summary : any = {
       })
       .subscribe(
         (data) => {
-            this.paymentIndex = -1;
+          this.paymentIndex = -1;
           this.inputField = '';
           console.log(data);
-       
+
           this.reload();
           this.logService.logAction('Submit Payment', this.id);
         },
@@ -422,40 +416,13 @@ summary : any = {
       );
   }
 
-  alertColor = "alert-warning";
+  alertColor = 'alert-warning';
   openModal() {
-     this.alertColor = 'alert-warning';
+    this.alertColor = 'alert-warning';
     this.httpCreateTxt();
-    console.log('openModal',this.cart);
-
-    if(this.cart.printBill == 0){
-      this.note = 'Printing bill, Please wait...';
-      console.log("print bill utama");
-      this.configService.getConfigJson()
-      const body = { 
-        message: this.htmlBill,
-        printer : {
-          address : this.configService.getConfigJson()['printer']['address'] ,
-          port : this.configService.getConfigJson()['printer']['port'] ,
-        }
-      }
-      this.http.post<any>(this.api + 'printing/print',  body, 
-        { headers: this.configService.headers() })
-      .subscribe(
-        (data) => {
-          this.note = 'Thank you for finish payment!';
-          console.log('Print Bill', data);  
-          this.http.post<any>(this.api + 'payment/markPrintBill', { id: this.id },
-            { headers: this.configService.headers() });
-          
-        },
-        (error) => {
-          console.log('Print Bill Error', error);
-          this.alertColor = 'alert-danger';
-            this.note = error.error['detail'] || 'ERROR printing bill';
-        }
-      );
-    }
+    console.log('openModal', this.cart);
+    this.fnPrint();
+ 
     this.modalService.open(this.myModal).result.then(
       (result) => {
         console.log('result');
@@ -484,6 +451,50 @@ summary : any = {
       }
     );
   }
+
+  fnPrint() {
+    this.cart.printBill = 0;
+    this.note = 'Printing bill, Please wait...';
+    console.log('print bill utama');
+    this.configService.getConfigJson();
+    const body = {
+      message: this.htmlBill,
+      printer: {
+        address: this.configService.getConfigJson()['printer']['address'],
+        port: this.configService.getConfigJson()['printer']['port'],
+      },
+    }; 
+    this.http
+      .post<any>(this.api + 'printing/print', body, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          this.cart.printBill = 1;
+          this.note = 'Thank you for finish payment!';
+          console.log('Print Bill', data);
+          this.http.post<any>(
+            this.api + 'payment/markPrintBill',
+            { id: this.id },
+            { headers: this.configService.headers() }
+          ).subscribe(
+            (data) => {
+              console.log('Mark Print Bill', data);
+            },
+            (error) => {
+              console.log('Mark Print Bill Error', error);
+            }
+          );
+        },
+        (error) => {
+          this.cart.printBill = 1;
+          console.log('Print Bill Error', error);
+          this.alertColor = 'alert-danger';
+          this.note = error.error['detail'] || 'ERROR printing bill';
+        }
+      );
+  }
+ 
 
   updateRow(x: any) {
     console.log(x);

@@ -57,13 +57,9 @@
                 <div class="mb-3">
                     <strong>{{lang.get('TABLE LOGOUT TIME')}}</strong>
                     <div>
-                      
-                            <small>{{lang.get('logout info')}}
-                                {{timerLogoff}} {{lang.get('second')}}</small>
+                        <small>{{lang.get('logout info')}}{{timerLogoff}} {{lang.get('second')}}</small>
                     </div>
                 </div>
-
-
                 <div class="mb-3">
                     <table class="table ">
                         <tbody>
@@ -128,7 +124,8 @@
                             <td></td>
                             <td>
                                 <div class="d-grid">
-                                    <a class="btn btn-lg btn-warning" [routerLink]="['/login/terminal']">{{lang.get('EDIT')}}</a>
+                                    <a class="btn btn-lg btn-warning"
+                                        [routerLink]="['/login/terminal']">{{lang.get('EDIT')}}</a>
                                 </div>
                             </td>
                         </tr>
@@ -208,6 +205,7 @@
                 <strong>{{lang.get('LOGS ONTESTPRINTING / GLOBALPRINTER:')}}</strong>
                 <div style="height: 400px; overflow-y: scroll; ">
                     <div *ngFor="let log of printerGlobalLogs">
+                        <div class="lh-1"> <small>{{log.updateDate | date:'short'}} {{log.consoleError}}</small></div>
 
                         <div class="lh-1">
                             <small>{{lang.get('PRINTER 1')}}
@@ -218,17 +216,29 @@
                             </small>
 
                         </div>
-                        <div class="lh-1"> <small>{{lang.get('PRINTER 2')}
+
+                        <div class="lh-1"> <small>{{lang.get('PRINTER 2')}}
 
                                 <i *ngIf="log.status2 == 1" class="bi bi-check text-primary"></i>
                                 <i *ngIf="log.status2 == 2" class="bi bi-check-all text-primary"></i>
                                 <i *ngIf="log.status2 == -1" class="bi bi-x text-danger"></i>
 
                                 : {{log.printer2}} {{log.status2}}</small></div>
-                        <div class="lh-1"> <small>{{log.updateDate | date:'short'}} {{log.consoleError}}</small></div>
-                        <div class="lh-1">
-                            <hr>
+
+                        <div>
+                            <ng-container *ngIf="parseLogMessage(log.message) as parsed; else plainMsg">
+                                <ng-container *ngIf="objectKeys(parsed).length > 0; else jsonDump">
+                                    <div *ngFor="let k of objectKeys(parsed)">
+                                        <div class="lh-1"> {{k}} : <strong> {{ parsed[k] }}</strong> </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #jsonDump>
+                                    <pre class="mb-0 small">{{ parsed | json }}</pre>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #plainMsg>{{ log.message }}</ng-template>
                         </div>
+                        <hr>
                     </div>
                 </div>
 

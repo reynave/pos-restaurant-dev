@@ -13,8 +13,7 @@
 
                <pre class="font-monospace" [innerHTML]="htmlBill"></pre>
 
-               <div class="border-top sticky-bottom bg-white py-2">
-        
+               <div class="border-top sticky-bottom bg-white py-2"> 
                   <table class="table table-sm"> 
                      <tr>
                         <td>{{lang.get('Grand Total')}}</td>
@@ -27,6 +26,10 @@
                      <tr>
                         <td>{{lang.get('Unpaid')}}</td>
                         <td class="text-end"><h4 class="text-danger">{{cartPayment.unpaid | number}}</h4></td>
+                     </tr>
+                      <tr>
+                        <td>{{lang.get('Change')}}</td>
+                        <td class="text-end"> {{cartPayment.change | number}}</td>
                      </tr>
                   </table>
                </div>
@@ -166,7 +169,7 @@
 
          <div class="col-12 text-center my-4">
             <h4>{{lang.get('PAYMENT FINISH')}}</h4>
-            <strong> {{lang.get('CHANGE')}} : {{data['change'] | number}} </strong>
+            <strong> {{lang.get('CHANGE')}} : {{cartPayment.change | number}}</strong>
          </div>
       </div>
       <div class="row g-2 mb-3">
@@ -182,7 +185,7 @@
          </div>
          <div class="col-6 d-grid">
             <button type="button" [disabled]="this.cart.printBill == 0" class="btn btn-lg btn-warning py-3"
-               (click)="modal.close('OK click');logService.logAction('Finish Payment And Print Copy Bill', id);">
+               (click)="fnPrint();logService.logAction('Finish Payment And Print Copy Bill', id);">
                <h1> <i class="bi bi-printer"></i> </h1> {{lang.get('Print Copy Bill')}}
 
             </button>

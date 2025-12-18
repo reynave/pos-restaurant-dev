@@ -1051,9 +1051,8 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   tableCheckerDetail(so: string) {
-    this.http
-      .get(this.api + 'menuItemPos/tableCheckerDetail', {
-           headers: this.configService.headers(),
+    this.http.get(this.api + 'menuItemPos/tableCheckerDetail', {
+        headers: this.configService.headers(),
         params: {
           so: so,
         },
@@ -1196,6 +1195,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.modalService.open(content, { size: 'lg' });
     this.http
       .get<any>(this.api + 'menuItemPos/tableChecker', {
+        headers: this.configService.headers(),
         params: {
           id: this.id,
         },
@@ -1215,6 +1215,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     this.isSO = so;
     this.http
       .get(this.api + 'menuItemPos/tableCheckerDetail', {
+        headers: this.configService.headers(),
         params: {
           so: so,
         },
