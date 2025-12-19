@@ -281,7 +281,9 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           this.groups = data['groups'];
           this.loading = false;
           if (this.closePayment == 1) {
-            this.openModal();
+            this.router.navigate(['receipt'], {
+              queryParams: { id: this.id },
+            });
           }
         },
         (error) => {
@@ -422,7 +424,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     this.httpCreateTxt();
     console.log('openModal', this.cart);
     this.fnPrint();
- 
+
     this.modalService.open(this.myModal).result.then(
       (result) => {
         console.log('result');
@@ -463,7 +465,7 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         address: this.configService.getConfigJson()['printer']['address'],
         port: this.configService.getConfigJson()['printer']['port'],
       },
-    }; 
+    };
     this.http
       .post<any>(this.api + 'printing/print', body, {
         headers: this.configService.headers(),
@@ -473,18 +475,20 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           this.cart.printBill = 1;
           this.note = 'Thank you for finish payment!';
           console.log('Print Bill', data);
-          this.http.post<any>(
-            this.api + 'payment/markPrintBill',
-            { id: this.id },
-            { headers: this.configService.headers() }
-          ).subscribe(
-            (data) => {
-              console.log('Mark Print Bill', data);
-            },
-            (error) => {
-              console.log('Mark Print Bill Error', error);
-            }
-          );
+          this.http
+            .post<any>(
+              this.api + 'payment/markPrintBill',
+              { id: this.id },
+              { headers: this.configService.headers() }
+            )
+            .subscribe(
+              (data) => {
+                console.log('Mark Print Bill', data);
+              },
+              (error) => {
+                console.log('Mark Print Bill Error', error);
+              }
+            );
         },
         (error) => {
           this.cart.printBill = 1;
@@ -494,7 +498,6 @@ export class PaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       );
   }
- 
 
   updateRow(x: any) {
     console.log(x);

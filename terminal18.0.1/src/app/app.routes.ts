@@ -35,6 +35,7 @@ import { CustomerDisplayComponent } from './customer-display/customer-display.co
 import { CashierComponent } from './pos/cashier/cashier.component';
 import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.component';
 import { VoidComponent } from './pos/void/void.component';
+import { ReceiptComponent } from './pos/receipt/receipt.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -54,6 +55,9 @@ export const routes: Routes = [
 
     // DAILYSTARTGUARD REQUREMENT
     { path: 'tables', component: TablesComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+
+    { path: 'receipt', component: ReceiptComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
+
     { path: 'menu', component: MenuComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     //{ path: 'menu/modifier', component: MenuModifierComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },
     { path: 'menu/transferItems', component: TransferItemsComponent, canActivate: [authGuard, dailyStartGuard, terminalGuard, loginGuard] },

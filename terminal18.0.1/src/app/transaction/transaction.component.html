@@ -54,17 +54,16 @@
                             <th>{{lang.get('Payment')}}</th>
                             <th class="text-end">{{lang.get('Cover')}}</th> 
                             <th class="text-end">{{lang.get('Grand Total')}}</th>
-                            <th>{{lang.get('User')}}</th> 
-                            <th>{{lang.get('Void')}}</th>
-                            <th>{{lang.get('Bill')}}</th>
+                   
+                            <th>{{lang.get('Receipt')}}</th>
 
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let x of items">
                             <td>
-                                <a href="javascript:;" [routerLink]="['/transaction/detail']"
-                                    [queryParams]="{id:x.id}">{{x.id}}</a>
+                                <a href="javascript:;" [routerLink]="['/receipt']"
+                                    [queryParams]="{id:x.id, return:'transaction'}">{{x.id}}</a>
                             </td>
                             <td>{{x.startDate | date :'yyyy.MM.dd'}}</td>
                             <td>{{x.startDate | date :'h:mm a'}}</td>
@@ -77,14 +76,11 @@
                             </td>
                             <td class="text-end">{{x.cover}}</td> 
                             <td class="text-end">{{x.grandTotal | number}}</td>
-                            <td>USER TEST</td>
-                          
-                            <td>
-                                <button type="button" class="btn btn-sm btn-danger py-0" (click)="fnVoid(x.id)">Void</button>
-                            </td>
+                           
+                           
                             <td>
                                 <button *ngIf="x.grandTotal > 0" type="button" class="btn btn-sm btn-outline-dark  py-0"
-                                    (click)="openComponent(x.id)">
+                                    [routerLink]="['/receipt']"  [queryParams]="{id:x.id, return:'transaction'}" >
                                     <i class="bi bi-printer"></i>
                                 </button>
                             </td>
