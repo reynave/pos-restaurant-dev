@@ -1,0 +1,92 @@
+<app-header-menu></app-header-menu>
+<div class="container-fluid">
+	<div class="row g-2">
+		<!-- Left menu -->
+		<div class="col-12 col-md-3 mb-3">
+			<div class="card">
+				<div class="card-body p-2">
+					<h5 class="card-title mb-2">Reports</h5>
+					<ul class="list-group list-group-flush reports-menu">
+						<li class="list-group-item" *ngFor="let a of reportsMenu" >
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+                                    <a href="javascript:;" (click)="goTo(a.router)">  
+									<strong>{{ a.title }}</strong></a>
+								</div>
+								<div *ngIf="a.items && a.items.length > 0">
+									<button class="btn btn-sm btn-link p-0" (click)="a.show = !a.show">
+										<span [class]="a.show ? 'caret-down' : 'caret-right'"></span>
+									</button>
+								</div>
+							</div>
+
+							<ul class="list-unstyled ms-2 mt-2" *ngIf="a.show">
+								<li
+									class="report-item"
+									*ngFor="let sub of a.items"
+									[class.active]="selectedReport?.id === sub.id"
+									(click)="selectReport(a, sub)"
+								>
+									{{ sub.title }}
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- Right content -->
+		<div class="col-12 col-md-9">
+			<div class="card">
+				<div class="card-body p-3">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<div>
+							<h5 class="mb-0">{{ selectedReport?.title || 'Select a report' }}</h5>
+							<small class="text-muted">{{ selectedReport?.description || 'Choose a report from the left menu to view details.' }}</small>
+						</div>
+						<div>
+							<button class="btn btn-outline-primary btn-sm me-2" (click)="openInNewTab(selectedReport?.route)" [disabled]="!selectedReport">Open in new tab</button>
+							<button class="btn btn-secondary btn-sm" (click)="sendMessage()">Refresh</button>
+						</div>
+					</div>
+
+                    @if(selectedReport== 'salesSummaryReport'){
+                        ok
+                    }
+
+
+					<div *ngIf="selectedReport; else emptyState">
+						<div class="table-responsive">
+							<table class="table table-sm table-hover">
+								<thead class="table-light">
+									<tr>
+										<th>#</th>
+										<th>Field</th>
+										<th>Value</th>
+										<th>Notes</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr *ngFor="let row of sampleRows; let i = index">
+										<td>{{ i + 1 }}</td>
+										<td>{{ row.field }}</td>
+										<td>{{ row.value }}</td>
+										<td>{{ row.notes }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<ng-template #emptyState>
+						<div class="text-center py-5 text-muted">
+							<p class="mb-1">Tidak ada laporan dipilih.</p>
+							<small>Pilih salah satu sub report dari menu untuk melihat data contoh.</small>
+						</div>
+					</ng-template>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

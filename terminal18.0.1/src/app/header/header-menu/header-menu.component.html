@@ -5,13 +5,13 @@
       <ul class="navbar-nav flex-row me-3">
          <li class="nav-item me-2">
 
-            @if(path == 'tables' || path == 'counter'  || path == '' ){ 
-               <strong class="text-white"><small>{{lang.get('Ver')}} {{ver}}</small></strong> 
+            @if(path == 'tables' || path == 'counter' || path == '' ){
+            <strong class="text-white"><small>{{lang.get('Ver')}} {{ver}}</small></strong>
             }
             @else {
-               <a class="nav-link btn btn-primary px-3 d-flex align-items-center" (click)="back()">
-                  <i class="bi bi-arrow-left"></i> {{lang.get('BACK')}}
-               </a>
+            <a class="nav-link btn btn-primary px-3 d-flex align-items-center" (click)="back()">
+               <i class="bi bi-arrow-left"></i> {{lang.get('BACK')}}
+            </a>
             }
          </li>
 
@@ -22,18 +22,20 @@
          <ul class="navbar-nav align-items-center">
             @if(path == 'tables' ){
             <li class="nav-item">
-               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Tables')" (click)="logService.logAction('Click Tables');"
-                  [routerLink]="['/tables']"> <i class="bi bi-map"></i> </a>
+               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Tables')"
+                  (click)="logService.logAction('Click Tables');" [routerLink]="['/tables']"> <i class="bi bi-map"></i>
+               </a>
             </li>
 
             <li class="nav-item">
-               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Print Queue')" (click)="logService.logAction('Click Print Queue');"
-                  [routerLink]="['/printQueue']"> <i class="bi bi-list-check"></i> </a>
+               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Print Queue')"
+                  (click)="logService.logAction('Click Print Queue');" [routerLink]="['/printQueue']"> <i
+                     class="bi bi-list-check"></i> </a>
             </li>
 
             <li class="nav-item">
-               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Setting')" (click)="logService.logAction('click setting');"
-                  [routerLink]="['/setting']">
+               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Setting')"
+                  (click)="logService.logAction('click setting');" [routerLink]="['/setting']">
                   <i class="bi bi-gear"></i> </a>
             </li>
             <li class="nav-item">
@@ -58,8 +60,16 @@
                      class="bi bi-person-exclamation"></i> </a>
             </li>
             <li class="nav-item">
-               <a class="btn btn-primary mx-1" (click)="openInNewTab('/customerDisplay')" [attr.title]="lang.get('Customer Display')">
+               <a class="btn btn-primary mx-1" (click)="openInNewTab('/customerDisplay')"
+                  [attr.title]="lang.get('Customer Display')">
                   <i class="bi bi-display"></i></a>
+            </li>
+
+
+            <li class="nav-item">
+               <a class="btn btn-primary mx-1" [attr.title]="lang.get('Reports')"
+                  (click)="offcanvasService.dismiss();"
+                  [routerLink]="['/reports']">REPORT(new) </a>
             </li>
 
             <li class="nav-item">
@@ -75,7 +85,7 @@
       </div>
 
       <!-- Right menu -->
-       @if(path == 'tables' ){
+      @if(path == 'tables' ){
       <ul class="navbar-nav flex-row ms-3">
 
          <li class="nav-item mx-1">
@@ -228,7 +238,8 @@
             </div>
 
             <div class="d-grid">
-               <a class="btn btn-lg btn-light  m-1" (click)=" signOff(); "><i class="bi bi-box-arrow-left"></i> {{lang.get('Sign Off')}}</a>
+               <a class="btn btn-lg btn-light  m-1" (click)=" signOff(); "><i class="bi bi-box-arrow-left"></i>
+                  {{lang.get('Sign Off')}}</a>
             </div>
             <div class="d-grid" *ngIf="getTokenJson['dailyAccess'] == 1 ">
                <button class="btn btn-lg btn-light  m-1" (click)="dailyClose();">

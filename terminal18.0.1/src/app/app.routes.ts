@@ -36,11 +36,12 @@ import { CashierComponent } from './pos/cashier/cashier.component';
 import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.component';
 import { VoidComponent } from './pos/void/void.component';
 import { ReceiptComponent } from './pos/receipt/receipt.component';
+import { ReportsComponent } from './reports/reports.component';
 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
     { path: 'home', component: HomeComponent},
-     { path: 'factory', component: FactoryComponent},
+    { path: 'factory', component: FactoryComponent},
     
     { path: 'setup', component: SetupComponent },
     { path: 'login', component: LoginComponent },
@@ -70,9 +71,8 @@ export const routes: Routes = [
 
     { path: 'payment', component: PaymentComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'printQueue', component: PrintQueueComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
-
-
-     { path: 'void', component: VoidComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+ 
+    { path: 'void', component: VoidComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
    
 
     { path: 'items', component: ItemsComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
@@ -87,6 +87,9 @@ export const routes: Routes = [
     { path: 'daily/start', component: DailyStartComponent, canActivate: [authGuard,terminalGuard, loginGuard] },
     { path: 'daily/close', component: DailyCloseComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
     { path: 'daily/cashBalance', component: DailyCashBalanceComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
+ 
+    { path: 'reports', component: ReportsComponent, canActivate: [authGuard, terminalGuard, loginGuard] },
+    { path: 'reports/:any', component: ReportsComponent, canActivate: [authGuard, terminalGuard, loginGuard] },
  
 
     { path: 'terminalRelogin', component: TerminalReloginComponent },

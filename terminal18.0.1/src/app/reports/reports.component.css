@@ -1,0 +1,23 @@
+.reports-menu .report-item {
+	padding: 6px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	color: #333;
+}
+.reports-menu .report-item:hover {
+	background: rgba(0,0,0,0.03);
+}
+.reports-menu .report-item.active {
+	background: #0d6efd;
+	color: #fff;
+}
+.caret-right::before {
+	content: '\25B8';
+	display: inline-block;
+	transform: rotate(0deg);
+}
+.caret-down::before {
+	content: '\25BE';
+}
+
+.card .table-responsive { max-height: 420px; overflow: auto; }
