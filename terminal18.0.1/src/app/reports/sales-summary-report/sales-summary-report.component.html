@@ -1,20 +1,153 @@
-<div class="table-responsive">
-    <table class="table table-sm table-hover">
-        <thead class="table-light">
+<div class="row g-2 mb-3">
+    <div class="col-4">
+        <div class="input-group">
+            <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="startDate"
+                ngbDatepicker #d="ngbDatepicker" />
+            <button class="btn btn-sm btn-outline-secondary bi bi-calendar3" (click)="d.toggle()"
+                type="button"></button>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="input-group">
+            <input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="endDate"
+                [minDate]="startDate" ngbDatepicker #d2="ngbDatepicker" />
+            <button class="btn btn-sm btn-outline-secondary bi bi-calendar3" (click)="d2.toggle()"
+                type="button"></button>
+        </div>
+    </div>
+    <div class="col-2 d-grid">
+        <button class="btn btn-secondary btn-sm">Submit </button>
+    </div>
+    <div class="col-2 d-grid">
+        <button class="btn btn-secondary btn-sm">Print </button>
+    </div>
+</div>
+
+<div class="text-center">
+    <div>PT. Mitrasys Bisnis Sinergi (FOR DEMO ONLY)</div>
+    <h1>Sales Summary Report</h1>
+</div>
+
+<div class="row">
+    <div class="col-4">
+        <div>Printed At : 11/10/2017 02:00:04 pm </div>
+    </div>
+    <div class="col-4 text-center">
+        <div>Printed By : MBS </div>
+    </div>
+    <div class="col-4 text-end">
+        <div> Server : All </div>
+    </div>
+</div>
+Outlet: DEMO MITRALINK
+
+
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Overall</strong>
+    </div>
+    <div class="col-5">
+        <table class="table table-sm table-borderless ">
+            <tbody>
+                <tr>
+                    <th class="ps-0">Item Sales :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Discount :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Net Sales :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Tax :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Serv. Charge :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Gross Sales :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-5 offset-1">
+        <table class="table table-sm table-borderless ">
+            <tbody>
+                <tr>
+                    <th class="ps-0">Total # of Checks :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Total # of Covers :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Sales per Checks :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Sales per Covers :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+                <tr>
+                    <th class="ps-0">Sales w/o SC :</th>
+                    <td class="text-end pe-0"> row.value </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Sales By Mode</strong>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Mode</th>
+                    <th>Quantity</th>
+                    <th>Item Sales</th>
+                    <th>%/All</th>
+                    <th>Discount</th>
+                    <th>Net Sales</th>
+                    <th>%/All</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>i</td>
+                    <td> row.field </td>
+                    <td> row.value </td>
+
+                    <td>i</td>
+                    <td> row.field </td>
+                    <td> row.value </td>
+                    <td> row.value </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-4">
+        <table class="table table-sm">
             <tr>
-                <th>#</th>
-                <th>Field</th>
-                <th>Value</th>
-                <th>Notes</th>
+                <td width="60%" class="text-end">Non-item Discount:</td>
+                <td width="40%" class="text-end">0</td>
             </tr>
-        </thead>
-        <tbody>
-            <tr  >
-                <td>i</td>
-                <td> row.field </td>
-                <td> row.value </td>
-                <td> row.notes </td>
+            <tr>
+                <td class="text-end">Total Discount:</td>
+                <td class="text-end">0</td>
             </tr>
-        </tbody>
-    </table>
+        </table>
+    </div>
 </div>

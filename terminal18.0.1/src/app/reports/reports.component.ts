@@ -10,11 +10,12 @@ import { DailyCloseComponent } from '../pos/daily/daily-close/daily-close.compon
 import { SocketService } from '../service/socket.service';
 import { LanguageService } from '../service/language.service';
 import { HeaderMenuComponent } from '../header/header-menu/header-menu.component';
+import { SalesSummaryReportComponent } from "./sales-summary-report/sales-summary-report.component";
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, RouterModule, HeaderMenuComponent],
+  imports: [HttpClientModule, CommonModule, RouterModule, HeaderMenuComponent, SalesSummaryReportComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
 })
@@ -29,7 +30,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
   path: any = '';
   api: string = '';
   // Menu definition for reports and sub-reports
-  reportsMenu: any[] = [
+  getReport : any = "";
+    reportsMenu: any[] = [
     {
       id: '1',
       title: '1. Sales Summary Report',
@@ -93,6 +95,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
+    this.getReport = this.activeRouter.snapshot.url[1]?.path || "";
+    console.log('this.getReport', this.getReport);
   }
 
   goTo(cat: any) {
