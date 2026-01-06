@@ -16,26 +16,26 @@
         </div>
     </div>
     <div class="col-2 d-grid">
-        <button class="btn btn-secondary btn-sm">Submit </button>
+        <button class="btn btn-primary btn-sm" (click)="onSubmit()">Submit </button>
     </div>
     <div class="col-2 d-grid">
         <button class="btn btn-secondary btn-sm">Print </button>
     </div>
 </div>
 
-<div class="text-center">
+<div class="text-center mb-3">
     <div>PT. Mitrasys Bisnis Sinergi (FOR DEMO ONLY)</div>
-    <h1>Sales Summary Report</h1>
+    <h4>Sales Summary Report</h4>
 </div>
 
 <div class="row">
-    <div class="col-4">
+    <div class="col-5">
         <div>Printed At : 11/10/2017 02:00:04 pm </div>
     </div>
-    <div class="col-4 text-center">
+    <div class="col-3 text-center">
         <div>Printed By : MBS </div>
     </div>
-    <div class="col-4 text-end">
+    <div class="col-3 text-end">
         <div> Server : All </div>
     </div>
 </div>
@@ -47,69 +47,71 @@ Outlet: DEMO MITRALINK
         <strong>Overall</strong>
     </div>
     <div class="col-5">
-        <table class="table table-sm table-borderless ">
+        <table class="table table-sm   ">
             <tbody>
                 <tr>
-                    <th class="ps-0">Item Sales :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Item Sales :</td>
+                    <td class="text-end pe-0">{{ overall?.ItemSales | number:'1.0-0' }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Discount :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Discount :</td>
+                    <td class="text-end pe-0">{{ overall?.discount | number:'1.0-0' }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Net Sales :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Net Sales :</td>
+                    <td class="text-end pe-0">{{ overall?.netSales | number:'1.0-0' }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Tax :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Tax :</td>
+                    <td class="text-end pe-0">{{ overall?.tax | number:'1.0-0' }}</td>
+
+
                 </tr>
                 <tr>
-                    <th class="ps-0">Serv. Charge :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Serv. Charge :</td>
+                    <td class="text-end pe-0">{{ overall?.sc | number:'1.0-0' }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Gross Sales :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Gross Sales :</td>
+                    <td class="text-end pe-0">{{ overall?.grossSales | number:'1.0-0' }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="col-5 offset-1">
-        <table class="table table-sm table-borderless ">
+        <table class="table table-sm ">
             <tbody>
                 <tr>
-                    <th class="ps-0">Total # of Checks :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Total # of Checks :</td>
+                    <td class="text-end pe-0">{{ overall?.totalCheck || 0 }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Total # of Covers :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Total # of Covers :</td>
+                    <td class="text-end pe-0">{{ overall?.totalCover || 0 }}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Sales per Checks :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Sales per Checks :</td>
+                    <td class="text-end pe-0">{{ overall?.salesPerCheck || 0}}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Sales per Covers :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Sales per Covers :</td>
+                    <td class="text-end pe-0">{{ overall?.salesPerCover || 0}}</td>
                 </tr>
                 <tr>
-                    <th class="ps-0">Sales w/o SC :</th>
-                    <td class="text-end pe-0"> row.value </td>
+                    <td class="ps-0">Sales w/o SC :</td>
+                    <td class="text-end pe-0">{{ (overall?.grossSales - overall?.sc) | number:'1.0-0' }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
+<!-- sales by mode -->
 <div class="row mb-3">
     <div class="col-12">
         <strong>Sales By Mode</strong>
     </div>
-
     <div class="table-responsive">
         <table class="table table-sm table-hover">
             <thead class="table-light">
@@ -124,29 +126,245 @@ Outlet: DEMO MITRALINK
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>i</td>
-                    <td> row.field </td>
-                    <td> row.value </td>
+                <tr *ngFor="let m of salesByMode">
+                    <td>{{ m.desc1 }}</td>
+                    <td class="text-end">{{ m.qty }}</td>
+                    <td class="text-end">{{ m.itemSales | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ m.percentItemSales }}%</td>
+                    <td class="text-end">{{ m.discount | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ m.netSales | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ m.percentNetSales }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
-                    <td>i</td>
-                    <td> row.field </td>
-                    <td> row.value </td>
-                    <td> row.value </td>
+<!-- sales by department -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Sales By Department</strong>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Department</th>
+                    <th>Item Sales</th>
+                    <th>%/All</th>
+                    <th>Discount</th>
+                    <th>Net Sales</th>
+                    <th>%/All</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let d of salesByDepartment">
+                    <td>{{ d.desc1 }}</td>
+                    <td class="text-end">{{ d.itemSales | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ d.percentItemSales }}%</td>
+                    <td class="text-end">{{ d.discount | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ d.netSales | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ d.percentNetSales }}%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- << Sales by Period >> -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Sales By Period</strong>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Period</th>
+                    <th>Item Sales <br>Tax </th>
+                    <th>Discount <Br>Serv. Charge </th>
+                    <th>Net Sales<br>Gross Sales </th>
+                    <th>%/All<br>%/All</th>
+                    <th># of Checks<br> Sales / Check </th>
+                    <th># of Cover <br> Sales / Cover </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of salesByPeriod">
+                    <td>{{ p.period }}</td>
+                    <td class="text-end">{{ p.itemSales | number:'1.0-0' }}<br>{{ p.tax | number:'1.0-0' }}</td>
+                     <td class="text-end">{{ p.discount | number:'1.0-0' }}<br>{{ p.sc | number:'1.0-0' }}</td>
+                    
+                    <td class="text-end">{{ p.netSales | number:'1.0-0' }}<br>{{ p.grossSales | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ p.percentItemSales }}%<br>{{ p.percentNetSales }}%</td>
+                    <td class="text-end">{{ p.noOfCheck | number:'1.0-0' }}<br>{{ p.salesPerCheck | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ p.noOfCover | number:'1.0-0' }}<br>{{ p.salesPerCover | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- paymentAndTipsSummary -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Payment & Tips Summary</strong>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Pay Type</th>
+                    <th>Paid</th>
+                    <th>Paid Amount</th>
+                    <th>Tips</th>
+                    <th>Sub Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of paymentAndTipsDetails">
+                    <td>{{ t.payType }}</td>
+                    <td class="text-end">{{ t.paid }}</td>
+                    <td class="text-end">{{ t.paidAmount | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ t.tipsAmount | number:'1.0-0' }}</td>
+                    <td class="text-end">{{ t.subTotal | number:'1.0-0' }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <div class="col-4">
+    <div class="col-6 offset-6">
         <table class="table table-sm">
             <tr>
-                <td width="60%" class="text-end">Non-item Discount:</td>
-                <td width="40%" class="text-end">0</td>
+                <td class="ps-0">Total Paid:</td>
+                <td class="text-end">{{ paymentAndTipsSummary?.totalPaid || 0 }}</td>
             </tr>
             <tr>
-                <td class="text-end">Total Discount:</td>
-                <td class="text-end">0</td>
+                <td class="ps-0">Total Paid Amount:</td>
+                <td class="text-end">{{ paymentAndTipsSummary?.totalPaidAmount | number:'1.0-0' }}</td>
+            </tr>
+            <tr>
+                <td class="ps-0">Total Tips:</td>
+                <td class="text-end">{{ paymentAndTipsSummary?.totalTipsAmount | number:'1.0-0' }}</td>
+            </tr>
+            <tr>
+                <td class="ps-0">Total Sub Total:</td>
+                <td class="text-end">{{ paymentAndTipsSummary?.totalSubTotal | number:'1.0-0' }}</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- void summaries -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Void Item Summary</strong>
+    </div>
+    <div class="col-12">
+        <div *ngIf="voidItemSummary?.length; else noVoidItems" class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Item</th>
+                        <th class="text-end">Qty</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let v of voidItemSummary">
+                        <td>{{ v.itemName || v.desc1 || '-' }}</td>
+                        <td class="text-end">{{ v.qty || 0 }}</td>
+                        <td class="text-end">{{ v.amount | number:'1.0-0' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noVoidItems>
+            <div class="small text-muted">No void items.</div>
+        </ng-template>
+    </div>
+
+    <div class="col-12 mt-2">
+        <strong>Void Payment Summary</strong>
+        <div *ngIf="voidPaymentSummary?.length; else noVoidPayments" class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pay Type</th>
+                        <th class="text-end">Paid</th>
+                        <th class="text-end">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let vp of voidPaymentSummary">
+                        <td>{{ vp.payType || vp.desc1 || '-' }}</td>
+                        <td class="text-end">{{ vp.paid || 0 }}</td>
+                        <td class="text-end">{{ vp.amount | number:'1.0-0' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <ng-template #noVoidPayments>
+            <div class="small text-muted">No void payments.</div>
+        </ng-template>
+    </div>
+</div>
+
+<!-- unpaid summary -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Unpaid Summary</strong>
+    </div>
+    <div class="col-6">
+        <table class="table table-sm">
+            <tbody>
+                <tr *ngFor="let u of unpaid">
+                    <td class="ps-0">Item Sales :</td>
+                    <td class="text-end pe-0">{{ u.ItemSales || '-' }}</td>
+                </tr>
+                <tr *ngFor="let u of unpaid">
+                    <td class="ps-0">Total Cover :</td>
+                    <td class="text-end pe-0">{{ u.totalCover || '-' }}</td>
+                </tr>
+                <tr *ngFor="let u of unpaid">
+                    <td class="ps-0">Total Check :</td>
+                    <td class="text-end pe-0">{{ u.totalCheck || 0 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- tax summary -->
+<div class="row mb-3">
+    <div class="col-12">
+        <strong>Tax Summary</strong>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Note</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let t of taxSummary?.details">
+                    <td>{{ t.note }}</td>
+                    <td class="text-end">{{ t.total | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-6 offset-6">
+        <table class="table table-sm">
+            <tr>
+                <td class="ps-0">Total Tax:</td>
+                <td class="text-end">{{ taxSummary?.totalTax | number:'1.0-0' }}</td>
             </tr>
         </table>
     </div>
