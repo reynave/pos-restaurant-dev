@@ -5,17 +5,17 @@ import { environment } from '../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UserLoggerService } from '../service/user-logger.service';
-import { DailyCloseComponent } from '../pos/daily/daily-close/daily-close.component';
+import { UserLoggerService } from '../service/user-logger.service'; 
 import { SocketService } from '../service/socket.service';
 import { LanguageService } from '../service/language.service';
 import { HeaderMenuComponent } from '../header/header-menu/header-menu.component';
 import { SalesSummaryReportComponent } from "./sales-summary-report/sales-summary-report.component";
+import { CashierReportPosPrinterPaperComponent } from "./cashier-report-pos-printer-paper/cashier-report-pos-printer-paper.component";
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, RouterModule, HeaderMenuComponent, SalesSummaryReportComponent],
+  imports: [HttpClientModule, CommonModule, RouterModule, HeaderMenuComponent, SalesSummaryReportComponent, CashierReportPosPrinterPaperComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
 })
@@ -48,13 +48,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
           id: '21',
           title: 'POS Printer Paper',
           description: 'POS Printer Paper',
-          route: 'reports/cashierReportPosPrinterPaper',
+          router: 'cashierReportPosPrinterPaper',
         },
         {
           id: '22',
           title: 'Desktop Printer Paper',
           description: 'Desktop Printer Paper',
-          route: 'reports/cashierReportDesktopPrinterPaper',
+          router: 'desktopPrinterPaper',
         },
       ],
     },
@@ -108,6 +108,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       queryParamsHandling: 'merge', // Merge with existing query params
       replaceUrl: true, // Replace the current history entry
     });
+    this.getReport = cat;
   }
   selectReport(cat: any, sub: any) {
     this.selectedReport = { ...sub, category: cat.id };

@@ -33,6 +33,12 @@ export class SalesSummaryReportComponent  implements OnInit {
   voidPaymentSummary: any = [];
   unpaid: any = [];
   taxSummary: any = null;
+  selectedOutlet : string = '';
+  outlets : any = [];
+  selectUser : string = '';
+  users : any = [];
+
+  showData : boolean = false;
   constructor(
     private activeRouter: ActivatedRoute, 
     private socketService: SocketService,
@@ -45,10 +51,38 @@ export class SalesSummaryReportComponent  implements OnInit {
     console.log(this.activeRouter.snapshot.queryParams['date']);
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
-
+    this.httpGetUsers();
+    this.httpGetOtlets();
+  }
+  httpGetUsers(){
+    this.http.get(this.api+`reports/getUsers`,{
+      headers: this.configService.headers()
+    }).subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.users = data.users || [];
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+        this.note = error.message;
+      }
+    });
   }
 
+  httpGetOtlets(){
+    this.http.get(this.api+`reports/getOutlets`,{
+      headers: this.configService.headers()
+    }).subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.outlets = data.outlets || [];
+      }
+    });
+  }
+
+
   onSubmit(){
+    this.showData = true;
     this.loading = true;
     const startDate = `${this.startDate.year}-${String(this.startDate.month).padStart(2,'0')}-${String(this.startDate.day).padStart(2,'0')}`;
     const endDate = `${this.endDate.year}-${String(this.endDate.month).padStart(2,'0')}-${String(this.endDate.day).padStart(2,'0')}`;
