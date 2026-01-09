@@ -48,7 +48,7 @@ export class CashierReportPosPrinterPaperComponent implements OnInit {
     const endDate = `${this.endDate.year}-${String(this.endDate.month).padStart( 2,'0')}-${String(this.endDate.day).padStart(2, '0')}`;
 
     this.http
-      .get(this.api + `reports/cashierPosPrinterPaper`, {
+      .get(this.api + `reports/cashierReports`, {
         headers: this.configService.headers(),
         params: {
           startDate: startDate,

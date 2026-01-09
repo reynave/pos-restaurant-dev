@@ -1,0 +1,87 @@
+<div class="container report">
+    <div class="row">
+        <div class="col-12">
+
+
+            <div *ngIf="report && report.data" class="mb-3">
+                <div *ngFor="let p of report.data">
+                    <h4>{{ p.period?.period || p.period }}</h4>
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>PLU</th>
+                                <th>Menu ID</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Qty</th>
+                                <th class="text-end">Item Sales</th>
+                                <th class="text-end">Discount</th>
+                                <th class="text-end">Net Sales</th>
+                                <th class="text-end">% Item</th>
+                                <th class="text-end">% Net</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let it of p.itemizedSalesDetail">
+                                <td>{{ it.name }}</td>
+                                <td>{{ it.plu }}</td>
+                                <td>{{ it.menuId }}</td>
+                                <td class="text-end">{{ it.price | number:'1.0-0' }}</td>
+                                <td class="text-end">{{ it.qty }}</td>
+                                <td class="text-end">{{ it.itemSales | number:'1.0-0' }}</td>
+                                <td class="text-end">{{ it.discount | number:'1.0-0' }}</td>
+                                <td class="text-end">{{ it.netSales | number:'1.0-0' }}</td>
+                                <td class="text-end">{{ it.percentPerAllItemSales }}</td>
+                                <td class="text-end">{{ it.percentPerAllNetSales }}</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Totals</td>
+                                <td class="text-end">{{ p.totalQty }}</td>
+                                <td class="text-end">{{ p.totalItemSales | number:'1.0-0' }}</td>
+                                <td></td>
+                                <td class="text-end">{{ p.totalNetSales | number:'1.0-0' }}</td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- fallback: if API returned legacy `items` array -->
+            <div *ngIf="(!report || !report.data) && items && items.length" class="mb-3">
+                <h4>Items</h4>
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Menu ID</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-end">Qty</th>
+                            <th class="text-end">Item Sales</th>
+                            <th class="text-end">Net Sales</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let it of items">
+                            <td>{{ it.name }}</td>
+                            <td>{{ it.menuId }}</td>
+                            <td class="text-end">{{ it.price | number:'1.0-0' }}</td>
+                            <td class="text-end">{{ it.qty }}</td>
+                            <td class="text-end">{{ it.itemSales | number:'1.0-0' }}</td>
+                            <td class="text-end">{{ it.netSales | number:'1.0-0' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- no data -->
+            <div *ngIf="!loading && (!report && (!items || items.length === 0))">
+                <p>Tidak ada data.</p>
+            </div>
+
+
+        </div>
+    </div>
+</div>

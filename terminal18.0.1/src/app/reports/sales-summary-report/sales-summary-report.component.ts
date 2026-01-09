@@ -17,8 +17,8 @@ import { ConfigService } from '../../service/config.service';
   styleUrl: './sales-summary-report.component.css'
 })
 export class SalesSummaryReportComponent  implements OnInit {
-  startDate : any = [];
-  endDate : any = [];
+  startDate : any = { year: 2025, month: 12, day: 18 };
+  endDate : any = { year: 2026, month: 12, day: 18 };
   loading: boolean = false;
   api: string = '';
   server: string = '';
@@ -39,6 +39,7 @@ export class SalesSummaryReportComponent  implements OnInit {
   users : any = [];
 
   showData : boolean = false;
+ 
   constructor(
     private activeRouter: ActivatedRoute, 
     private socketService: SocketService,
@@ -53,6 +54,7 @@ export class SalesSummaryReportComponent  implements OnInit {
     this.server = this.configService.getServerUrl();
     this.httpGetUsers();
     this.httpGetOtlets();
+    this.httpGetReport()
   }
   httpGetUsers(){
     this.http.get(this.api+`reports/getUsers`,{
@@ -80,8 +82,9 @@ export class SalesSummaryReportComponent  implements OnInit {
     });
   }
 
+  
 
-  onSubmit(){
+  httpGetReport(){
     this.showData = true;
     this.loading = true;
     const startDate = `${this.startDate.year}-${String(this.startDate.month).padStart(2,'0')}-${String(this.startDate.day).padStart(2,'0')}`;

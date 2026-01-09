@@ -1,8 +1,8 @@
 <app-header-menu></app-header-menu>
-<div class="container-fluid">
+<div class="container">
 	<div class="row g-2">
 		<!-- Left menu -->
-		<div class="col-12 col-md-3 mb-3">
+		<div class="col-12 col-md-4 mb-3">
 			<div class="card">
 				<div class="card-body p-2">
 					<h5 class="card-title mb-2">Reports</h5>
@@ -10,7 +10,7 @@
 						<li class="list-group-item" *ngFor="let a of reportsMenu">
 							<div class="d-flex justify-content-between align-items-center">
 								<div *ngIf="a.items == null || a.items.length === 0">
-									<a href="javascript:;" (click)="goTo(a.router)">
+									<a href="javascript:;" (click)="goTo(a.router, a.title)">
 										<strong>{{ a.title }}</strong></a>
 								</div>
 
@@ -27,7 +27,7 @@
 
 							<ul class="list-unstyled ms-2 mt-2" *ngIf="a.show">
 								<li class="report-item" *ngFor="let sub of a.items"
-									[class.active]="selectedReport?.id === sub.id" (click)="goTo(sub.router)">
+									[class.active]="selectedReport?.id === sub.id" (click)="goTo(sub.router,  sub.title)">
 									{{ sub.title }}
 								</li>
 							</ul>
@@ -38,16 +38,54 @@
 		</div>
 
 		<!-- Right content -->
-		<div class="col-12 col-md-9">
+		<div class="col-12 col-md-8">
+			
+		 
+			@if(getReport!= ''){
+			<div class="card">
+				<div class="card-body">
+					<h4>{{titleReport}}</h4>
+					<table class="table table-sm table-borderless">
+						<tbody>
+							<tr>
+								<td>Start date</td>
+								<td>
+									<div class="input-group ">
+										<input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp"
+											[(ngModel)]="startDate" ngbDatepicker #d="ngbDatepicker" />
+										<button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+											(click)="d.toggle()" type="button"></button>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>End date</td>
+								<td>
+									<div class="input-group ">
+										<input class="form-control form-control-sm" placeholder="yyyy-mm-dd" name="dp"
+											[(ngModel)]="endDate" [minDate]="startDate" ngbDatepicker
+											#d2="ngbDatepicker" />
+										<button class="btn btn-sm btn-outline-secondary bi bi-calendar3"
+											(click)="d2.toggle()" type="button"></button>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td></td>
+								<td>
+									<div class="d-grid"> 
+										<button class="btn btn-primary btn-sm me-2 px-4" 
+										[disabled]="endDate.year == undefined || startDate.year == undefined" (click)="openInNewTab()">Submit </button>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 
-			@if(getReport== 'salesSummaryReport'){
-			<app-sales-summary-report></app-sales-summary-report>
-			}
-			@if(getReport== 'cashierReportPosPrinterPaper'){
-			<app-cashier-report-pos-printer-paper></app-cashier-report-pos-printer-paper>
-			}
-			@if(getReport== 'desktopPrinterPaper'){
-			desktopPrinterPaper
+
+
+				</div>
+			</div>
 			}
 
 			@if(getReport== ''){

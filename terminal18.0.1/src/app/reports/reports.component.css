@@ -21,3 +21,8 @@
 }
 
 .card .table-responsive { max-height: 420px; overflow: auto; }
+
+.reports-menu a{
+	text-decoration: none;
+	color: inherit;
+}

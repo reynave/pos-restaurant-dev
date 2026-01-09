@@ -3,19 +3,18 @@ import { ConfigService } from '../service/config.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 import { CommonModule } from '@angular/common';
-import { NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule, NgbModal, NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserLoggerService } from '../service/user-logger.service'; 
 import { SocketService } from '../service/socket.service';
 import { LanguageService } from '../service/language.service';
-import { HeaderMenuComponent } from '../header/header-menu/header-menu.component';
-import { SalesSummaryReportComponent } from "./sales-summary-report/sales-summary-report.component";
-import { CashierReportPosPrinterPaperComponent } from "./cashier-report-pos-printer-paper/cashier-report-pos-printer-paper.component";
+import { HeaderMenuComponent } from '../header/header-menu/header-menu.component'; 
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reports',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, RouterModule, HeaderMenuComponent, SalesSummaryReportComponent, CashierReportPosPrinterPaperComponent],
+  imports: [HttpClientModule, NgbDatepickerModule, FormsModule, CommonModule, RouterModule, HeaderMenuComponent],
   templateUrl: './reports.component.html',
   styleUrl: './reports.component.css',
 })
@@ -31,7 +30,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   api: string = '';
   // Menu definition for reports and sub-reports
   getReport : any = "";
-    reportsMenu: any[] = [
+  reportsMenu: any[] = [
     {
       id: '1',
       title: '1. Sales Summary Report',
@@ -41,7 +40,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
     {
       id: '2',
-      title: 'Cashier Report',
+      title: '2. Cashier Report',
       show: false,
       items: [
         {
@@ -55,6 +54,23 @@ export class ReportsComponent implements OnInit, OnDestroy {
           title: 'Desktop Printer Paper',
           description: 'Desktop Printer Paper',
           router: 'desktopPrinterPaper',
+        },
+      ],
+    },
+     {
+      id: '3',
+      title: '3. Itemized Sales Report',
+      show: false,
+      items: [
+        {
+          id: '31',
+          title: 'Itemized Sales Detail',
+          router: 'itemizedSalesDetail',
+        },
+        {
+          id: '32',
+          title: 'Itemized Sales Summary',
+          router: 'itemizedSalesSummary',
         },
       ],
     },
@@ -81,10 +97,24 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   selectedReport: any = null;
   sampleRows: any[] = [];
+
+  today : any = new Date();
+  startDate: any = {
+    year: this.today.getFullYear(),
+    month: this.today.getMonth() + 1,
+    day: this.today.getDate(), 
+  };
+  endDate: any = {
+    year: this.today.getFullYear(),
+    month: this.today.getMonth() + 1,
+    day: this.today.getDate(),
+  }; 
+titleReport : string = '';
+outlets : any = [];
+users : any = [];
   constructor(
     public configService: ConfigService,
-    private http: HttpClient,
-    public offcanvasService: NgbOffcanvas,
+    private http: HttpClient, 
     private router: Router,
     public modalService: NgbModal,
     private activeRouter: ActivatedRoute,
@@ -95,34 +125,50 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
-    this.getReport = this.activeRouter.snapshot.url[1]?.path || "";
-    console.log('this.getReport', this.getReport);
+    this.getReport = this.activeRouter.snapshot.queryParams['category'] || '';
+    this.titleReport= this.activeRouter.snapshot.queryParams['titleReport'] || '';
+  }
+    httpGetUsers(){
+    this.http.get(this.api+`reports/getUsers`,{
+      headers: this.configService.headers()
+    }).subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.users = data.users || [];
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+     
+      }
+    });
   }
 
-  goTo(cat: any) {
+  httpGetOtlets(){
+    this.http.get(this.api+`reports/getOutlets`,{
+      headers: this.configService.headers()
+    }).subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.outlets = data.outlets || [];
+      }
+    });
+  }
+
+
+  goTo(cat: any, titleReport?: any) {
+    this.titleReport = titleReport; 
     console.log('navigating to', cat);
-    this.router.navigate(['reports', cat], {
+    this.router.navigate(['reports'], {
       queryParams: {
-        //id: data['id'],
+        category: cat,
+        titleReport : titleReport
       },
       queryParamsHandling: 'merge', // Merge with existing query params
       replaceUrl: true, // Replace the current history entry
     });
     this.getReport = cat;
   }
-  selectReport(cat: any, sub: any) {
-    this.selectedReport = { ...sub, category: cat.id };
-    // populate sampleRows with small mock data for UI preview
-    this.sampleRows = [
-      {
-        field: 'Total',
-        value: 'Rp 1.250.000',
-        notes: this.selectedReport.title,
-      },
-      { field: 'Transactions', value: '45', notes: 'Count' },
-      { field: 'Top Item', value: 'Nasi Goreng', notes: 'Qty 12' },
-    ];
-  }
+  
 
   ngOnDestroy(): void {}
   sendMessage() {
@@ -133,13 +179,19 @@ export class ReportsComponent implements OnInit, OnDestroy {
     history.back();
   }
 
-  openInNewTab(route: string) {
+  openInNewTab() {
+
+    const startDate = `${this.startDate.year}-${String(this.startDate.month).padStart(2,'0')}-${String(this.startDate.day).padStart(2,'0')}`;
+    const endDate = `${this.endDate.year}-${String(this.endDate.month).padStart(2,'0')}-${String(this.endDate.day).padStart(2,'0')}`;
+
+
+    let url = 'reports/'+this.getReport + `?startDate=${startDate}&endDate=${endDate}`;
     const params =
       'width=800,height=600,left=100,top=50,resizable=yes,scrollbars=yes';
 
     const baseUrl =
       window.location.origin +
       window.location.pathname.replace(/\/[^\/]*$/, '/');
-    window.open(`${baseUrl}#${route}`, '_blank', params);
+    window.open(`${baseUrl}#${url}`, '_blank', params);
   }
 }
