@@ -6,7 +6,12 @@
 .report  td, .report  th {
     padding: 0px !important;
 }
-
+.report h1, .report h2, .report h3 , .report h4, .report h5, .report h6, .report strong {
+    font-family:monospace;
+}
+.report strong{
+    font-size: 1rem;
+}
  .report  th {
  border-bottom:  1px solid black; 
 }
@@ -14,4 +19,53 @@
 .report  tfoot td {
     border-top:  1px solid black; 
  
+}
+
+.tbodyAsfooter td {
+    border-top:  1px solid black; 
+    font-weight: bold;
+}
+
+/* Print / A4 paper styling */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm 12mm; /* top/bottom 10mm, left/right 12mm */
+    }
+
+    html, body {
+        width: 210mm;
+        height: 297mm;
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* Make the report fill an A4 page with a visible border */
+    .report {
+        box-sizing: border-box;
+        width: 210mm;
+        min-height: 297mm;
+        padding: 10mm;
+        margin: 0 auto;
+        border: 1px solid #000;
+        background: #fff;
+    }
+
+    /* Avoid breaking table rows across pages */
+    table { page-break-inside: auto; }
+    tr    { page-break-inside: avoid; page-break-after: auto }
+    thead { display: table-header-group; }
+    tfoot { display: table-footer-group; }
+
+    /* Utility for forcing a page break */
+    .page-break { page-break-after: always; }
+}
+
+/* Optional on-screen preview: constrain width similar to A4 */
+@media screen {
+    .report {
+        max-width: 900px;
+        margin: 10px auto;
+        padding: 12px;
+    }
 }

@@ -20,4 +20,13 @@ export class LanguageService {
   getSelectLanguage(){
     return this.currentLanguage;
   }
+
+  reportLabel(){
+    return {
+      company: this.get('PT. Mitrasys Bisnis Sinergi (FOR DEMO ONLY)'),
+      endOfReport : this.get('<< End of Report >>'),
+      footer: this.get('PT. Mitrasys Bisnis Sinergi (FOR DEMO ONLY) is licensed to use this program')
+    }
+  }
+
 }

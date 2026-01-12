@@ -29,7 +29,8 @@ export class ItemizedSalesDetailComponent  implements OnInit {
   constructor(
     private activeRouter: ActivatedRoute,  
     private http: HttpClient,
-    private configService: ConfigService
+    private configService: ConfigService,
+    public languageService: LanguageService,
   ) { }
   ngOnInit(): void { 
     this.api = this.configService.getApiUrl();
@@ -53,8 +54,8 @@ export class ItemizedSalesDetailComponent  implements OnInit {
       next: (data:any) => {
         console.log(data); 
         // support both shapes: legacy `items` or new object with `data`/`periods`
-        this.report = data;
-        this.items = data.items || data.data || [];
+   
+        this.items = data;
         this.loading = false;
       },
       error: (error) => {
