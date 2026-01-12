@@ -1,0 +1,86 @@
+<div class="container report">
+    <div class="row">
+        <div class="col-12 text-center mb-3">
+            <div>{{ languageService.reportLabel().company }}</div>
+            <div>
+                <h6 class="mb-0 pb-0"> Itemized Sales Summary Report</h6>
+            </div>
+            <div> {{startDate | date : 'yyyy-MM-dd'}} to {{endDate | date : 'yyyy-MM-dd'}} </div>
+        </div>
+        <div class="col-12">
+            <strong>Sales by Department</strong>
+            <div>Outlet : DEMO MITRALINK</div>
+        </div>
+        <div class="col-12" *ngIf="report">
+            <strong>Sales by Periods</strong>
+            <table class="table table-sm table-bordered" *ngIf="report.periods?.length">
+                <thead>
+                    <tr>
+                        <th>Period ID</th>
+                        <th>Period</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of report.periods">
+                        <td>{{ p.periodId }}</td>
+                        <td>{{ p.period }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <strong>Summary</strong>
+            <table class="table table-sm table-bordered" *ngIf="report.summary">
+                <tbody>
+                    <tr><th>Gross Sales</th><td>{{ report.summary.grossSales }}</td></tr>
+                    <tr><th>Item Sales</th><td>{{ report.summary.itemSales }}</td></tr>
+                    <tr><th>Discount</th><td>{{ report.summary.discount }}</td></tr>
+                    <tr><th>Net Sales</th><td>{{ report.summary.netSales }}</td></tr>
+                    <tr><th>Tax</th><td>{{ report.summary.tax }}</td></tr>
+                    <tr><th>Service Charge (SC)</th><td>{{ report.summary.sc }}</td></tr>
+                    <tr><th>Total Cover</th><td>{{ report.summary.totalCover }}</td></tr>
+                    <tr><th>Total Checks</th><td>{{ report.summary.totalChecks }}</td></tr>
+                    <tr><th>Sales Per Check</th><td>{{ report.summary.salesPerChecks }}</td></tr>
+                    <tr><th>Sales Per Cover</th><td>{{ report.summary.salesPerCover }}</td></tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="report.data?.length">
+                <strong>Sales by Department</strong>
+                <div *ngFor="let dept of report.data" class="mb-3">
+                    <h6 class="mb-1">{{ dept.name }}</h6>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Qty</th>
+                                <th>Item Sales</th>
+                                <th>% Item Sales</th>
+                                <th>Discount</th>
+                                <th>Net Sales</th>
+                                <th>% Net Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let r of dept.departments">
+                                <td>{{ r.period }}</td>
+                                <td>{{ r.totalQty }}</td>
+                                <td>{{ r.totalItemSales }}</td>
+                                <td>{{ r.percentItemSales }}</td>
+                                <td>{{ r.totalDiscount }}</td>
+                                <td>{{ r.totalNetSales }}</td>
+                                <td>{{ r.percentNetSales }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="cal-12 text-center">
+            <div>{{ languageService.reportLabel().endOfReport }}</div>
+            <Div>{{ languageService.reportLabel().footer }}</Div>
+        </div>
+
+    </div>
+</div>

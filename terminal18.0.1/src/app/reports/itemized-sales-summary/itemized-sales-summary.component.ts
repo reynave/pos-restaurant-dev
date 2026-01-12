@@ -6,15 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from '../../service/config.service';
-
 @Component({
-  selector: 'app-itemized-sales-detail',
+  selector: 'app-itemized-sales-summary',
   standalone: true,
   imports: [NgbDatepickerModule, NgbAlertModule, FormsModule, CommonModule],
-  templateUrl: './itemized-sales-detail.component.html',
-  styleUrl: './itemized-sales-detail.component.css'
+  templateUrl: './itemized-sales-summary.component.html',
+  styleUrl: './itemized-sales-summary.component.css'
 })
-export class ItemizedSalesDetailComponent  implements OnInit {
+export class ItemizedSalesSummaryComponent  implements OnInit {
   startDate : any = { year: 2025, month: 12, day: 18 };
   endDate : any = { year: 2026, month: 12, day: 18 };
   loading: boolean = false;
@@ -22,8 +21,8 @@ export class ItemizedSalesDetailComponent  implements OnInit {
   server: string = '';
   note : string = '';  
   showData : boolean = false;
- items : any = [];
  report: any = null;
+  
   constructor(
     private activeRouter: ActivatedRoute,  
     private http: HttpClient,
@@ -42,7 +41,7 @@ export class ItemizedSalesDetailComponent  implements OnInit {
     this.showData = true;
     this.loading = true;
    
-    this.http.get(this.api+`reports/itemizedSalesDetail`,{
+    this.http.get(this.api+`reports/itemizedSalesSummary`,{
       headers: this.configService.headers(),
       params: {
         startDate: this.startDate,
@@ -53,7 +52,7 @@ export class ItemizedSalesDetailComponent  implements OnInit {
         console.log(data); 
         // support both shapes: legacy `items` or new object with `data`/`periods`
    
-        this.items = data;
+        this.report = data;
         this.loading = false;
       },
       error: (error) => {
