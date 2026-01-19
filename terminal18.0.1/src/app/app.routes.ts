@@ -37,12 +37,7 @@ import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.
 import { VoidComponent } from './pos/void/void.component';
 import { ReceiptComponent } from './pos/receipt/receipt.component';
 import { ReportsComponent } from './reports/reports.component';
-import { SalesSummaryReportComponent } from './reports/sales-summary-report/sales-summary-report.component';
-import { CashierReportPosDesktopPrinterPaperComponent } from './reports/cashier-report-pos-desktop-printer-paper/cashier-report-pos-desktop-printer-paper.component';
-import { CashierReportPosPrinterPaperComponent } from './reports/cashier-report-pos-printer-paper/cashier-report-pos-printer-paper.component';
-import { ItemizedSalesDetailComponent } from './reports/itemized-sales-detail/itemized-sales-detail.component';
-import { ItemizedSalesSummaryComponent } from './reports/itemized-sales-summary/itemized-sales-summary.component';
-
+ 
 export const routes: Routes = [
     { path: '', component: SetupComponent },
     { path: 'home', component: HomeComponent},
@@ -94,13 +89,7 @@ export const routes: Routes = [
     { path: 'daily/cashBalance', component: DailyCashBalanceComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },
  
     { path: 'reports', component: ReportsComponent, canActivate: [authGuard, terminalGuard, loginGuard] },
-   // { path: 'reports/:any', component: ReportsComponent, canActivate: [authGuard, terminalGuard, loginGuard] },
-    { path: 'reports/salesSummaryReport', component: SalesSummaryReportComponent,    canActivate: [authGuard, terminalGuard, loginGuard] },
-    { path: 'reports/cashierReportPosDesktopPrinterPaper', component: CashierReportPosDesktopPrinterPaperComponent,    canActivate: [authGuard, terminalGuard, loginGuard] },
-    { path: 'reports/cashierReportPosPrinterPaper', component: CashierReportPosPrinterPaperComponent,    canActivate: [authGuard, terminalGuard, loginGuard] },
-    { path: 'reports/itemizedSalesDetail', component: ItemizedSalesDetailComponent,    canActivate: [authGuard, terminalGuard, loginGuard] },
-     { path: 'reports/itemizedSalesSummary', component: ItemizedSalesSummaryComponent,    canActivate: [authGuard, terminalGuard, loginGuard] },
-    
+      
     { path: 'terminalRelogin', component: TerminalReloginComponent },
 
     { path: '**', component: PageNotFoundComponent },

@@ -30,70 +30,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   api: string = '';
   // Menu definition for reports and sub-reports
   getReport : any = "";
-  reportsMenu: any[] = [
-    {
-      id: '1',
-      title: '1. Sales Summary Report',
-      show: false,
-      router: 'salesSummaryReport',
-    },
-
-    {
-      id: '2',
-      title: '2. Cashier Report',
-      show: false,
-      items: [
-        {
-          id: '21',
-          title: 'POS Printer Paper',
-          description: 'POS Printer Paper',
-          router: 'cashierReportPosPrinterPaper',
-        },
-        {
-          id: '22',
-          title: 'Desktop Printer Paper',
-          description: 'Desktop Printer Paper',
-          router: 'desktopPrinterPaper',
-        },
-      ],
-    },
-     {
-      id: '3',
-      title: '3. Itemized Sales Report',
-      show: false,
-      items: [
-        {
-          id: '31',
-          title: 'Itemized Sales Detail',
-          router: 'itemizedSalesDetail',
-        },
-        {
-          id: '32',
-          title: 'Itemized Sales Summary',
-          router: 'itemizedSalesSummary',
-        },
-      ],
-    },
-    {
-      id: 'operational',
-      title: 'Operational',
-      show: false,
-      items: [
-        {
-          id: 'open-tables',
-          title: 'Open Tables',
-          description: 'Meja yang masih terbuka',
-          route: 'reports/operational/open-tables',
-        },
-        {
-          id: 'staff',
-          title: 'Staff Activity',
-          description: 'Aktivitas staff',
-          route: 'reports/operational/staff',
-        },
-      ],
-    },
-  ];
+  reportsMenu: any[] = []
 
   selectedReport: any = null;
   sampleRows: any[] = [];
@@ -111,7 +48,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }; 
 titleReport : string = '';
 outlets : any = [];
+outletId : string = '';
 users : any = [];
+usersId : string = '';
   constructor(
     public configService: ConfigService,
     private http: HttpClient, 
@@ -125,10 +64,29 @@ users : any = [];
 
   ngOnInit(): void {
     this.api = this.configService.getApiUrl();
-    this.getReport = this.activeRouter.snapshot.queryParams['category'] || '';
-    this.titleReport= this.activeRouter.snapshot.queryParams['titleReport'] || '';
+   
+    this.httpGet();
+    this.httpGetUsers();
+    this.httpGetOtlets();
   }
-    httpGetUsers(){
+
+   httpGet(){
+    this.http.get(this.api+`reports/selectReports`,{
+      headers: this.configService.headers()
+    }).subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.reportsMenu = data.data || [];
+      },
+      error: (error) => {
+        console.error('There was an error!', error);
+     
+      }
+    });
+  }
+
+
+  httpGetUsers(){
     this.http.get(this.api+`reports/getUsers`,{
       headers: this.configService.headers()
     }).subscribe({
@@ -154,19 +112,19 @@ users : any = [];
     });
   }
 
-
-  goTo(cat: any, titleReport?: any) {
-    this.titleReport = titleReport; 
-    console.log('navigating to', cat);
+   
+  goTo(a : any) {
+    this.titleReport = a.title
+ 
+    console.log('navigating to', a.router);
     this.router.navigate(['reports'], {
       queryParams: {
-        category: cat,
-        titleReport : titleReport
+        category: a.router, 
       },
       queryParamsHandling: 'merge', // Merge with existing query params
       replaceUrl: true, // Replace the current history entry
     });
-    this.getReport = cat;
+    this.getReport = a;
   }
   
 
@@ -179,19 +137,22 @@ users : any = [];
     history.back();
   }
 
-  openInNewTab() {
+  
+
+  externalTab() {
 
     const startDate = `${this.startDate.year}-${String(this.startDate.month).padStart(2,'0')}-${String(this.startDate.day).padStart(2,'0')}`;
     const endDate = `${this.endDate.year}-${String(this.endDate.month).padStart(2,'0')}-${String(this.endDate.day).padStart(2,'0')}`;
 
+    const getRouter = this.getReport.router || '';
 
-    let url = 'reports/'+this.getReport + `?startDate=${startDate}&endDate=${endDate}`;
+    let url = this.api+`reports/${getRouter}?startDate=${startDate}&endDate=${endDate}&view=printable&outletId=${this.outletId}&userId=${this.usersId}`;
     const params =
       'width=800,height=600,left=100,top=50,resizable=yes,scrollbars=yes';
 
     const baseUrl =
       window.location.origin +
       window.location.pathname.replace(/\/[^\/]*$/, '/');
-    window.open(`${baseUrl}#${url}`, '_blank', params);
+    window.open(`${url}`, '_blank', params);
   }
 }

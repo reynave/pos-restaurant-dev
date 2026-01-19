@@ -2,15 +2,16 @@
 <div class="container">
 	<div class="row g-2">
 		<!-- Left menu -->
-		<div class="col-12 col-md-4 mb-3">
-			<div class="card">
-				<div class="card-body p-2">
-					<h5 class="card-title mb-2">Reports</h5>
+		<div class="col-12 col-md-5">
+			<div class="card" >
+				<h5 class="card-header">Select Reports</h5>
+				<div class="card-body p-2" style="max-height: 80vh; overflow-y: auto;">
+				
 					<ul class="list-group list-group-flush reports-menu">
 						<li class="list-group-item" *ngFor="let a of reportsMenu">
 							<div class="d-flex justify-content-between align-items-center">
 								<div *ngIf="a.items == null || a.items.length === 0">
-									<a href="javascript:;" (click)="goTo(a.router, a.title)">
+									<a href="javascript:;" (click)="goTo(a)">
 										<strong>{{ a.title }}</strong></a>
 								</div>
 
@@ -27,7 +28,7 @@
 
 							<ul class="list-unstyled ms-2 mt-2" *ngIf="a.show">
 								<li class="report-item" *ngFor="let sub of a.items"
-									[class.active]="selectedReport?.id === sub.id" (click)="goTo(sub.router,  sub.title)">
+									[class.active]="selectedReport?.id === sub.id" (click)="goTo(sub)">
 									{{ sub.title }}
 								</li>
 							</ul>
@@ -38,8 +39,8 @@
 		</div>
 
 		<!-- Right content -->
-		<div class="col-12 col-md-8">
-			
+		<div class="col-12 col-md-7">
+			  
 		 
 			@if(getReport!= ''){
 			<div class="card">
@@ -47,7 +48,7 @@
 					<h4>{{titleReport}}</h4>
 					<table class="table table-sm table-borderless">
 						<tbody>
-							<tr>
+							<tr *ngIf="getReport.startDate == 1 ">
 								<td>Start date</td>
 								<td>
 									<div class="input-group ">
@@ -58,7 +59,7 @@
 									</div>
 								</td>
 							</tr>
-							<tr>
+							<tr *ngIf="getReport.endDate == 1 ">
 								<td>End date</td>
 								<td>
 									<div class="input-group ">
@@ -70,30 +71,51 @@
 									</div>
 								</td>
 							</tr>
+
+							<tr *ngIf="getReport.employeeId == 1 ">
+								<td>Employee </td>
+								<td>
+									 
+										 <select class="form-select form-select-sm" [(ngModel)]="usersId">
+											<option *ngFor="let emp of users" [value]="emp.id">{{emp.name}}</option>
+										</select> 
+								</td>
+							</tr>
+
+							<tr *ngIf="getReport.outletId == 1 ">
+								<td>End date</td>
+								<td>
+									 
+									<select class="form-select form-select-sm" [(ngModel)]="outletId">
+										<option *ngFor="let outlet of outlets" [value]="outlet.id">{{outlet.name}}</option>
+									</select>
+									 
+								</td>
+							</tr>
 							<tr>
 								<td></td>
 								<td>
 									<div class="d-grid"> 
 										<button class="btn btn-primary btn-sm me-2 px-4" 
-										[disabled]="endDate.year == undefined || startDate.year == undefined" (click)="openInNewTab()">Submit </button>
+										[disabled]="endDate.year == undefined || startDate.year == undefined" (click)="externalTab()">Submit </button>
 									</div>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-
-
-
+ 
 				</div>
 			</div>
 			}
 
 			@if(getReport== ''){
 			<div class="text-center py-5 text-muted">
-				<p class="mb-1">Tidak ada laporan dipilih.</p>
-				<small>Pilih salah satu sub report dari menu untuk melihat data contoh.</small>
+				<p class="mb-1">No report selected.</p>
+				<small>Select a sub-report from the menu to view sample data.</small>
 			</div>
 			}
+		 
+			 
 		</div>
 	</div>
 </div>
