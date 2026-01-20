@@ -9,10 +9,11 @@
 				
 					<ul class="list-group list-group-flush reports-menu">
 						<li class="list-group-item" *ngFor="let a of reportsMenu">
-							<div class="d-flex justify-content-between align-items-center">
-								<div *ngIf="a.items == null || a.items.length === 0">
-									<a href="javascript:;" (click)="goTo(a)">
-										<strong>{{ a.title }}</strong></a>
+							<div class="d-flex justify-content-between align-items-center" (click)="goTo(a)">
+								<div [class.isActive]="a.id == getReport.id" *ngIf="a.items == null || a.items.length === 0" >
+									<a href="javascript:;" >
+										<strong>{{ a.title }} <span *ngIf="a.id == getReport.id"><i class="bi bi-arrow-left"></i> </span>  </strong>
+									</a>
 								</div>
 
 								<div *ngIf="a.items && a.items.length > 0">
@@ -46,6 +47,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h4>{{titleReport}}</h4>
+				 
 					<table class="table table-sm table-borderless">
 						<tbody>
 							<tr *ngIf="getReport.startDate == 1 ">
@@ -77,6 +79,7 @@
 								<td>
 									 
 										 <select class="form-select form-select-sm" [(ngModel)]="usersId">
+											<option value="">All Users</option>
 											<option *ngFor="let emp of users" [value]="emp.id">{{emp.name}}</option>
 										</select> 
 								</td>
@@ -87,6 +90,7 @@
 								<td>
 									 
 									<select class="form-select form-select-sm" [(ngModel)]="outletId">
+										<option value="">All Outlets</option>
 										<option *ngFor="let outlet of outlets" [value]="outlet.id">{{outlet.name}}</option>
 									</select>
 									 
@@ -115,7 +119,7 @@
 			</div>
 			}
 		 
-			 
+			 <button class="btn btn-secondary btn-sm mt-2" (click)="postRequestToken()">postRequestToken</button>
 		</div>
 	</div>
 </div>

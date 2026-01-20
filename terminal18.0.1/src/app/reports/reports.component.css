@@ -26,3 +26,7 @@
 	text-decoration: none;
 	color: inherit;
 }
+.isActive {
+	color: #9a0000;
+	font-weight: bold;
+}	
