@@ -127,17 +127,22 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   goTo(a: any) {
-    this.titleReport = a.title;
+   this.titleReport = a.title;
+   this.getReport = a;
+    if (a.items.length === 0) {
+    
+      
 
-    console.log('navigating to', a.router);
-    this.router.navigate(['reports'], {
-      queryParams: {
-        category: a.router,
-      },
-      queryParamsHandling: 'merge', // Merge with existing query params
-      replaceUrl: true, // Replace the current history entry
-    });
-    this.getReport = a;
+      console.log('navigating to', a.router);
+      this.router.navigate(['reports'], {
+        queryParams: {
+          category: a.router,
+        },
+        queryParamsHandling: 'merge', // Merge with existing query params
+        replaceUrl: true, // Replace the current history entry
+      });
+      
+    }
   }
 
   ngOnDestroy(): void {}
