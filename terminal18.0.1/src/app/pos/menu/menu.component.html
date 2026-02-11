@@ -2,7 +2,7 @@
    <div class="row g-2 mt-1">
       <!-- TABLE CART -->
       <div class="col-5 col-lg-4 ">
-
+      
          <div class="order-panel  mb-2">
             <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i class="bi bi-exclamation-triangle"></i>
                {{lang.get('Overdue')}}: {{table.overTime}} {{lang.get('min')}}</span>
@@ -253,7 +253,9 @@
  
       <!-- TABS / MENU -->
       <div class="col-7 col-lg-8 position-relative">
-
+         <div>
+           Time Coundown : {{duration.timer}}  | {{duration.limitEndDate | date:'yyyy-MM-dd HH:mm:ss'}} | {{duration.timeDifference}}
+         </div>
          <div class="inline-modal" *ngIf="selectedItem">
             <div class="card shadow-sm">
                <div class="card-header">
@@ -540,6 +542,7 @@
 
 
                <div class="row g-2 mb-3">
+                 
                   <div class="col-3 mb-1 d-grid" *ngFor="let a of items">
 
                      @if(a.openPrice == 1){

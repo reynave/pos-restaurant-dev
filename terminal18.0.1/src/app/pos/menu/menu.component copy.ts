@@ -146,10 +146,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 		config.keyboard = false;
   }
   ngOnDestroy(): void {
-    // Bersihkan interval countdown jika ada
-    if (this.coundownInterval) {
-      clearInterval(this.coundownInterval);
-    }
     console.log('MENU EMIT : ngOnDestroy');
     const data = {
       terminalId: this.terminalId,
@@ -421,7 +417,7 @@ coundownInterval : any;
       })
       .subscribe(
         (data) => {
-          if (data['table'].length == 0) {
+          if(data['table'].length == 0){
             alert("ERROR / EMPTY SESSION");
             this.router.navigate(['/']);
           }
@@ -433,37 +429,26 @@ coundownInterval : any;
           const lockBy = this.table['lockBy'] != '' ? this.table['lockBy'] : 0;
           this.duration = data['duration'];
 
-          // Hitung selisih waktu antara currentDate dan limitEndDate
-          const currentDate = new Date(this.duration.currentDate);
-          const limitEndDate = new Date(this.duration.limitEndDate);
-          let diffInSeconds = Math.floor((limitEndDate.getTime() - currentDate.getTime()) / 1000);
 
-          // Bersihkan interval sebelumnya jika ada
-          if (this.coundownInterval) {
-            clearInterval(this.coundownInterval);
-          }
+ // Hitung selisih waktu antara currentDate dan limitEndDate
+        const currentDate = new Date(this.duration.currentDate);
+        const limitEndDate = new Date(this.duration.limitEndDate);
+        let diffInSeconds = Math.floor((limitEndDate.getTime() - currentDate.getTime()) / 1000);
 
-          // Fungsi untuk memperbarui timeDifference setiap detik
-          const updateTimeDifference = () => {
-            if (diffInSeconds > 0) {
-              diffInSeconds--;
-              const hours = Math.floor(diffInSeconds / 3600);
-              const minutes = Math.floor((diffInSeconds % 3600) / 60);
-              const seconds = diffInSeconds % 60;
-              this.duration.timeDifference = `${hours.toString().padStart(2, '0')}:${minutes
-                .toString()
-                .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            } else {
-              this.duration.timeDifference = '00:00:00';
-              clearInterval(this.coundownInterval);
-            }
-          };
+        // Konversi selisih waktu ke format hh:mm:ss
+        const hours = Math.floor(diffInSeconds / 3600);
+        diffInSeconds %= 3600;
+        const minutes = Math.floor(diffInSeconds / 60);
+        const seconds = diffInSeconds % 60;
 
-          // Jalankan fungsi updateTimeDifference setiap detik
-          updateTimeDifference(); // Inisialisasi pertama
-          this.coundownInterval = setInterval(updateTimeDifference, 1000);
+        // Format hasil ke hh:mm:ss
+        this.duration.timeDifference = `${hours.toString().padStart(2, '0')}:${minutes
+          .toString()
+          .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-          console.log('Time Difference:', this.duration.timeDifference);
+        console.log('Time Difference:', this.duration.timeDifference);
+
+
 
           console.log(this.terminalId, lockBy);
           if (this.terminalId != lockBy) {

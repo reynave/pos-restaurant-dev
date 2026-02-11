@@ -31,7 +31,7 @@ export class TableMapComponent implements OnInit, AfterViewInit {
   loading: boolean = false;
   editable: boolean = false;
   outletFloorPlandId: number = 0;
-
+  outletFloorPlan : any = {};
   items: any = [];
   floorPlan: any = [];
   model: any = new Actor(1, "", 1, '');
@@ -40,18 +40,14 @@ export class TableMapComponent implements OnInit, AfterViewInit {
   selectIcons: any = [];
   item: any = [];
   indexItem: number = 0;
-
+  imageFloor : string = '';
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
     public modalService: NgbModal,
     private activatedRoute: ActivatedRoute,
   ) { }
-  // tables = [
-  //   { id: 1, name: 'Table A', x: 100, y: 50, width: 100, height: 80, icon: 'assets/table-a.png' },
-  //   { id: 2, name: 'Table B', x: 300, y: 150, width: 120, height: 90, icon: 'assets/table-b.png' },
-  //   { id: 3, name: 'Table C', x: 200, y: 250, width: 110, height: 100, icon: 'assets/table-c.png' }
-  // ];
+ 
   tables: any = [];
   tablesTemp: any = [];
   templateTableMap: any = [];
@@ -84,6 +80,13 @@ export class TableMapComponent implements OnInit, AfterViewInit {
       }
     }
 
+    //bisa buatkan cari index dari array outletFloorPlan dimana outletId = 1002
+    const index = this.outletFloorPlan.findIndex((plan: any) => plan.id == x.id);
+    console.log('Index of outletId :', index, x);
+    this.imageFloor = this.outletFloorPlan[index]?.image || '';
+    console.log('Image Floor :', this.imageFloor);
+
+
   }
   httpMaster() {
     this.loading = true;
@@ -100,6 +103,8 @@ export class TableMapComponent implements OnInit, AfterViewInit {
         this.floorPlan = data['floorPlan'];
         this.templateTableMap = data['templateTableMap']
         this.modalService.dismissAll();
+        this.outletFloorPlan = data['floorPlan'];
+        console.log(this.outletFloorPlan);
       },
       error => {
         console.log(error);

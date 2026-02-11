@@ -104,9 +104,14 @@
 
          @if(items.length > 0){
          @if(activeView == 'map'){
-         <div class="order-panel " style="height: 75vh; zoom:{{zoom}}% ">
-            <div class="table-map "
-               style="background: url('{{public}}floor/{{items[current]?.image}}') left top no-repeat;">
+         <!-- MAP view -->
+         <div class="order-panel " style="zoom:{{zoom}}% ">
+            <div class="table-map ">
+
+               <div class="table-map-bgn">
+                  <img *ngIf="items[current]?.image != '' " [src]="public+'floor/'+items[current]?.image"
+                     width="100%" />
+               </div>
                <div class="floorPlan " *ngFor="let x of items[current]?.maps ; let i = index">
 
                   <div class="items   {{ x.active == 1 ? 'border border-dark border-3 shadow' : '' }} {{x.bgn}} "
@@ -115,19 +120,27 @@
                      style="background-size: cover;" (click)="open(modalCheckIn, x, current, i)">
                      <div class="text-end p-1" style=" cursor: pointer;">
                         <div class="table-pos-label">
-                           <strong class="table-name">
+                        
+                           <div  class="text-center ">
+                              <strong>
                               <span *ngIf="x.overdueMinute > 0 "> <i class="bi bi-exclamation-diamond"></i> </span>
                               {{x.tableName}} </strong>
-
-                           <div>
-                              <span *ngIf="x.lockBy">
+                              
+                              <div>
+                                 <span *ngIf="x.lockBy">
                                  <h4><i class="bi bi-lock-fill"></i> </h4>
                               </span>
+                              </div>
                            </div>
+
+                           
                         </div>
 
+
                      </div>
+
                   </div>
+
 
                </div>
             </div>
@@ -136,6 +149,7 @@
          </div>
          }
          @else {
+         <!-- Table view -->
          <div class="order-panel " style="height: 75vh; overflow-y: auto;">
             <table class="table table-sm table-striped">
                <thead class="sticky-top">
@@ -184,8 +198,9 @@
             <div class="col-12 mb-2">
                <div *ngIf="dataDailyStart['closeDateWarning'] < 0"
                   class="bg-danger text-white p-1 rounded mb-2 text-center">
-                  <strong><small> {{lang.get('Warning Daily Close')}} : +{{ getHourMinute(dataDailyStart['closeDateWarning'])
-                     }}</small></strong>
+                  <strong><small> {{lang.get('Warning Daily Close')}} : +{{
+                        getHourMinute(dataDailyStart['closeDateWarning'])
+                        }}</small></strong>
 
                </div>
 
@@ -214,8 +229,10 @@
                      </div>
                      <div class="mb-2 ">
                         <div>
-                           <label *ngIf="dataDailyStart['closeDateWarning'] > 0" class="me-2">{{lang.get('Will Close at')}}:</label>
-                           <label *ngIf="dataDailyStart['closeDateWarning'] < 0" class="text-danger me-2">{{lang.get('Warning Daily Close')}}:</label>
+                           <label *ngIf="dataDailyStart['closeDateWarning'] > 0" class="me-2">{{lang.get('Will Close
+                              at')}}:</label>
+                           <label *ngIf="dataDailyStart['closeDateWarning'] < 0"
+                              class="text-danger me-2">{{lang.get('Warning Daily Close')}}:</label>
                         </div>
                         <div>{{dataDailyStart['closeDateLimit'] | date:'medium'}}</div>
                      </div>
@@ -325,7 +342,8 @@
                <button type="button" class="btn btn-warning btn-lg" (click)="model.cover=''">{{lang.get('CE')}}</button>
             </div>
             <div class="col-6  d-grid">
-               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid  ">{{lang.get('Order Now')}}</button>
+               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid  ">{{lang.get('Order
+                  Now')}}</button>
             </div>
          </div>
 

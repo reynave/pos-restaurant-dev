@@ -41,8 +41,10 @@
   <div class="row g-1">
 
     <div class="col-lg-8 col-12 ">
-      <div id="contentDiv" class="layout-container shadow-sm"
-        [style]="'background: '+(editable? '#fefefe':'#f5f5f5')+' url('+path+'floor/'+outletFloorPlandId+'.png) no-repeat 0 0;'">
+      <div id="contentDiv" class="layout-container shadow-sm table-map">
+        <div class="table-map-bgn">
+          <img src="{{path}}floor/{{imageFloor}}" width="100%" />
+        </div>
         <div *ngFor="let table of tables" class="draggable" #tableEl [attr.data-id]="table.id"
           [style.transform]="'translate(' + table.x + 'px,' + table.y + 'px)'" [style.width.px]="table.width"
           [style.height.px]="table.height" [style.backgroundImage]="'url('+path+'icon/'+ table.icon + ')'"

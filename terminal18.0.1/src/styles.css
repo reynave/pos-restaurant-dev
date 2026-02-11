@@ -174,7 +174,7 @@ a {
 .order-panel {
     background: var(--color-order-panel-bg);
     border-radius: 15px;
-    padding: 18px;
+    padding: 0.5rem;
     box-shadow: 0 0 8px var(--color-order-panel-shadow);
 }
 
@@ -265,7 +265,11 @@ a {
 
     overflow-y: auto;
 }
-
+.table-map .table-map-bgn {
+    position: absolute;
+    width: 800px;
+    height: auto;
+}
 .table-map .floorPlan {
     position: absolute;
 }
