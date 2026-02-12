@@ -11,7 +11,11 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { environment } from '../../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbDropdownModule, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbDropdownModule,
+  NgbModal,
+  NgbModalConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { HeaderMenuComponent } from '../../header/header-menu/header-menu.component';
 import { BillComponent } from '../bill/bill.component';
@@ -27,7 +31,7 @@ export class Actor {
   constructor(
     public newQty: number,
     public note: string,
-    public price: number
+    public price: number,
   ) {}
 }
 @Component({
@@ -50,8 +54,9 @@ export class Actor {
 export class MenuComponent implements OnInit, OnDestroy {
   @ViewChild('myInput') myInputRef!: ElementRef<HTMLInputElement>;
   @ViewChild('remarkInput') remarkInputRef!: ElementRef<HTMLInputElement>;
-  @ViewChild('modalInfoPrinting') modalInfoPrinting!: ElementRef<HTMLInputElement>;
-  
+  @ViewChild('modalInfoPrinting')
+  modalInfoPrinting!: ElementRef<HTMLInputElement>;
+
   loading: boolean = false;
   current: number = 0;
   checkboxAll: number = 0;
@@ -63,7 +68,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     },
   ];
   questCheckTemp: string = '';
-
+  unlockMenu: boolean = false;
   sendOrderItems: any = [];
   zoom: number = parseInt(localStorage.getItem('pos3.zoom') || '100');
   public: string = '';
@@ -137,13 +142,13 @@ export class MenuComponent implements OnInit, OnDestroy {
     public logService: UserLoggerService,
     private socketService: SocketService,
     config: NgbModalConfig,
-    public lang: LanguageService
+    public lang: LanguageService,
   ) {
     window.addEventListener('resize', () => {
       this.screenWidth = window.innerWidth;
     });
     config.backdrop = 'static';
-		config.keyboard = false;
+    config.keyboard = false;
   }
   ngOnDestroy(): void {
     // Bersihkan interval countdown jika ada
@@ -217,33 +222,31 @@ export class MenuComponent implements OnInit, OnDestroy {
       }
     }
   }
-  uxMenu : any = [];
-  uxFunction(){
+  uxMenu: any = [];
+  uxFunction() {
     this.http
       .get(this.api + 'ux', {
-        headers: this.configService.headers(), 
+        headers: this.configService.headers(),
       })
       .subscribe(
         (data: any) => {
-          const menu = data['menu']
-          console.log('uxFunction', data); 
-        
+          const menu = data['menu'];
+          console.log('uxFunction', data);
+
           // Transformasi array menjadi objek
-        const transformedMenu = menu.reduce((acc : any, item :any) => {
-          acc[item.name.toLowerCase().replace(/\s+/g, "_")] = item;
-          return acc;
-        }, {});
-        this.uxMenu = transformedMenu;
+          const transformedMenu = menu.reduce((acc: any, item: any) => {
+            acc[item.name.toLowerCase().replace(/\s+/g, '_')] = item;
+            return acc;
+          }, {});
+          this.uxMenu = transformedMenu;
 
-          console.log('uxFunction', this.uxMenu); 
-
+          console.log('uxFunction', this.uxMenu);
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
-
 
   httpBillGrandTotal() {
     this.http
@@ -266,7 +269,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -291,11 +294,34 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
-  httpMenuLookUp(id: number) {
+
+  btnFinish() {
+    this.showHeader = true;
+    this.showMenu = false;
+    this.showModifier = false;
+    this.showApplyDiscount = false;
+    this.httpMenuLookUp(0);
+  }
+
+  backMenu(menuLookUpParent: any = []) {
+      this.items = [];
+      this.menuLookupId = 0;
+    if (menuLookUpParent.length <= 0) {
+      this.showHeader = true;
+      this.showMenu = false;
+      this.showModifier = false;
+      this.showApplyDiscount = false;
+      
+    } else {
+      this.httpMenuLookUp(menuLookUpParent[0]['parentId']);
+    }
+      
+  }
+    httpMenuLookUp(id: number) {
     this.logService.logAction('Menu Lookup ' + id, this.id);
     this.loading = true;
     const url = this.api + 'menuItemPos/menuLookUp';
@@ -319,29 +345,10 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
-  btnFinish() {
-    this.showHeader = true;
-    this.showMenu = false;
-    this.showModifier = false;
-    this.showApplyDiscount = false;
-    this.httpMenuLookUp(0);
-  }
-
-  backMenu(menuLookUpParent: any = []) {
-    this.item = []
-    if (menuLookUpParent.length <= 0) {
-      this.showHeader = true;
-      this.showMenu = false;
-      this.showModifier = false;
-      this.showApplyDiscount = false;
-    } else {
-      this.httpMenuLookUp(menuLookUpParent[0]['parentId']);
-    }
-  }
 
   httpMenu() {
     this.loading = true;
@@ -361,7 +368,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -382,7 +389,7 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -403,11 +410,11 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
-duration : any = {};
-coundownInterval : any;
+  duration: any = {};
+  coundownInterval: any;
   httpCart() {
     this.loading = true;
     const url = this.api + 'menuItemPos/cart';
@@ -422,7 +429,7 @@ coundownInterval : any;
       .subscribe(
         (data) => {
           if (data['table'].length == 0) {
-            alert("ERROR / EMPTY SESSION");
+            alert('ERROR / EMPTY SESSION');
             this.router.navigate(['/']);
           }
           console.log('httpCart', data);
@@ -436,13 +443,17 @@ coundownInterval : any;
           // Hitung selisih waktu antara currentDate dan limitEndDate
           const currentDate = new Date(this.duration.currentDate);
           const limitEndDate = new Date(this.duration.limitEndDate);
-          let diffInSeconds = Math.floor((limitEndDate.getTime() - currentDate.getTime()) / 1000);
+          let diffInSeconds = Math.floor(
+            (limitEndDate.getTime() - currentDate.getTime()) / 1000,
+          );
 
           // Bersihkan interval sebelumnya jika ada
           if (this.coundownInterval) {
             clearInterval(this.coundownInterval);
           }
-
+          if (this.duration.timer > 0) {
+            this.unlockMenu = true;
+          }
           // Fungsi untuk memperbarui timeDifference setiap detik
           const updateTimeDifference = () => {
             if (diffInSeconds > 0) {
@@ -453,10 +464,23 @@ coundownInterval : any;
               this.duration.timeDifference = `${hours.toString().padStart(2, '0')}:${minutes
                 .toString()
                 .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+             
+
+              if (this.duration.timer > 0) {
+                this.unlockMenu = false;
+              }
             } else {
               this.duration.timeDifference = '00:00:00';
+              if (this.duration.timer > 0) {
+                this.unlockMenu = true;
+              }
               clearInterval(this.coundownInterval);
             }
+
+            console.log(
+              'Updated Time Difference:',
+              this.duration.timeDifference,
+            );
           };
 
           // Jalankan fungsi updateTimeDifference setiap detik
@@ -468,7 +492,7 @@ coundownInterval : any;
           console.log(this.terminalId, lockBy);
           if (this.terminalId != lockBy) {
             alert(
-              'This table is being used by another user. Please select another table.'
+              'This table is being used by another user. Please select another table.',
             );
             this.router.navigate(['menu/lock'], {
               queryParams: { id: this.id },
@@ -479,7 +503,7 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -521,7 +545,7 @@ coundownInterval : any;
           (error) => {
             console.log(error);
             this.logService.logAction('ERROR Add MenuSet ', this.id);
-          }
+          },
         );
     } else {
       alert(menuSetMinQty + ' menu required!');
@@ -557,7 +581,7 @@ coundownInterval : any;
               this.modifierDetail['id'] +
               ') @' +
               this.modifierDetail['price'],
-            this.id
+            this.id,
           );
           this.reload();
           this.results = data['results'];
@@ -575,9 +599,9 @@ coundownInterval : any;
               this.modifierDetail['id'] +
               ') @' +
               this.modifierDetail['price'],
-            this.id
+            this.id,
           );
-        }
+        },
       );
   }
 
@@ -586,7 +610,7 @@ coundownInterval : any;
     x: any,
     i: number,
     size: string = 'sm',
-    name: string = ''
+    name: string = '',
   ) {
     this.item = x;
     this.modalService.open(content, { size: size });
@@ -606,7 +630,7 @@ coundownInterval : any;
           },
           (error) => {
             console.log(error);
-          }
+          },
         );
     }
   }
@@ -625,7 +649,7 @@ coundownInterval : any;
           inputElement.focus();
           inputElement.setSelectionRange(
             inputElement.value.length,
-            inputElement.value.length
+            inputElement.value.length,
           );
         }
       }, 300);
@@ -657,7 +681,7 @@ coundownInterval : any;
         (data) => {
           this.logService.logAction(
             'Modifier Custom  Notes :' + this.model.note,
-            this.id
+            this.id,
           );
           console.log(data);
           this.modalService.dismissAll();
@@ -669,9 +693,9 @@ coundownInterval : any;
           console.log(error);
           this.logService.logAction(
             'ERROR Add Qty ' + qty + ' ' + this.item['name'],
-            this.id
+            this.id,
           );
-        }
+        },
       );
   }
 
@@ -694,9 +718,9 @@ coundownInterval : any;
       (reason) => {
         // modal ditutup tanpa data (dismiss)
         this.id = this.activeRouter.snapshot.queryParams['id'];
-       // this.reload();
+        // this.reload();
         console.log('Modal dismissed:', reason);
-      }
+      },
     );
   }
 
@@ -714,7 +738,7 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -740,7 +764,7 @@ coundownInterval : any;
                 menu['id'] +
                 ') @' +
                 menu['price'],
-              this.id
+              this.id,
             );
             this.reload();
           },
@@ -753,9 +777,9 @@ coundownInterval : any;
                 menu['id'] +
                 ') @' +
                 menu['price'],
-              this.id
+              this.id,
             );
-          }
+          },
         );
 
       if (openPrice == 1) {
@@ -785,13 +809,13 @@ coundownInterval : any;
           if (data['warning']) {
             this.logService.logAction(
               'WARNING Add Qty ' + qty + ' ' + this.item['name'],
-              this.id
+              this.id,
             );
             alert(data['warning']);
           } else {
             this.logService.logAction(
               'Add Qty ' + qty + ' ' + this.item['name'],
-              this.id
+              this.id,
             );
           }
         },
@@ -799,9 +823,9 @@ coundownInterval : any;
           console.log(error);
           this.logService.logAction(
             'ERROR Add Qty ' + qty + ' ' + this.item['name'],
-            this.id
+            this.id,
           );
-        }
+        },
       );
   }
 
@@ -825,7 +849,7 @@ coundownInterval : any;
         (error) => {
           alert('ERROR');
           console.log(error);
-        }
+        },
       );
   }
 
@@ -859,7 +883,7 @@ coundownInterval : any;
         : (this.cart[index].modifier[subIndex].checkBox = 0);
       // check apakah ada modifier yang di-check
       let isModifierChecked = this.cart[index].modifier.some(
-        (mod: { checkBox: number }) => mod.checkBox == 1
+        (mod: { checkBox: number }) => mod.checkBox == 1,
       );
       console.log(isModifierChecked);
     }
@@ -895,7 +919,7 @@ coundownInterval : any;
             (error) => {
               console.log(error);
               this.logService.logAction('ERROR Void item ', this.id);
-            }
+            },
           );
       }
     }
@@ -935,7 +959,7 @@ coundownInterval : any;
             console.log(data);
             this.logService.logAction(
               'Add Modifier ' + a['descs'] + '(' + a['id'] + ') @' + a['price'],
-              this.id
+              this.id,
             );
             this.reload();
             this.results = data['results'];
@@ -949,9 +973,9 @@ coundownInterval : any;
                 a['id'] +
                 ') @' +
                 a['price'],
-              this.id
+              this.id,
             );
-          }
+          },
         );
     }
   }
@@ -990,7 +1014,7 @@ coundownInterval : any;
           // jika user menolak, keluar dari fungsi dan jangan jalankan if(access) di bawah
           if (
             !confirm(
-              'A discount has already been applied. Do you want to proceed?'
+              'A discount has already been applied. Do you want to proceed?',
             )
           ) {
             return;
@@ -1036,7 +1060,7 @@ coundownInterval : any;
                 ') @' +
                 a['discRate'] +
                 '%',
-              this.id
+              this.id,
             );
           },
           (error) => {
@@ -1049,9 +1073,9 @@ coundownInterval : any;
                 ') @' +
                 a['discRate'] +
                 '%',
-              this.id
+              this.id,
             );
-          }
+          },
         );
     }
   }
@@ -1074,24 +1098,23 @@ coundownInterval : any;
           (data) => {
             console.log(data);
             this.logService.logAction('Send Order & Print Queue', this.id);
-            if(data['printQueue'] && data['printQueue'].length > 0){ 
-           
-               this.tableCheckerDetail(data['sendOrder']);
-            }else{
-                this.back();
+            if (data['printQueue'] && data['printQueue'].length > 0) {
+              this.tableCheckerDetail(data['sendOrder']);
+            } else {
+              this.back();
             }
-           
           },
           (error) => {
             console.log(error);
             this.logService.logAction('ERROR Send Order', this.id);
-          }
+          },
         );
     }
   }
 
   tableCheckerDetail(so: string) {
-    this.http.get(this.api + 'menuItemPos/tableCheckerDetail', {
+    this.http
+      .get(this.api + 'menuItemPos/tableCheckerDetail', {
         headers: this.configService.headers(),
         params: {
           so: so,
@@ -1099,27 +1122,23 @@ coundownInterval : any;
         responseType: 'text',
       })
       .subscribe(
-        (data) => { 
+        (data) => {
           this.fnDirectPrint(data);
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
-  
 
-
- 
   fnDirectPrint(htmlBill: string) {
     const a = this.modalService.open(this.modalInfoPrinting, { size: 'md' });
     // a.result.finally(() => {
     //   this.back();
     // });
- 
 
-    this.printNote = "Printing, please wait...";
-    console.log("fnDirectPrint", htmlBill);
+    this.printNote = 'Printing, please wait...';
+    console.log('fnDirectPrint', htmlBill);
     this.printLoading = true;
     const config = this.configService.getConfigJson();
     const body = {
@@ -1134,19 +1153,18 @@ coundownInterval : any;
       .subscribe(
         (data) => {
           console.log(data);
-             this.modalService.dismissAll();
+          this.modalService.dismissAll();
           this.printNote = 'Print Success';
           this.printLoading = false;
-           this.back();
+          this.back();
         },
         (error) => {
           this.printNoteError = true;
           this.printLoading = false;
           console.log(error);
-          this.printNote = 'ERROR ' + error.error.detail; 
+          this.printNote = 'ERROR ' + error.error.detail;
           this.modalService.dismissAll();
-           
-        }
+        },
       );
   }
 
@@ -1168,7 +1186,7 @@ coundownInterval : any;
         (error) => {
           console.log(error);
           this.logService.logAction('ERROR Exit Without Order', this.id);
-        }
+        },
       );
   }
 
@@ -1195,7 +1213,13 @@ coundownInterval : any;
     //     );
     // }
     this.router
-      .navigate(['void'], { queryParams: { id: this.id , module:'menuItemPos', action:'voidTransaction'} })
+      .navigate(['void'], {
+        queryParams: {
+          id: this.id,
+          module: 'menuItemPos',
+          action: 'voidTransaction',
+        },
+      })
       .then(() => {
         this.modalService.dismissAll();
       });
@@ -1203,7 +1227,7 @@ coundownInterval : any;
 
   payment() {
     this.logService.logAction('Click PAYMENT', this.id);
-    this.loading = true; 
+    this.loading = true;
     const body = {
       id: this.id,
     };
@@ -1223,7 +1247,7 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -1247,10 +1271,10 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
-  isSO : string = '';
+  isSO: string = '';
   printTableChecker(so: string) {
     this.isSO = so;
     this.http
@@ -1267,7 +1291,7 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -1299,7 +1323,7 @@ coundownInterval : any;
           this.printLoading = false;
           console.log(error);
           this.printNote = 'ERROR ' + error.error.detail;
-        }
+        },
       );
   }
 
@@ -1389,7 +1413,7 @@ coundownInterval : any;
           (error) => {
             console.log(error);
             this.logService.logAction('ERROR Item TA' + cart.length, this.id);
-          }
+          },
         );
     }
   }
@@ -1413,7 +1437,7 @@ coundownInterval : any;
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -1431,7 +1455,7 @@ coundownInterval : any;
     if (x.cardId != '' && x.cardId != this.table['id']) {
       this.logService.logAction(
         'Merge table with ' + x.tableName + ' ?',
-        this.id
+        this.id,
       );
       if (confirm('Merge table with ' + x.tableName + ' ?')) {
         this.loading = true;
@@ -1453,16 +1477,16 @@ coundownInterval : any;
               this.back();
               this.logService.logAction(
                 'Merge to table :' + x.tableName,
-                this.id
+                this.id,
               );
             },
             (error) => {
               console.log(error);
               this.logService.logAction(
                 'ERROR Merge to table :' + x.tableName,
-                this.id
+                this.id,
               );
-            }
+            },
           );
       }
     } else {
@@ -1476,7 +1500,7 @@ coundownInterval : any;
     if (x.cardId == '' && x.tableMapStatusId == '1') {
       this.logService.logAction(
         'Change table with ' + x.tableName + ' ?',
-        this.id
+        this.id,
       );
       if (confirm('Change table with ' + x.tableName + ' ?')) {
         this.loading = true;
@@ -1499,17 +1523,17 @@ coundownInterval : any;
               this.back();
               this.logService.logAction(
                 'Change to table :' + x.tableName,
-                this.id
+                this.id,
               );
             },
             (error) => {
-              alert("ERROR changing table, please try again");
+              alert('ERROR changing table, please try again');
               console.log(error);
               this.logService.logAction(
                 'ERROR Change to table :' + x.tableName,
-                this.id
+                this.id,
               );
-            }
+            },
           );
       } else {
         alert('Please select available table');

@@ -1,5 +1,5 @@
 .tab-content{
-    height: 63vh;
+        max-height: 50vh;
     overflow-y: auto;
     margin-bottom: 1rem;
 }

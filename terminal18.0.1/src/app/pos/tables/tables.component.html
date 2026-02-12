@@ -114,7 +114,7 @@
                </div>
                <div class="floorPlan " *ngFor="let x of items[current]?.maps ; let i = index">
 
-                  <div class="items   {{ x.active == 1 ? 'border border-dark border-3 shadow' : '' }} {{x.bgn}} "
+                  <div class="items border  {{ x.active == 1 ? 'border border-dark border-3 shadow' : '' }} {{x.bgn}} "
                      [style.transform]="'translate(' + x.posX + 'px,' + x.posY + 'px)'" [style.width.px]="x.width"
                      [style.height.px]="x.height" [style.backgroundImage]="'url('+public+'icon/'+x.icon+')'"
                      style="background-size: cover;" (click)="open(modalCheckIn, x, current, i)">

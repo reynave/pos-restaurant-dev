@@ -2,7 +2,7 @@
    <div class="row g-2 mt-1">
       <!-- TABLE CART -->
       <div class="col-5 col-lg-4 ">
-      
+
          <div class="order-panel  mb-2">
             <span *ngIf="table.overTime > 0" class="badge text-bg-danger"><i class="bi bi-exclamation-triangle"></i>
                {{lang.get('Overdue')}}: {{table.overTime}} {{lang.get('min')}}</span>
@@ -10,7 +10,8 @@
                <strong class="fw-bold mb-0"> {{table.sendOrder == 0 ? lang.get('Order') : lang.get('Bill')}}
                   {{table.id}} | {{table.startDate | date:'yyyy-mm-dd HH:mm:ss'}} </strong>
             </div>
-            <div class="mb-2">{{lang.get('Cover')}}: {{table.cover}}, {{lang.get('Table')}} {{table.tableName}}, {{lang.get('Waiter')}}: {{table.inputBy}}</div>
+            <div class="mb-2">{{lang.get('Cover')}}: {{table.cover}}, {{lang.get('Table')}} {{table.tableName}},
+               {{lang.get('Waiter')}}: {{table.inputBy}}</div>
 
             <div style="height: 44vh; overflow-y: auto;">
                <table class="table table-sm table-hover">
@@ -250,16 +251,39 @@
             </div>
          </div>
       </div>
- 
+
       <!-- TABS / MENU -->
       <div class="col-7 col-lg-8 position-relative">
-         <div>
-           Time Coundown : {{duration.timer}}  | {{duration.limitEndDate | date:'yyyy-MM-dd HH:mm:ss'}} | {{duration.timeDifference}}
+         @if(duration.timer > 0){
+         <div class="alert  {{duration.timeDifference == '00:00:00' ? 'alert-danger' : 'alert-warning' }}">
+            <div class="row g-0">
+               <div class="col-3 text-center">
+                  <div> Duration (min)</div>
+                  <h4>{{duration.timer}}</h4>
+               </div>
+
+               <div class="col-4 text-center">
+                  <div>Count Down</div>
+                  <h4>
+                     <span *ngIf="duration.timeDifference == '00:00:00'"> <i class="bi bi-lock-fill"></i> </span>
+
+                     {{duration.timeDifference}}
+                  </h4>
+               </div>
+
+               <div class="col-5 text-center">
+                  <div> End Date</div>
+                  <h4>{{duration.limitEndDate | date:'yyyy-MM-dd HH:mm:ss'}}</h4>
+               </div>
+
+            </div>
          </div>
+         }
          <div class="inline-modal" *ngIf="selectedItem">
             <div class="card shadow-sm">
                <div class="card-header">
-                  <button type="button" class="btn btn-light btn-sm" (click)="selectedItem = null">{{lang.get('Back')}}</button> {{lang.get('Item Information')}}
+                  <button type="button" class="btn btn-light btn-sm"
+                     (click)="selectedItem = null">{{lang.get('Back')}}</button> {{lang.get('Item Information')}}
                </div>
                <div class="card-body">
 
@@ -341,25 +365,25 @@
          </div>
 
          <ul class="nav nav-pills mb-2">
-            <li class="nav-item" *ngIf="posMode != 'cashier'" >
+            <li class="nav-item" *ngIf="posMode != 'cashier'">
                <a class="nav-link" (click)="sendOrder();">
-                     <i class="bi bi-fork-knife"></i> {{lang.get('Send Order')}}
+                  <i class="bi bi-fork-knife"></i> {{lang.get('Send Order')}}
                </a>
             </li>
             <li class="nav-item" *ngIf="posMode != 'cashier'">
                <a class="nav-link" (click)="fnTableChecker(contentGuestPrinting)">
-                     <i class="bi bi-receipt-cutoff"></i> {{lang.get('Table Checker')}}
+                  <i class="bi bi-receipt-cutoff"></i> {{lang.get('Table Checker')}}
                </a>
             </li>
 
             <li class="nav-item">
                <a class="nav-link" (click)="activeTab = 'info'">
-                     <i class="bi bi-question-circle"></i> {{lang.get('INFO')}}</a>
+                  <i class="bi bi-question-circle"></i> {{lang.get('INFO')}}</a>
             </li>
 
             <li class="nav-item">
                <a class="nav-link" (click)="openComponent(id);logService.logAction('Click BILL', id)">
-                     <i class="bi bi-receipt-cutoff"></i> {{lang.get('Bill')}}</a>
+                  <i class="bi bi-receipt-cutoff"></i> {{lang.get('Bill')}}</a>
             </li>
 
          </ul>
@@ -373,6 +397,9 @@
                <a class="nav-link pointer-event" [class.active]="activeTab === 'menu'" (click)="activeTab = 'menu'"><i
                      class="bi bi-cup-straw"></i> {{lang.get('MENU')}}</a>
             </li>
+
+
+
             <li class="nav-item">
                <a class="nav-link pointer-event" [class.active]="activeTab === 'modifier'"
                   (click)="activeTab = 'modifier'"><i class="bi bi-pencil"></i> {{lang.get('MODIFIER')}}</a>
@@ -391,15 +418,15 @@
          <div class="tab-content px-2">
 
             <div *ngIf="activeTab === 'function'">
- 
+
                <div class="row g-2">
 
 
                   @if(uxMenu['send_order']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['send_order'] ? uxMenu['send_order']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['send_order']['class']]" [disabled]="cart.length < 1 || lock"
-                        (click)="sendOrder();">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['send_order']['class']]"
+                        [disabled]="cart.length < 1 || lock" (click)="sendOrder();">
                         <i class="bi bi-fork-knife"></i> {{lang.get('SEND ORDER')}}</button>
                   </div>
                   }
@@ -412,8 +439,8 @@
                   }
                   @if(uxMenu['payment']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['payment'] ? uxMenu['payment']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]" [disabled]="table.paymentId == ''  "
-                        (click)="payment()">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['payment']['class']]"
+                        [disabled]="table.paymentId == ''  " (click)="payment()">
                         <i class="bi bi-credit-card"></i> {{lang.get('PAYMENT')}}</button>
 
                   </div>
@@ -421,17 +448,18 @@
 
                   @if(uxMenu['info']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['info'] ? uxMenu['info']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['info']['class']]" [disabled]="table.tableMapStatusId < 13 "
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['info']['class']]"
+                        [disabled]="table.tableMapStatusId < 13 "
                         (click)="openComponent(id);logService.logAction('Click INFO', id)">
-                        <i class="bi bi-question-circle"></i>  {{lang.get('INFO')}}</button>
+                        <i class="bi bi-question-circle"></i> {{lang.get('INFO')}}</button>
                   </div>
                   }
 
                   @if(uxMenu['exit_without_order']){
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['exit_without_order'] ? uxMenu['exit_without_order']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['exit_without_order']['class']]" (click)="exitWithoutOrder();"><i
-                           class="bi bi-trash"></i>
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['exit_without_order']['class']]"
+                        (click)="exitWithoutOrder();"><i class="bi bi-trash"></i>
                         {{lang.get('EXIT WITHOUT ORDER')}}</button>
                   </div>
                   }
@@ -440,7 +468,8 @@
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['transfer_items'] ? uxMenu['transfer_items']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_items']['class']]"
+                     <button type="button" [disabled]="lock"
+                        [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_items']['class']]"
                         (click)="transferItemsGroup()"> <i class="bi bi-send-plus"></i>
                         {{lang.get('TRANSFER ITEMS')}}
                      </button>
@@ -449,7 +478,8 @@
 
                   @if(uxMenu['take_out']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['take_out'] ? uxMenu['take_out']['order'] : ''">
-                     <button type="button" [disabled]="lock" [ngClass]="[cssClass, 'btn-' + uxMenu['take_out']['class']]" (click)="takeOut()">
+                     <button type="button" [disabled]="lock"
+                        [ngClass]="[cssClass, 'btn-' + uxMenu['take_out']['class']]" (click)="takeOut()">
                         <i class="bi bi-bag-check"></i>
                         {{lang.get('TAKE OUT')}}</button>
                   </div>
@@ -458,7 +488,8 @@
                   @if(uxMenu['merger']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['merger'] ? uxMenu['merger']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger']['class']]" (click)="openTables(modalMergeCheck)">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger']['class']]"
+                        (click)="openTables(modalMergeCheck)">
                         <i class="bi bi-intersect"></i>
                         {{lang.get('MERGE')}} </button>
                   </div>
@@ -478,16 +509,18 @@
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['change_table'] ? uxMenu['change_table']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_table']['class']]" (click)="openTables(modalChangeTable)">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_table']['class']]"
+                        (click)="openTables(modalChangeTable)">
                         <i class="bi bi-arrow-repeat"></i>
                         {{lang.get('CHANGE TABLE')}} </button>
                   </div>
                   }
-                  @if(uxMenu['transfer_log']){ 
+                  @if(uxMenu['transfer_log']){
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['transfer_log'] ? uxMenu['transfer_log']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_log']['class']]" (click)="transferLog()">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['transfer_log']['class']]"
+                        (click)="transferLog()">
                         <i class="bi bi-clock-history"></i>
                         {{lang.get('TRANSFER LOG')}}</button>
                   </div>
@@ -495,7 +528,8 @@
                   @if(uxMenu['merger_log']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['merger_log'] ? uxMenu['merger_log']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger_log']['class']]" (click)="mergerLog()">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['merger_log']['class']]"
+                        (click)="mergerLog()">
                         <i class="bi bi-clock-history"></i>
                         {{lang.get('MERGE LOG')}}</button>
                   </div>
@@ -503,110 +537,143 @@
                   @if(uxMenu['void_transaction']){
                   <div class="col-3 d-grid"
                      [style.order]="uxMenu['void_transaction'] ? uxMenu['void_transaction']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_transaction']['class']]" (click)="onVoidTransaction()">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_transaction']['class']]"
+                        (click)="onVoidTransaction()">
                         <i class="bi bi-x-lg"></i> {{lang.get('VOID TRANSCTION')}}</button>
                   </div>
                   }
                   @if(uxMenu['void_item']){
                   <div class="col-3 d-grid" [style.order]="uxMenu['void_item'] ? uxMenu['void_item']['order'] : ''">
-                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_item']['class']]" (click)="onVoidItem()">
+                     <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['void_item']['class']]"
+                        (click)="onVoidItem()">
                         <i class="bi bi-x-lg"></i> {{lang.get('VOID ITEM')}} </button>
                   </div>
                   }
                </div>
             </div>
-
- 
-
+            <!-- END tab menu function -->
             <div *ngIf="activeTab === 'menu'">
 
-               <div class="row g-1 mb-3">
-                  @if(menuLookUpParent.length> 0){
-                  <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{menuLookUpParent[0]['name'] }} </strong> </div>
+               <div *ngIf="unlockMenu == false; else elseBlock">
 
-                  }
-                  @else {
-                  <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{lang.get('MENU')}}</strong> </div>
-                  }
-                  <div class="col-3 mb-1 d-grid" *ngIf="menuLookUpParent.length > 0">
-                     <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent)"> <i
-                           class="bi bi-arrow-left"></i> {{lang.get('BACK')}}</button>
-                  </div>
+                  <div class="row g-1 mb-3">
+                     @if(menuLookUpParent.length> 0){
+                     <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{menuLookUpParent[0]['name'] }}
+                        </strong> </div>
 
-                  <div class="col-3 mb-1 d-grid" *ngFor="let x of menuLookUp; let i= index">
-                     <button type="button" class="btn btn-primary py-3" (click)="httpMenuLookUp(x.id);">
-                        {{x.name}}
-                     </button>
-                  </div>
-               </div>
-
-
-               <div class="row g-2 mb-3">
-                 
-                  <div class="col-3 mb-1 d-grid" *ngFor="let a of items">
-
-                     @if(a.openPrice == 1){
-                     <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                        class="card-menu btn-light" (click)="modalOpenPrice(modalOpenPriceContent,a)"
-                        [disabled]="(a.qty - a.usedQty) < 1">
-                        <div class="mb-1">{{a.name}}</div>
-                        <small>&#64;{{a.priceLabel | number}}*</small>
-                        <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
-                     </button>
                      }
-                     @else{
-                     <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
-                        class="card-menu btn-light"
-                        (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
-                        [disabled]="(a.qty - a.usedQty) < 1">
-                        <div class="mb-1">{{a.name}} </div>
-                        <img src="./img/icons8-delete-48.png" class="mx-1" height="16" width="16"
-                           *ngIf="(a.qty - a.usedQty)< 1">
-
-                        <small>&#64;{{a.priceLabel | number}} </small>
-                        <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
-
-                     </button>
+                     @else {
+                     <div>{{lang.get('Lookup Menu')}} : <strong class="text-uppercase">{{lang.get('MENU')}}</strong>
+                     </div>
                      }
+                     <div class="col-3 mb-1 d-grid" *ngIf="menuLookUpParent.length > 0">
+                        <button type="button" class="btn btn-light border" (click)="backMenu(menuLookUpParent); "> <i
+                              class="bi bi-arrow-left"></i> {{lang.get('BACK')}} </button>
+                     </div>
+
+                     <div class="col-3 mb-1 d-grid" *ngFor="let x of menuLookUp; let i= index">
+                        <button type="button" class="btn btn-primary py-3" (click)="httpMenuLookUp(x.id);">
+                           {{x.name}}
+                        </button>
+                     </div>
                   </div>
+
+
+                  <div class="row g-2 mb-3">
+                   
+                     <div class="col-3 mb-1 d-grid" *ngFor="let a of items">
+
+                        @if(a.openPrice == 1){
+                        <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                           class="card-menu btn-light" (click)="modalOpenPrice(modalOpenPriceContent,a)"
+                           [disabled]="(a.qty - a.usedQty) < 1">
+                           <div class="mb-1">{{a.name}}</div>
+                           <small>&#64;{{a.priceLabel | number}}*</small>
+                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
+                        </button>
+                        }
+                        @else{
+                        <button type="button" [class]="((a.qty - a.usedQty)< 1) ? cssMenuDisable : cssMenu"
+                           class="card-menu btn-light"
+                           (click)=" a.menuSet == 'SELECT' ? open(modalMenuSet,a,0, 'lg','SELECT') :addToCart(a)"
+                           [disabled]="(a.qty - a.usedQty) < 1">
+                           <div class="mb-1">{{a.name}} </div>
+                           <img src="./img/icons8-delete-48.png" class="mx-1" height="16" width="16"
+                              *ngIf="(a.qty - a.usedQty)< 1">
+
+                           <small>&#64;{{a.priceLabel | number}} </small>
+                           <small *ngIf="a.adjustItemsId != ''"> / {{(a.qty - a.usedQty)}}</small>
+
+                        </button>
+                        }
+                     </div>
+                  </div>
+
                </div>
+               <!-- else -->
+               <ng-template #elseBlock>
+                  <div class="text-center mt-5">
+                     <h4>{{lang.get('TIME OUT')}}</h4>
+                     <img src="./img/icons8-time-out-64.png" class="img-fluid mx-auto d-block" alt="LOCKED MENU">
+
+                     <div>
+                        <strong>{{lang.get('MENU LOCKED')}}</strong>
+                     </div>
+                  </div>
+               </ng-template>
+
             </div>
 
             <div *ngIf="activeTab === 'modifier'">
 
-               <ul class="nav nav-pills mb-2">
-                  <li class="nav-item" *ngFor="let x of modifiers; let i = index">
-                     <a class="nav-link" [class]="{'active':x.id == modifierDetail['id']}"
-                        (click)="fnShowModifierDetail(i);logService.logAction('Click MODIFIER : '+ x.name,id) ">
-                        {{x.name}}</a>
-                  </li>
-                  <li class="nav-item">
-                       <a class="nav-link" (click)="modal(modalAddMemo,'md');"><i class="bi bi-pen"></i> {{lang.get('Custom Notes')}}</a>
-                  </li>
-               </ul>
+               <div *ngIf="unlockMenu == false; else elseBlock2">
 
-               <div class="row g-1 mb-3">
-                  <strong class="text-center">{{modifierDetail['name']}}</strong>
-                  <div class="col-3 mb-1 d-grid" *ngFor="let a of modifierDetail['detail']">
-                     <!-- <a type="button" class="btn btn-light" (click)="addToItemModifier(a);">
-                        {{a.descs}}
-                     </a> -->
-                     <a type="button" class="btn btn-{{a.checkBox == 1 ? 'primary' : 'light'}} text-start"
-                        (click)="a.checkBox == 0 ? a.checkBox = 1 : a.checkBox = 0">
-                        <i *ngIf="a.checkBox == 1" class="bi bi-check-square-fill"></i>
-                        <i *ngIf="a.checkBox == 0" class="bi bi-square"></i>
-                        {{a.descs}}
-                     </a>
-                  </div>
-               </div>
-
-               @if(env.production == false){
-               <div class="alert alert-warning" *ngIf="results.length > 0">
-                  <ul>
-                     <li *ngFor="let x of results">{{x.status}}</li>
+                  <ul class="nav nav-pills mb-2">
+                     <li class="nav-item" *ngFor="let x of modifiers; let i = index">
+                        <a class="nav-link" [class]="{'active':x.id == modifierDetail['id']}"
+                           (click)="fnShowModifierDetail(i);logService.logAction('Click MODIFIER : '+ x.name,id) ">
+                           {{x.name}}</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" (click)="modal(modalAddMemo,'md');"><i class="bi bi-pen"></i>
+                           {{lang.get('Custom Notes')}}</a>
+                     </li>
                   </ul>
+
+                  <div class="row g-1 mb-3">
+                     <strong class="text-center">{{modifierDetail['name']}}</strong>
+                     <div class="col-3 mb-1 d-grid" *ngFor="let a of modifierDetail['detail']">
+                        <!-- <a type="button" class="btn btn-light" (click)="addToItemModifier(a);">
+                           {{a.descs}}
+                        </a> -->
+                        <a type="button" class="btn btn-{{a.checkBox == 1 ? 'primary' : 'light'}} text-start"
+                           (click)="a.checkBox == 0 ? a.checkBox = 1 : a.checkBox = 0">
+                           <i *ngIf="a.checkBox == 1" class="bi bi-check-square-fill"></i>
+                           <i *ngIf="a.checkBox == 0" class="bi bi-square"></i>
+                           {{a.descs}}
+                        </a>
+                     </div>
+                  </div>
+
+                  @if(env.production == false){
+                  <div class="alert alert-warning" *ngIf="results.length > 0">
+                     <ul>
+                        <li *ngFor="let x of results">{{x.status}}</li>
+                     </ul>
+                  </div>
+                  }
+
                </div>
-               }
+               <ng-template #elseBlock2>
+                  <div class="text-center mt-5">
+                     <h4>{{lang.get('TIME OUT')}}</h4>
+                     <img src="./img/icons8-time-out-64.png" class="img-fluid mx-auto d-block" alt="LOCKED MENU">
+
+                     <div>
+                        <strong>{{lang.get('MENU LOCKED')}}</strong>
+                     </div>
+                  </div>
+               </ng-template>
             </div>
 
             <div *ngIf="activeTab === 'discount'">
@@ -614,7 +681,8 @@
                   <ul>
                      <li *ngFor="let x of results">{{x.status}}</li>
                   </ul>
-                     <div class="text-center"><button class="btn btn-sm btn-warning" (click)="results = '' ">{{lang.get('Close')}}</button>
+                  <div class="text-center"><button class="btn btn-sm btn-warning"
+                        (click)="results = '' ">{{lang.get('Close')}}</button>
                   </div>
                </div>
 
@@ -652,28 +720,28 @@
                         <table class="table table-sm">
                            <tbody>
                               <tr>
-                                    <th>{{lang.get('ID')}}</th>
+                                 <th>{{lang.get('ID')}}</th>
                                  <td>{{table?.id}}</td>
                               </tr>
                               <tr>
-                                    <th>{{lang.get('Daily Check ID')}}</th>
+                                 <th>{{lang.get('Daily Check ID')}}</th>
                                  <td>{{table?.dailyCheckId}}</td>
                               </tr>
                               <tr>
-                                    <th>{{lang.get('Outlet ID')}}</th>
+                                 <th>{{lang.get('Outlet ID')}}</th>
                                  <td>{{table?.outletId}}</td>
                               </tr>
 
                               <tr>
-                                    <th>{{lang.get('Table Name / ID')}}</th>
+                                 <th>{{lang.get('Table Name / ID')}}</th>
                                  <td>{{table?.tableName}} / {{table?.outletTableMapId}} </td>
                               </tr>
                               <tr>
-                                    <th>{{lang.get('Cover')}}</th>
+                                 <th>{{lang.get('Cover')}}</th>
                                  <td>{{table?.cover}}</td>
                               </tr>
                               <tr>
-                                    <th>{{lang.get('Status / ID')}}</th>
+                                 <th>{{lang.get('Status / ID')}}</th>
                                  <td> {{table?.status}} / {{table?.tableMapStatusId}}</td>
                               </tr>
 
@@ -817,7 +885,8 @@
                   (click)="modal.close('Save click')">{{lang.get('Cancel')}}</button>
             </div>
             <div class="col-6 d-grid">
-               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
+               <button type="submit" class="btn btn-lg btn-dark"
+                  [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -1009,7 +1078,8 @@
                <button type="button" class="btn btn-lg btn-warning" (click)="model.newQty=0">{{lang.get('CE')}}</button>
             </div>
             <div class="col  d-grid">
-               <button type="submit" class="btn btn-lg btn-dark" [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
+               <button type="submit" class="btn btn-lg btn-dark"
+                  [disabled]="!actorForm.form.valid">{{lang.get('OK')}}</button>
             </div>
          </div>
 
@@ -1055,7 +1125,8 @@
 
    <div class="modal-body">
       <div class="d-grid">
-         <button type="button" (click)="onSubmitMenuSet()" class="btn btn-lg btn-primary">{{lang.get('SUBMIT')}}</button>
+         <button type="button" (click)="onSubmitMenuSet()"
+            class="btn btn-lg btn-primary">{{lang.get('SUBMIT')}}</button>
       </div>
 
    </div>
@@ -1105,14 +1176,14 @@
 
                <textarea class="form-control form-control-sm font-monospace" disabled rows="20"
                   [(ngModel)]="questCheckTemp" name="guestPrintingNote"
-                    [placeholder]="lang.get('Please select Send Order')"></textarea>
+                  [placeholder]="lang.get('Please select Send Order')"></textarea>
             </div>
             <div class="mb-3 alert alert-warning" [ngClass]="{'alert-danger': printNoteError}" *ngIf="printNote != ''">
                {{printNote}}
             </div>
             <div class="d-grid">
                <button type="button" [disabled]="questCheckTemp == '' || printLoading" class="btn btn-lg btn-dark"
-                    (click)="fnPrint()">{{lang.get('Print')}}</button>
+                  (click)="fnPrint()">{{lang.get('Print')}}</button>
             </div>
 
          </div>
@@ -1131,7 +1202,8 @@
          <div class="mb-3">
             <div class="row g-1">
                <div class="col-12 mb-2">
-                  {{lang.get('Please enter the price for "open Price item"')}}<br>{{lang.get('Items')}} : <strong>{{selectItemOpenPrice.name}}</strong>
+                  {{lang.get('Please enter the price for "open Price item"')}}<br>{{lang.get('Items')}} :
+                  <strong>{{selectItemOpenPrice.name}}</strong>
                </div>
 
                <div class="col-12">

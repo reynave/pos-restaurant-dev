@@ -65,6 +65,7 @@ export class TablesComponent implements OnInit, OnDestroy {
   public: string = '';
 
   private intervalId: any;
+  private httpGetIntervalId: any;
   currentTime: Date = new Date();
 
   server: string = '';
@@ -87,6 +88,12 @@ export class TablesComponent implements OnInit, OnDestroy {
     // Bersihkan langganan untuk mencegah kebocoran memori
     if (this.inactivitySubscription) {
       this.inactivitySubscription.unsubscribe();
+    }
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
+    if (this.httpGetIntervalId) {
+      clearInterval(this.httpGetIntervalId);
     }
   }
 
@@ -126,7 +133,14 @@ export class TablesComponent implements OnInit, OnDestroy {
     this.fnClearLock();
     this.modalService.dismissAll();
     this.httpOutlet();
+
     this.httpGet();
+    // Refresh table data every minute to keep the view in sync
+    this.httpGetIntervalId = setInterval(() => {
+      this.httpGet();
+    }, 60000);
+
+
     this.httpDailyStart();
     this.httpDailyCheck();
     this.socketService
