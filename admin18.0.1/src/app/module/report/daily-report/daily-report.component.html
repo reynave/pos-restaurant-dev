@@ -4,11 +4,31 @@
 
       <div class="header py-2">
          <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                <strong>DAILY CLOSED</strong>
                <span class="mx-1" *ngIf="loading">
                   <img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30">
                </span>
+            </div>
+            <div class="col-6 text-end">
+               <div class="d-inline-flex align-items-center gap-2">
+                  <div class="input-group input-group-sm" style="width: 180px;">
+                     <input class="form-control form-control-sm" placeholder="Start Date" 
+                        [(ngModel)]="startDate" name="startDate" ngbDatepicker #dpStart="ngbDatepicker" />
+                     <button class="btn btn-outline-secondary btn-sm bi bi-calendar3" (click)="dpStart.toggle()"
+                        type="button"></button>
+                  </div>
+                  <span>-</span>
+                  <div class="input-group input-group-sm" style="width: 180px;">
+                     <input class="form-control form-control-sm" placeholder="End Date" [minDate]="startDate"
+                        [(ngModel)]="endDate" name="endDate" ngbDatepicker #dpEnd="ngbDatepicker" />
+                     <button class="btn btn-outline-secondary btn-sm bi bi-calendar3" (click)="dpEnd.toggle()"
+                        type="button"></button>
+                  </div>
+                  <button class="btn btn-sm btn-dark" (click)="onFilter()">Filter</button>
+                  
+                  
+               </div>
             </div>
 
          </div>

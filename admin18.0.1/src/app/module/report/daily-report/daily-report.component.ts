@@ -17,7 +17,9 @@ export class DailyReportComponent implements OnInit {
   loading: boolean = false;
   checkboxAll: number = 0;
   disabled: boolean = true;
-  items: any = []; 
+  items: any = [];
+  startDate: any = null;
+  endDate: any = null; 
  
   constructor(
     public configService: ConfigService,
@@ -26,6 +28,20 @@ export class DailyReportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    const now = new Date();
+    this.startDate = { year: now.getFullYear(), month: now.getMonth() + 1, day: 1 };
+    this.endDate = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+    this.httpGet();
+  }
+
+  formatDateStruct(d: any): string {
+    if (!d) return '';
+    const mm = String(d.month).padStart(2, '0');
+    const dd = String(d.day).padStart(2, '0');
+    return `${d.year}-${mm}-${dd}`;
+  }
+
+  onFilter() {
     this.httpGet();
   }
 
@@ -34,6 +50,10 @@ export class DailyReportComponent implements OnInit {
     const url = environment.api + "dailyClose/";
     this.http.get<any>(url, {
       headers: this.configService.headers(),
+      params: {
+        startDate: this.formatDateStruct(this.startDate),
+        endDate: this.formatDateStruct(this.endDate),
+      }
     }).subscribe(
       data => {
         console.log(data);

@@ -18,7 +18,7 @@ export class Actor {
 @Component({
   selector: 'app-menu-item',
   standalone: true,
-  imports: [HttpClientModule, CommonModule, RouterLink, FormsModule, NgxCurrencyDirective],
+  imports: [HttpClientModule, CommonModule, RouterLink, FormsModule, NgxCurrencyDirective, NgbDatepickerModule],
   templateUrl: './menu-item.component.html',
   styleUrl: './menu-item.component.css'
 })

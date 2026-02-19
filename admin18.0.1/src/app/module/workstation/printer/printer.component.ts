@@ -15,7 +15,8 @@ export class Actor {
     public printerTypeCon: string,
     public ip: string,
     public port: string,
-    public name: string
+    public name: string,
+    public printerId2: string
   ) {}
 }
 @Component({
@@ -40,7 +41,7 @@ export class PrinterComponent implements OnInit {
   item: any = {};
   com: any = ['com1', 'com2', 'com3', 'com4', 'com5', 'com6', 'com7', 'com8'];
   note: string = 'Test';
-  model = new Actor('', '', '', '');
+  model = new Actor('', '', '', '', '0');
   printerGroupId : string = '';
   printerGroup: any = []
   constructor(
@@ -89,7 +90,14 @@ export class PrinterComponent implements OnInit {
         (data) => {
           console.log(data);
           this.loading = false;
-          this.items = data['items'];
+          const list = Array.isArray(data['items']) ? data['items'] : [];
+          this.items = list.map((item: any) => ({
+            ...item,
+            printerId2:
+              item.printerId2 !== undefined && item.printerId2 !== null
+                ? String(item.printerId2)
+                : '0',
+          }));
           //  this.modalService.dismissAll();
         },
         (error) => {

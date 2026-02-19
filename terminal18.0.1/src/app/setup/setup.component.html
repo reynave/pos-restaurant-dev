@@ -42,7 +42,7 @@
                             <a href="javascript:;" [routerLink]="['/login']" class="btn btn-primary py-3">LOG IN</a>
                         </div>
                     </div>
-                </div>
+                </div>  <div class="text-center my-3" [hidden]="!savingData">Saving language data...</div>
                 <div class="text-center my-3" [hidden]="!loading">Loading...</div>
                 <div class="mt-3" *ngIf="response.message">
 

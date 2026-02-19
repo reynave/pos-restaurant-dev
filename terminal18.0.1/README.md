@@ -12,7 +12,14 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
+for Angular only
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Build & VERSION
+ 
+Run `npm run build` to build the project + generate version. The build artifacts will be stored in the `dist/` directory.
+
+
 
 ## Running unit tests
 

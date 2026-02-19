@@ -37,6 +37,7 @@ export class PaymentTypeComponent implements OnInit {
   paymentGroup: any = [];
   paymentGroupId: string = '';
   model = new Actor('', '');
+  checkPaymentTypePopup : any = [];
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -61,6 +62,7 @@ export class PaymentTypeComponent implements OnInit {
         (data) => {
           console.log(data);
           this.paymentGroup = data['items'];
+          this.checkPaymentTypePopup = data['checkPaymentTypePopup'];
           this.httpGet();
         },
         (error) => {

@@ -52,6 +52,10 @@ html {
   display: flex;
   height: 100vh;
 }
+.form-control:disabled {
+    background-color: #f5f5f5; 
+}
+
 
 .sidebar {
   width: 250px;
@@ -75,7 +79,9 @@ html {
   padding: 0rem 1rem;
 }
 
-
+.sticky-top { 
+    z-index: 99;
+}
 
 
 .mainNavigator {
@@ -93,9 +99,9 @@ html {
 
 
 .table tr td{
-    font-size: 0.8rem; 
+  font-size: 0.8rem; 
   min-height: auto !important;
-  padding: 3px 5px !important;
+  padding: 2px 5px !important;
   margin: 0px;
 }
 
@@ -109,14 +115,13 @@ html {
 .table-editable input[type='text'],
 .table-editable input[type='email'],
 .table-editable select,
-.table-editable input[type='number'] {
-
+.table-editable input[type='number'] { 
   font-size: 0.8rem;
   border-radius: 0px;
   background: #fafafa;
   border: none;
   min-height: auto !important;
-  padding: 3px 5px !important;
+  padding: 0px 3px !important;
   margin: 0px;
 }
 

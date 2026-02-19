@@ -50,9 +50,10 @@
 
                      <th>Name</th>
                      <th>Payment Group</th>
-
                      <th>Auto Match</th>
                      <th>open Drawer</th>
+                     <th>Popup</th>
+                     <th>Popup Requirement</th>
                      <th>update Date</th>
 
                   </tr>
@@ -77,7 +78,7 @@
                            <option [value]="a.id" *ngFor="let a of paymentGroup">{{a.name}}</option>
                         </select>
 
-                       <td class="text-center"> 
+                     <td class="text-center">
 
                         @if(disabled){
                         @if(x.autoMatchAmount == 1){
@@ -93,12 +94,12 @@
 
 
                      </td>
-                     <td class="text-center"> 
+                     <td class="text-center">
 
                         @if(disabled){
-                           @if(x.openDrawer == 1){
-                              <i class="bi bi-check-lg"></i>
-                           }
+                        @if(x.openDrawer == 1){
+                        <i class="bi bi-check-lg"></i>
+                        }
                         }
                         @else {
                         <div (click)="x.openDrawer == 0 ? x.openDrawer = 1 : x.openDrawer = 0">
@@ -107,6 +108,29 @@
                         </div>
                         }
 
+
+                     </td>
+                     <td>
+                        <select class="form-control form-control-sm" [(ngModel)]="x.checkPaymentTypePopupId"
+                           [disabled]="disabled">
+                           <option value="0">None</option>
+                           <option [value]="a.id" *ngFor="let a of checkPaymentTypePopup">{{a.name}}</option>
+                        </select>
+
+                     </td>
+
+                     <td>
+                         @if(disabled){
+                        @if(x.checkPaymentTypePopupRequirement == 1){
+                        <i class="bi bi-check-lg"></i>
+                        }
+                        }
+                        @else {
+                        <div (click)="x.checkPaymentTypePopupRequirement == 0 ? x.checkPaymentTypePopupRequirement = 1 : x.checkPaymentTypePopupRequirement = 0">
+                           <i *ngIf="x.checkPaymentTypePopupRequirement == 1" class="bi bi-check-square-fill"></i>
+                           <i *ngIf="x.checkPaymentTypePopupRequirement == 0" class="bi bi-square"></i>
+                        </div>
+                        }
 
                      </td>
 

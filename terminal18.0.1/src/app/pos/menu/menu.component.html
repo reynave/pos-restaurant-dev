@@ -255,7 +255,7 @@
       <!-- TABS / MENU -->
       <div class="col-7 col-lg-8 position-relative">
          @if(duration.timer > 0){
-         <div class="alert  {{duration.timeDifference == '00:00:00' ? 'alert-danger' : 'alert-warning' }}">
+         <div class="alert  {{timeMinute <= 15 ? 'alert-danger' : 'alert-warning' }}">
             <div class="row g-0">
                <div class="col-3 text-center">
                   <div> Duration (min)</div>

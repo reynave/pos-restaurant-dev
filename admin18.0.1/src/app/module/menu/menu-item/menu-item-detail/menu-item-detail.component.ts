@@ -170,5 +170,5 @@ export class MenuItemDetailComponent implements OnInit {
     )
   }
 
-
+  
 }

@@ -23,7 +23,7 @@ export class SetupComponent implements OnInit {
   api: string = '';
   server: string = '';
   constructor(private configService: ConfigService) {}
-
+  savingData: boolean = false;
   ngOnInit(): void {
     this.loading = true;
     console.log(
@@ -33,6 +33,28 @@ export class SetupComponent implements OnInit {
 
     this.api = this.configService.getApiUrl();
     this.server = this.configService.getServerUrl();
+    this.savingData =true;
+    this.httpSaveLang();
+  }
+
+  httpSaveLang(){
+    this.http.get<any>(this.api + 'language').subscribe({
+      next: (response) => {
+        console.log('Language data saved:', response);
+        if(localStorage.getItem('pos3.language') == null){
+            localStorage.setItem('pos3.language', 'en');
+        }
+      
+        localStorage.setItem('pos3.languageData',  JSON.stringify(response));
+        this.savingData = false;
+      },
+      error: (error) => {
+        console.error('Failed to save language data:', error);
+      },
+    });
+
+
+    
   }
 
   testConnection() {

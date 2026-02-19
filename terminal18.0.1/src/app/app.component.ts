@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
   template: '<router-outlet />',
 })
 export class AppComponent implements OnInit {
-
+  api: string = '';
   constructor(
     public configService: ConfigService,
     private socketService: SocketService,
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+      this.api = this.configService.getApiUrl();
    // console.log(environment.client+'')
     this.httpCheckKey();
     this.socketService.listen<string>('reload').subscribe((msg) => {
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit {
   httpCheckKey() {
     if (localStorage.getItem("pos3.terminal.mitralink")) {
     
-      const url = environment.api + "login/checkTerminal";
+      const url = this.api + "login/checkTerminal";
       this.http.get<any>(url, {
         params: {
           address: localStorage.getItem("pos3.address.mitralink") ?? '',
@@ -52,7 +53,7 @@ export class AppComponent implements OnInit {
         }
       }).subscribe(
         data => {
-          //console.log(data);
+          console.log(data);
         },
         error => {
           console.log(error);

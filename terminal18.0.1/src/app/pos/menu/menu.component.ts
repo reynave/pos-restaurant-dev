@@ -415,6 +415,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
   duration: any = {};
   coundownInterval: any;
+  timeMinute: number = 999999;
   httpCart() {
     this.loading = true;
     const url = this.api + 'menuItemPos/cart';
@@ -464,7 +465,7 @@ export class MenuComponent implements OnInit, OnDestroy {
               this.duration.timeDifference = `${hours.toString().padStart(2, '0')}:${minutes
                 .toString()
                 .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-             
+              this.timeMinute = parseInt(hours.toString().padStart(2, '0')  + minutes.toString().padStart(2, '0'));
 
               if (this.duration.timer > 0) {
                 this.unlockMenu = false;
@@ -477,11 +478,10 @@ export class MenuComponent implements OnInit, OnDestroy {
               clearInterval(this.coundownInterval);
             }
 
-            console.log(
-              'Updated Time Difference:',
-              this.duration.timeDifference,
-            );
+            //console.log( 'Updated Time Difference:',  this.duration.timeDifference, this.timeMinute);
           };
+
+
 
           // Jalankan fungsi updateTimeDifference setiap detik
           updateTimeDifference(); // Inisialisasi pertama

@@ -34,9 +34,9 @@
       <div class="mainContent ">
          <div class="row">
             <div class="col-12">
-             <div class="alert alert-secondary">
-                 <small>Only working on local Server, if used Cloud Server, please setup with printer service</small>
-             </div>
+               <div class="alert alert-secondary">
+                  <small>Only working on local Server, if used Cloud Server, please setup with printer service</small>
+               </div>
             </div>
          </div>
          <div class="border">
@@ -55,13 +55,17 @@
                         </a>
                      </th>
                      <th>#</th>
-                     <th >Type</th>
+                     <th>Type</th>
                      <th width="120px">Group</th>
 
-                     <th>Name</th>
-                     <th>IP Address</th>
-                     <th class="text-end">Port</th>
+                     <th>Name of Main Printer</th>
+
+                     <th colspan="2" class="text-center">IP Address : Port</th>
+
+                     <th>Alt Printer 2</th>
                      <th>Test</th>
+
+
 
                   </tr>
                </thead>
@@ -77,27 +81,41 @@
                      </td>
                      <td>{{i+1}}</td>
                      <td>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.printerTypeCon" [disabled]="disabled">
+                        <select class="form-control form-control-sm" [(ngModel)]="x.printerTypeCon"
+                           [disabled]="disabled">
                            <option value="ip">ip</option>
-                           <option [value]="item" *ngFor="let item of com">{{item}}</option> 
+                           <option [value]="item" *ngFor="let item of com">{{item}}</option>
                         </select>
+                     </td>
                      <td>
-                        <select class="form-control form-control-sm" [(ngModel)]="x.printerGroupId" [disabled]="disabled">
-                         
-                           <option [value]="item.id" *ngFor="let item of printerGroup">{{item.name}}</option> 
+                        <select class="form-control form-control-sm" [(ngModel)]="x.printerGroupId"
+                           [disabled]="disabled">
+
+                           <option [value]="item.id" *ngFor="let item of printerGroup">{{item.name}}</option>
                         </select>
                      </td>
 
                      <td><input type="text" class="form-control form-control-sm" [(ngModel)]="x.name"
                            [disabled]="disabled"> </td>
-                     <td><input type="text" class="form-control form-control-sm" [(ngModel)]="x.ipAddress"
+
+                     <td  width="140" ><input type="text" class="form-control form-control-sm" [(ngModel)]="x.ipAddress"
                            [disabled]="disabled"> </td>
-                     <td><input type="number" class="form-control form-control-sm" [(ngModel)]="x.port"
+                     <td  width="100" ><input type="number" class="form-control form-control-sm" [(ngModel)]="x.port"
                            [disabled]="disabled"> </td>
 
+
+                     <td>
+                        <select class="form-control form-control-sm" [(ngModel)]="x.printerId2" [disabled]="disabled">
+                           <option value="0">None</option>
+                           <option [value]="printer.id" *ngFor="let printer of items" [disabled]="printer.id === x.id">
+                              {{printer.name || ('Printer #' + printer.id)}}
+                           </option>
+                        </select>
+                     </td>
 
                      <td> <a href="javascript:;" class="btn btn-sm btn-primary"
                            (click)="item = x; open(modalTestPrinting)">Test Print</a> </td>
+
 
                   </tr>
                </tbody>
@@ -157,6 +175,16 @@
                   </small>
                </div>
             </div>
+         </div>
+
+         <div class="mb-3">
+            <label for="printerId2">Secondary Printer</label>
+            <select id="printerId2" class="form-control form-control-sm" name="printerId2"
+               [(ngModel)]="model.printerId2">
+               <option value="0">None</option>
+               <option [value]="printer.id" *ngFor="let printer of items">{{printer.name || ('Printer #' + printer.id)}}
+               </option>
+            </select>
          </div>
 
          <div class="d-grid">
