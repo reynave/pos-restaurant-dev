@@ -12,12 +12,14 @@
             </div>
             <div class="col-8 text-end">
                @if(disabled==false){
+                  <button type="button" class="btn btn-sm btn-light border me-2" (click)="onDuplicate();">Duplicate</button>
+
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
                <button type="button" class="btn btn-sm btn-dark border me-2" (click)="open(content);">Create</button>
                <button type="button" class="btn btn-sm btn-danger border me-2" (click)="onDelete();">Delete</button>
-
+               
                }
                @else {
                <button type="button" class="btn btn-sm btn-light border me-2"

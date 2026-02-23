@@ -78,7 +78,8 @@ export class PrinterComponent implements OnInit {
         }
       );
   }
-   httpGet() {
+  dummyPrinter: string = '';
+  httpGet() {
     this.loading = true;
     const url = environment.api + 'workStation/printer/';
     this.http
@@ -89,6 +90,7 @@ export class PrinterComponent implements OnInit {
       .subscribe(
         (data) => {
           console.log(data);
+          this.dummyPrinter = data['DUMMY_PRINTER'];
           this.loading = false;
           const list = Array.isArray(data['items']) ? data['items'] : [];
           this.items = list.map((item: any) => ({
@@ -222,4 +224,38 @@ export class PrinterComponent implements OnInit {
         }
       );
   }
+
+  
+
+  onDuplicate() {
+    
+    this.loading = true;
+    const url = environment.api + 'workStation/printer/duplicate';
+    const body = this.items;
+
+
+    //tolong buatkan array yang di check box saja yang di post ke backend
+    let duplicateItems = [];
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i]['checkbox'] == 1) {
+        duplicateItems.push(this.items[i]);
+      }
+    } 
+    console.log(duplicateItems);
+
+    this.http
+      .post<any>(url, duplicateItems, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.httpGet();
+        },
+        (error) => {
+          console.log(error);
+        }
+      ); 
+  }
+
 }

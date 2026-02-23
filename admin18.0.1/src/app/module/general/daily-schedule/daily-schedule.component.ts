@@ -152,37 +152,34 @@ export class DailyScheduleComponent implements OnInit {
   open(content: any, item: any = [], size: string = 'md') {
     this.item = item;
     this.modalService.open(content, { size: size });
-    this.httpGetImg();
+  
 
   }
-  selectImg: any = [];
-  httpGetImg() {
-    const url = environment.api + "tableMap/table/icon";
-    this.http.get<any>(url, {
-      headers: this.configService.headers(),
-    }).subscribe(
-      data => {
-        console.log(data);
-        this.selectImg = data['items'];
-      },
-      error => {
-        console.log(error);
+ 
+ 
+
+ 
+
+  onDuplicate() {
+    this.loading = true;
+    const url = environment.api + "dailySchedule/duplicate";
+    const body = this.items;
+
+
+    //tolong buatkan array yang di check box saja yang di post ke backend
+    let duplicateItems = [];
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i]['checkbox'] == 1) {
+        duplicateItems.push(this.items[i]);
       }
-    )
-  }
+    } 
+    console.log(duplicateItems);
 
-  updateImg(filename: string) {
-    const url = environment.api + "dailySchedule/updateImg";
-    const body = {
-      filename: filename,
-      item: this.item
-    }
-    this.http.post<any>(url, body, {
+    this.http.post<any>(url, duplicateItems, {
       headers: this.configService.headers(),
     }).subscribe(
       data => {
         console.log(data);
-        this.modalService.dismissAll()
         this.httpGet();
       },
       error => {
@@ -190,4 +187,5 @@ export class DailyScheduleComponent implements OnInit {
       }
     )
   }
+
 }

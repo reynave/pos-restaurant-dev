@@ -1,19 +1,36 @@
-<div class="row">
-    <div class="col-12 ">
+<div class="header py-2">
 
-
-        <div class="header py-2">
-            <div class="row">
-                <div class="col-12">
-                    <strong>TRANSACTION</strong>
-                    <span class="mx-1" *ngIf="loading">
-                        <img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30">
-                    </span>
-                </div>
-
-            </div>
+    <div class="row">
+        <div class="col-4  ">
+            <strong>TRANSACTION</strong>
 
         </div>
+
+        <div class="col-8  ">
+            <div class="d-flex text-end justify-content-end">
+
+
+                <div class="input-group input-group-sm mx-2" style="width:180px;">
+                    <span class="input-group-text">Start</span>
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="startDate" [(ngModel)]="startDate"
+                        ngbDatepicker #dpStart="ngbDatepicker" (click)="dpStart.toggle()" readonly />
+                </div>
+                <div class="input-group input-group-sm" style="width:180px;">
+                    <span class="input-group-text">End</span>
+                    <input class="form-control" placeholder="yyyy-mm-dd" name="endDate" [(ngModel)]="endDate" [minDate]="startDate"
+                        ngbDatepicker #dpEnd="ngbDatepicker" (click)="dpEnd.toggle()" readonly />
+                </div>
+                <button class="btn btn-sm btn-primary mx-2" (click)="httpGet()">Search</button>
+                <span class="mx-1" *ngIf="loading">
+                    <img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="30">
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-12 ">
         <div class="mainContent border">
 
             <div style="width: max-content;">

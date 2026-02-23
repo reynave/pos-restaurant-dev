@@ -36,7 +36,7 @@ export class TransactionDetailComponent implements OnInit {
   tax: any = [];
   discount: any = [];
   modifier: any = [];
-payment : any = [];
+  payment : any = [];
   showModifier: boolean = false;
   constructor(
     public configService: ConfigService,
@@ -54,7 +54,7 @@ payment : any = [];
   }
   httpGet() {
     this.loading = true;
-    const url = environment.api + 'transaction/detailGroup';
+    const url = environment.api + 'transaction/detail';
     this.http
       .get<any>(url, {
         headers: this.configService.headers(),
@@ -68,11 +68,7 @@ payment : any = [];
           this.loading = false;
           this.items = data['cartItem'];
           this.header = data['header'];
-
-          this.discount = data['discount'];
-          this.sc = data['sc'];
-          this.tax = data['tax'];
-          this.modifier = data['modifier'];
+  
           this.payment = data['payment'];
           this.modalService.dismissAll();
         },

@@ -11,6 +11,8 @@
                 </div>
                 <div class="col-8 text-end">
                     @if(disabled==false){
+                    <button type="button" class="btn btn-sm btn-light border me-2" (click)="onDuplicate();">Duplicate</button>
+
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
@@ -52,17 +54,18 @@
                                 <th>#</th>
 
                                 <th>Name</th>
-                                <th width="80">+days</th>
-                                <th>closeHour</th>
+                                <!-- <th width="80">+days</th> -->
+                                <th>Open Hour</th>
+                                <th>Close Hour</th>
 
                                 <th class="text-center">Mon</th>
-                                <th class="text-center">tue</th>
-                                <th class="text-center">wed</th>
-                                <th class="text-center">thu</th>
-                                <th class="text-center">fri</th>
-                                <th class="text-center">sat</th>
-                                <th class="text-center">sun</th>
-                                <th class="text-center">status</th>
+                                <th class="text-center">Tue</th>
+                                <th class="text-center">Wed</th>
+                                <th class="text-center">Thu</th>
+                                <th class="text-center">Fri</th>
+                                <th class="text-center">Sat</th>
+                                <th class="text-center">Sun</th>
+                                <th class="text-center">Status</th>
 
                                 <th>Update Date</th>
 
@@ -84,105 +87,106 @@
                                 <td><input type="text" class="form-control form-control-sm" [(ngModel)]="x.name"
                                         name="name" [disabled]="disabled"> </td>
 
-                                <td><input type="number" class="form-control form-control-sm" [(ngModel)]="x.days"
-                                        name="days" [disabled]="disabled"> </td>
-
-
+                                <!-- <td><input type="number" class="form-control form-control-sm" [(ngModel)]="x.days"
+                                        name="days" [disabled]="disabled"> </td> -->
+                                <td><input type="time" class="form-control form-control-sm" [(ngModel)]="x.openHour"
+                                        name="openHour" [disabled]="disabled"> </td>
                                 <td><input type="time" class="form-control form-control-sm" [(ngModel)]="x.closeHour"
                                         name="closeHour" [disabled]="disabled"> </td>
+ 
 
-                                <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.mon == 1 ? x.mon = 0 : x.mon = 1">
                                         <i *ngIf="x.mon == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.mon != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.mon == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.mon == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
 
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.tue == 1 ? x.tue = 0 : x.tue = 1">
                                         <i *ngIf="x.tue == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.tue != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.tue == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.tue == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.wed == 1 ? x.wed = 0 : x.wed = 1">
                                         <i *ngIf="x.wed == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.wed != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.wed == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.wed == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
 
 
 
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.thu == 1 ? x.thu = 0 : x.thu = 1">
                                         <i *ngIf="x.thu == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.thu != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.wed == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.wed == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.fri == 1 ? x.fri = 0 : x.fri = 1">
                                         <i *ngIf="x.fri == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.fri != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.fri == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.fri == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.sat == 1 ? x.sat = 0 : x.sat = 1">
                                         <i *ngIf="x.sat == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.sat != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.sat == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.sat == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
 
-                                 <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.sun == 1 ? x.sun = 0 : x.sun = 1">
                                         <i *ngIf="x.sun == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.sun != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.sun == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.sun == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
 
-                                <td class="text-center"> 
-                                    @if(!disabled){ 
+                                <td class="text-center">
+                                    @if(!disabled){
                                     <a href="javascript:;" (click)="x.status == 1 ? x.status = 0 : x.status = 1">
                                         <i *ngIf="x.status == 1" class="bi bi-check-square"></i>
                                         <i *ngIf="x.status != 1" class="bi bi-square"></i>
                                     </a>
                                     }
                                     @else {
-                                        <i *ngIf="x.status == 1" class="bi bi-check-lg"></i>
+                                    <i *ngIf="x.status == 1" class="bi bi-check-lg"></i>
                                     }
                                 </td>
 
@@ -192,7 +196,7 @@
                         </tbody>
                     </table>
 
-                   
+
                 </div>
 
             </div>
@@ -217,7 +221,7 @@
                 <small [hidden]="name.valid || name.pristine" class="text-danger">
                     *Name is required
                 </small>
-            </div> 
+            </div>
 
             <div class="d-grid">
                 <button type="submit" class="btn  btn-dark" [disabled]="!actorForm.form.valid">Save</button>
@@ -226,5 +230,3 @@
     </div>
 
 </ng-template>
-
- 

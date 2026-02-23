@@ -13,12 +13,14 @@
             </div>
             <div class="col-8 text-end">
                @if(disabled==false){
+                 <button type="button" class="btn btn-sm  btn-light border me-2" (click)="onDuplicate();">Duplicate</button>
+
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
                <button type="button" class="btn btn-sm btn-dark border me-2" (click)="open(content);">Create</button>
                <button type="button" class="btn btn-sm btn-danger border me-2" (click)="onDelete();">Delete</button>
-
+             
                }
                @else {
                <button type="button" class="btn btn-sm btn-light border me-2"
@@ -37,6 +39,11 @@
                <div class="alert alert-secondary">
                   <small>Only working on local Server, if used Cloud Server, please setup with printer service</small>
                </div>
+               
+               <div class="alert alert-warning" *ngIf="dummyPrinter">
+                  <strong><small>DummyPrinter : {{ dummyPrinter }}</small></strong>
+                  <p class="small mb-0">You are currently using the dummy printer. To switch to the live printer, please modify the configuration in the server's <strong>".env"</strong> file. Please contact your administrator to enable the live printer.</p>
+                  </div>
             </div>
          </div>
          <div class="border">

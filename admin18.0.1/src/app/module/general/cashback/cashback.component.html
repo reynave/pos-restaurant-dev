@@ -11,10 +11,12 @@
                 </div>
                 <div class="col-8 text-end">
                     @if(disabled==false){
+                    <button type="button" class="btn btn-sm btn-light border me-2" (click)="onDuplicate()">Duplicate</button>
+
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="cancel()">Close</button>
                     <button type="button" class="btn btn-sm btn-light border me-2" (click)="onUpdate();">Update</button>
 
-                  
+
                     <button type="button" class="btn btn-sm btn-danger border me-2"
                         (click)="onDelete();">Delete</button>
 
@@ -24,97 +26,98 @@
                         (click)="disabled= false">Editable</button>
 
                     }
-                    <button class="btn btn-sm btn-primary" (click)="open(modalCreate)" >Create</button>
+                    <button class="btn btn-sm btn-primary" (click)="open(modalCreate)">Create</button>
                 </div>
             </div>
 
         </div>
         <div class="mainContent border">
-            
-                <div class="table table-sm table-editable table-hover" style="width: max-content;">
-                    <table class="table table-hover" style=" min-width:80vw;">
+
+            <div class="table table-sm table-editable table-hover" style="width: max-content;">
+                <table class="table table-hover" style=" min-width:80vw;">
 
 
-                        <thead class="sticky-top ">
-                            <tr>
+                    <thead class="sticky-top ">
+                        <tr>
 
-                                <th *ngIf="disabled==false">
-                                    <a href="javascript:;" (click)="checkAll();">
-                                        @if(checkboxAll == 1){
-                                        <i class="bi bi-check-square"></i>
-                                        }@else {
-                                        <i class="bi bi-square"></i>
-                                        }
-                                    </a>
-                                </th>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Earning Start</th>
-                                <th>Earning End</th>
-
-                                <th>Redeem Start</th>
-                                <th>Redeem End</th>
-
-                                <th class="text-center">Status</th>
-                                <th>Status</th>
-
-                                <th>Update Date</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let x of items; let i = index" [class]="{'tr-disable':x.status == 0}">
-
-                                <td *ngIf="disabled==false">
-                                    <a href="javascript:;" (click)=" x.checkbox == 0 ? x.checkbox = 1 : x.checkbox = 0">
-                                        <i *ngIf="x.checkbox == 0" class="bi bi-square"></i>
-
-                                        <i *ngIf="x.checkbox == 1" class="bi bi-check-square"></i>
-                                    </a>
-                                </td>
-                                <td>{{i+1}}</td>
-
-
-                                <td>
-                                    <div>{{x.name}}</div>
-                                </td>
-                                <td>
-                                    <div>{{x.earningStartDate}}</div>
-                                </td>
-                                <td>
-                                    <div>{{x.earningEndDate}}</div>
-                                </td>
-                                <td>
-                                    <div>{{x.redeemStartDate}}</div>
-                                </td>
-                                <td>
-                                    <div>{{x.redeemEndDate}}</div>
-                                </td>
-
-
-                                <td class="text-center">
-                                    @if(!disabled){
-                                    <a href="javascript:;" (click)="x.status == 1 ? x.status = 0 : x.status = 1">
-                                        <i *ngIf="x.status == 1" class="bi bi-check-square"></i>
-                                        <i *ngIf="x.status != 1" class="bi bi-square"></i>
-                                    </a>
+                            <th *ngIf="disabled==false">
+                                <a href="javascript:;" (click)="checkAll();">
+                                    @if(checkboxAll == 1){
+                                    <i class="bi bi-check-square"></i>
+                                    }@else {
+                                    <i class="bi bi-square"></i>
                                     }
-                                    @else {
-                                    <i *ngIf="x.status == 1" class="bi bi-check-lg"></i>
-                                    }
-                                </td>
-                                <td><a class="btn btn-sm btn-primary" [routerLink]="['/cashback/detail']" [queryParams]="{ id: x.id }">Detail</a>
-                                </td>
+                                </a>
+                            </th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Earning Start</th>
+                            <th>Earning End</th>
 
-                                <td>{{ x.updateDate | date:'medium'}} </td>
+                            <th>Redeem Start</th>
+                            <th>Redeem End</th>
 
-                            </tr>
-                        </tbody>
-                    </table>
+                            <th class="text-center">Status</th>
+                            <th>Status</th>
+
+                            <th>Update Date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let x of items; let i = index" [class]="{'tr-disable':x.status == 0}">
+
+                            <td *ngIf="disabled==false">
+                                <a href="javascript:;" (click)=" x.checkbox == 0 ? x.checkbox = 1 : x.checkbox = 0">
+                                    <i *ngIf="x.checkbox == 0" class="bi bi-square"></i>
+
+                                    <i *ngIf="x.checkbox == 1" class="bi bi-check-square"></i>
+                                </a>
+                            </td>
+                            <td>{{i+1}}</td>
 
 
-                </div>
- 
+                            <td>
+                                <div>{{x.name}}</div>
+                            </td>
+                            <td>
+                                <div>{{x.earningStartDate}}</div>
+                            </td>
+                            <td>
+                                <div>{{x.earningEndDate}}</div>
+                            </td>
+                            <td>
+                                <div>{{x.redeemStartDate}}</div>
+                            </td>
+                            <td>
+                                <div>{{x.redeemEndDate}}</div>
+                            </td>
+
+
+                            <td class="text-center">
+                                @if(!disabled){
+                                <a href="javascript:;" (click)="x.status == 1 ? x.status = 0 : x.status = 1">
+                                    <i *ngIf="x.status == 1" class="bi bi-check-square"></i>
+                                    <i *ngIf="x.status != 1" class="bi bi-square"></i>
+                                </a>
+                                }
+                                @else {
+                                <i *ngIf="x.status == 1" class="bi bi-check-lg"></i>
+                                }
+                            </td>
+                            <td><a class="btn btn-sm btn-primary" [routerLink]="['/cashback/detail']"
+                                    [queryParams]="{ id: x.id }">Detail</a>
+                            </td>
+
+                            <td>{{ x.updateDate | date:'medium'}} </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+
         </div>
     </div>
 </div>
@@ -127,7 +130,7 @@
     <div class="modal-body">
         <form (ngSubmit)="onSubmit()" #cashbackForm="ngForm">
 
-            
+
             <div class="mb-2">
                 <label for="name">Name *</label>
                 <input id="name" class="form-control form-control-sm" name="name" [(ngModel)]="model.name" required
@@ -145,7 +148,7 @@
                     *Description is required
                 </small>
             </div>
-          
+
 
             <div class="mb-2">
                 <label for="status">Status *</label>
@@ -159,10 +162,10 @@
 
 
             <div class="d-grid">
-                <button type="submit" class="btn btn-dark" [disabled]="!cashbackForm.form.valid">Save & Go to Detail</button>
+                <button type="submit" class="btn btn-dark" [disabled]="!cashbackForm.form.valid">Save & Go to
+                    Detail</button>
             </div>
         </form>
     </div>
 
 </ng-template>
- 
