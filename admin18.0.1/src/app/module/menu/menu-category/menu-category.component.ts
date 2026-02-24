@@ -139,4 +139,35 @@ export class MenuCategoryComponent  implements OnInit {
     this.modalService.open(content);
   }
 
+   onDuplicate() {
+    
+    this.loading = true;
+    const url = environment.api + 'menu/category/duplicate';
+    const body = this.items;
+
+
+    //tolong buatkan array yang di check box saja yang di post ke backend
+    let duplicateItems = [];
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i]['checkbox'] == 1) {
+        duplicateItems.push(this.items[i]);
+      }
+    } 
+    console.log(duplicateItems);
+
+    this.http
+      .post<any>(url, duplicateItems, {
+        headers: this.configService.headers(),
+      })
+      .subscribe(
+        (data) => {
+          console.log(data);
+          this.httpGet();
+        },
+        (error) => {
+          console.log(error);
+        }
+      ); 
+  }
+
 }

@@ -1,5 +1,4 @@
 <div class="bg-light px-2 border-bottom shadow-sm mb-1">
-
   <div class="row my-1">
     <div class="col-9 ">
       <label> Select Floor : </label>
@@ -16,16 +15,17 @@
     <div class="col-3 text-end">
       <span class="mx-2" *ngIf="loading"><img src="./gif/Pulse@1x-1.0s-200px-200px.gif" height="20"></span>
       <span class="mx-2 text-primary"><small>{{resp}}</small></span>
-      @if(outletFloorPlandId != 0){
-      <button type="button" (click)="onEditable()" class="btn btn-sm btn-light border mx-1">{{!editable ?
-        'Editable':'Cancel'}}</button>
+      @if(outletFloorPlandId != 0){ 
+        <button type="button" (click)="onDuplicate()" *ngIf="editable" class="btn btn-sm btn-light border mx-1">Duplicate</button>
+      
+        <button type="button" (click)="onEditable()" class="btn btn-sm btn-light border mx-1">{{!editable ? 'Editable':'Cancel'}}</button>
       <button type="button" (click)="onSave()" *ngIf="editable" class="btn btn-sm btn-success border mx-1">Save</button>
       }
 
     </div>
   </div>
-
 </div>
+
 <div class="container" *ngIf="outletFloorPlandId == 0">
   <div class="row">
     <div class="col-12">
@@ -65,53 +65,72 @@
     <div class="col-lg-4 col-12">
 
       <div style="height: 90vh; overflow-y: auto;">
+        <div class="border"> 
+          <table class="table table-sm ">
+            <thead class="sticky-top">
+              <tr>
+                <th *ngIf="editable" width="10"></th>
+                <th>TABLE NAME</th>
+                <th class="text-center" style="width: 80px;">COVER</th>
+                <th *ngIf="editable"></th>
+                <th *ngIf="editable">
+                   <button type="button" class="btn text-danger  py-1" (click)="onDeleteCheckAll();">
+                    <i class="bi bi-x-square-fill"></i>
+                  </button>
+                </th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let x of tables;let i = index">
+                <td *ngIf="editable" (click)="x.checkbox == 1 ? x.checkbox = 0 : x.checkbox = 1" class="text-center ">
+                  <div class="align-text-center mt-1">
+                    @if(x.checkbox == 1){
+                    <i class="bi bi-check-square-fill"></i>
+                    }@else {
+                    <i class="bi bi-square"></i>
+                    }
+                  </div>
 
+                </td>
+                <td>
+                  <input type="text" class="form-control form-control-sm py-0" [disabled]="!editable"
+                    [(ngModel)]="x.tableName">
+                </td>
+                <td class="text-center">
+                  <input type="number" class="form-control form-control-sm py-0" [disabled]="!editable"
+                    [(ngModel)]="x.capacity">
+                </td>
 
-        <table class="table table-sm ">
-          <thead class="sticky-top">
-            <tr>
-              <th>TABLE NAME</th>
-              <th class="text-center" style="width: 80px;">COVER</th>
-              <th *ngIf="editable"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let x of tables;let i = index">
-              <td>
-                <input type="text" class="form-control form-control-sm py-0" [disabled]="!editable"
-                  [(ngModel)]="x.tableName">
-              </td>
-              <td class="text-center">
-                <input type="number" class="form-control form-control-sm py-0" [disabled]="!editable"
-                  [(ngModel)]="x.capacity">
-              </td>
+                <td *ngIf="editable">
+                  <button type="button" (click)="open(modalTemplate, x, i )" class="btn   py-1"><i
+                      class="bi bi-gear"></i></button>
+                </td>
+                 <td *ngIf="editable">
+                  <button type="button" class="btn text-danger  py-1" (click)="onDelete(i);">
+                    <i class="bi bi-x-square-fill"></i>
+                  </button>
+                </td>
 
-              <td *ngIf="editable">
-                <button type="button" (click)="open(modalTemplate, x, i )" class="btn   py-1"><i
-                    class="bi bi-gear"></i></button>
-                <button type="button" class="btn text-danger  py-1" (click)="onDelete(i);">
-                  <i class="bi bi-x-square-fill"></i>
-                </button>
-              </td>
+              </tr>
 
-            </tr>
+            </tbody>
+            <tfoot class="sticky-bottom" *ngIf="editable">
+              <tr>
+                <th colspan="3">
+                  <div class="d-grid">
+                    <button type="button" class="btn btn-success" (click)="open(content,[])">NEW TABLE</button>
+                  </div>
+                </th>
+              </tr>
+            </tfoot>
+          </table>
 
-          </tbody>
-          <tfoot class="sticky-bottom" *ngIf="editable">
-            <tr>
-              <th colspan="3">
-                <div class="d-grid">
-                  <button type="button" class="btn btn-success" (click)="open(content,[])">NEW TABLE</button>
-                </div>
-              </th>
-            </tr>
-          </tfoot>
-        </table>
+        </div>
       </div>
 
     </div>
   </div>
-
 </div>
 
 

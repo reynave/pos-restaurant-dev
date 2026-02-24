@@ -112,7 +112,7 @@ export class TableMapComponent implements OnInit, AfterViewInit {
     )
   }
   httpGet() {
-    this.editable = false;
+   // this.editable = false;
     this.loading = true;
     const url = environment.api + "tableMap/table";
     this.http.get<any>(url, {
@@ -346,6 +346,37 @@ export class TableMapComponent implements OnInit, AfterViewInit {
 
   }
 
+  onDeleteCheckAll() { 
+    if (confirm("Delete check all this tables ?")) {
+    
+       //tolong buatkan array yang di check box saja yang di post ke backend
+      let duplicateItems = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        if (this.tables[i]['checkbox'] == 1) {
+          duplicateItems.push(this.tables[i]);
+        }
+      } 
+      console.log(duplicateItems);
+      
+      const body = {
+        items: duplicateItems, 
+      } 
+
+      // console.log(body);
+      this.http.post<any>(environment.api + "tableMap/table/deleteCheckAll", body, {
+        headers: this.configService.headers(),
+      }).subscribe(
+        data => {
+          console.log(data);
+          this.httpGet();
+        },
+        error => {
+          console.log(error);
+        },
+      )
+    }
+  }
+
   open(content: any, item: any, index: number = 0) {
     this.indexItem = index;
     this.item = item;
@@ -395,4 +426,42 @@ export class TableMapComponent implements OnInit, AfterViewInit {
       }
     )
   }
+
+   onDuplicate() {
+      
+      this.loading = true;
+      const url = environment.api + 'tableMap/table/duplicate';
+     
+  
+      //tolong buatkan array yang di check box saja yang di post ke backend
+      let duplicateItems = [];
+      for (let i = 0; i < this.tables.length; i++) {
+        if (this.tables[i]['checkbox'] == 1) {
+          duplicateItems.push(this.tables[i]);
+        }
+      } 
+      console.log(duplicateItems);
+      
+      const body = {
+        duplicateItems: duplicateItems,
+        outletId: this.activatedRoute.snapshot.queryParamMap.get('outletId'),
+        outletFloorPlandId: this.outletFloorPlandId,
+      }
+      
+      console.log(body)
+      this.http
+        .post<any>(url, body, {
+          headers: this.configService.headers(),
+        })
+        .subscribe(
+          (data) => {
+            console.log(data);
+            this.httpGet();
+          },
+          (error) => {
+            console.log(error);
+          }
+        ); 
+    }
+  
 }
