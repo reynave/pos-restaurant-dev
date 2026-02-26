@@ -66,6 +66,7 @@ export class BillComponent implements OnInit {
   tableSendOrder: number = 0;
   env: any = environment;
   posMode: string = '';
+  accessRight: any = {};
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -77,7 +78,7 @@ export class BillComponent implements OnInit {
 
   ngOnInit() {
     this.posMode = this.configService.getConfigJson()['outlet']['posMode'];
-
+    this.accessRight = this.configService.acceesRight(); 
     this.api = this.configService.getApiUrl();
     this.httpCart();
     this.httpCartBill();
@@ -296,6 +297,10 @@ export class BillComponent implements OnInit {
   }
   lockScreen: number = 0;
   printBill() {
+    if(this.accessRight['bill'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
     this.lockScreen = 1;
     const body = {
       id: this.id,
@@ -427,6 +432,10 @@ export class BillComponent implements OnInit {
   }
 
   splitBill(subgroup: number) {
+    if(this.accessRight['splitBill'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
     console.log(subgroup);
     this.router
       .navigate(['bill/splitBill'], {

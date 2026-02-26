@@ -510,7 +510,7 @@
                      [style.order]="uxMenu['change_table'] ? uxMenu['change_table']['order'] : ''"
                      *ngIf="posMode != 'cashier'">
                      <button type="button" [ngClass]="[cssClass, 'btn-' + uxMenu['change_table']['class']]"
-                        (click)="openTables(modalChangeTable)">
+                        (click)="openChangeTable(modalChangeTable)">
                         <i class="bi bi-arrow-repeat"></i>
                         {{lang.get('CHANGE TABLE')}} </button>
                   </div>

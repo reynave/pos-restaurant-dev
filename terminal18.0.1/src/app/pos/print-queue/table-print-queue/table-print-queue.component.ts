@@ -25,6 +25,7 @@ export class TablePrintQueueComponent implements OnInit {
   item: any;
   template : string = '';
   api: string = '';
+  accessRight: any = {}
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -35,6 +36,7 @@ export class TablePrintQueueComponent implements OnInit {
     public lang: LanguageService
   ) {}
   ngOnInit() { 
+    this.accessRight = this.configService.acceesRight(); 
     this.api = this.configService.getApiUrl();
 
     console.log('messageFromParent:', this.data);
@@ -77,6 +79,11 @@ export class TablePrintQueueComponent implements OnInit {
   }
 
   fnReprint(item: any) {
+       if(this.accessRight['rePrintKitchen'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
+
     this.loading = true;
     const url = this.api + 'printQueue/fnReprint';
     const body = {
@@ -132,6 +139,10 @@ export class TablePrintQueueComponent implements OnInit {
   }
 
   fnRushPrint(item: any) {
+    if(this.accessRight['rushPrintKitchen'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
     this.loading = true;
     const url = this.api + 'printQueue/fnRushPrint';
     const body = {

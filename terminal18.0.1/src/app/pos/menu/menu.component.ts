@@ -133,6 +133,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   selectedItem: any;
   posMode: string = 'table'; // counter / table
   autoBack: boolean = true;
+  accessRight: any = {};
   constructor(
     public configService: ConfigService,
     private http: HttpClient,
@@ -192,6 +193,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.accessRight = this.configService.acceesRight(); 
     this.id = this.activeRouter.snapshot.queryParams['id'];
     this.posMode = localStorage.getItem('pos3.mode') || 'table';
     this.api = this.configService.getApiUrl();
@@ -259,13 +261,7 @@ export class MenuComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: any) => {
           console.log('httpBill', data);
-          this.summary = data['data']['summary'];
-          // data['data']['discountGroup'].forEach(
-          //   (element: { [x: string]: any }) => {
-          //     console.log(element);
-          //     this.billDiscount += parseInt(element['amount'] || 0);
-          //   }
-          // );
+          this.summary = data['data']['summary']; 
         },
         (error) => {
           console.log(error);
@@ -321,7 +317,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
       
   }
-    httpMenuLookUp(id: number) {
+
+  httpMenuLookUp(id: number) {
     this.logService.logAction('Menu Lookup ' + id, this.id);
     this.loading = true;
     const url = this.api + 'menuItemPos/menuLookUp';
@@ -373,6 +370,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   httpGetDiscountGroup() {
+    
     this.loading = true;
     const url = this.api + 'menuItemPos/discountGroup';
     this.http
@@ -743,6 +741,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addToCart(menu: any, openPrice: number = 0) {
+    if(this.accessRight['addToCart'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
+
     if (menu.qty > 0) {
       const body = {
         id: this.id,
@@ -789,6 +792,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   updateQty() {
+      if(this.accessRight['addToCart'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
+
     const qty = this.model.newQty;
     const body = {
       model: this.model,
@@ -830,6 +838,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   updateCover() {
+    if(this.accessRight['changeCover'] !== true){
+      alert('You dont have access this function!');
+      return;
+    } 
     const qty = this.model.newQty;
     const body = {
       model: this.model,
@@ -890,6 +902,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onVoid() {
+    if(this.accessRight['voidItem'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
+
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
     this.checkIfAnyItemChecked();
@@ -926,6 +943,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   fnCustomNotes() {
+      if(this.accessRight['addToCart'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
     this.checkIfAnyItemChecked();
@@ -936,6 +957,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addToItemModifier(a: any) {
+      if(this.accessRight['modifier'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
     this.checkIfAnyItemChecked();
@@ -981,6 +1006,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addDiscountGroupWithRemark(content: any, a: any) {
+    if(this.accessRight['itemDiscount'] !== true){
+      alert('You dont have access this function!');
+      return;
+    } 
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
     this.checkIfAnyItemChecked();
@@ -996,6 +1025,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   addDiscountGroup(a: any) {
+    if(this.accessRight['itemDiscount'] !== true){
+      alert('You dont have access this function!');
+      return;
+    } 
     this.isChecked = false;
     let access = false;
     this.checkIfAnyItemChecked();
@@ -1081,6 +1114,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   sendOrder() {
+
+    if (this.accessRight['sendOrder'] !== true) {
+      alert('You dont have access this function!');
+      return;
+    }
     this.loading = true;
     const body = {
       cartId: this.id,
@@ -1191,27 +1229,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onVoidTransaction() {
-    // if (confirm('Are you sure  void this transaction ?')) {
-    //   const body = {
-    //     cartId: this.id,
-    //   };
-    //   const url = this.api + 'menuItemPos/voidTransacton';
-    //   this.http
-    //     .post<any>(url, body, {
-    //       headers: this.configService.headers(),
-    //     })
-    //     .subscribe(
-    //       (data) => {
-    //         this.logService.logAction('Exit Without Order', this.id);
-    //         console.log(data);
-    //         this.back();
-    //       },
-    //       (error) => {
-    //         console.log(error);
-    //         this.logService.logAction('ERROR Exit Without Order', this.id);
-    //       }
-    //     );
-    // }
+    if (this.accessRight['voidTransaction'] !== true) {
+      alert('You dont have access this function!');
+      return;
+    }
     this.router
       .navigate(['void'], {
         queryParams: {
@@ -1226,6 +1247,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   payment() {
+    if (this.accessRight['payment'] !== true) {
+      alert('You dont have access this function!');
+      return;
+    }
     this.logService.logAction('Click PAYMENT', this.id);
     this.loading = true;
     const body = {
@@ -1348,6 +1373,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   transferItems() {
+      if (this.accessRight['transferItems'] !== true) {
+        alert('You dont have access this function!');
+        return;
+      }
     this.logService.logAction('menu/transferItems', this.id);
     this.router
       .navigate(['menu/transferItems'], { queryParams: { id: this.id } })
@@ -1357,6 +1386,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   transferItemsGroup() {
+       if (this.accessRight['transferItems'] !== true) {
+        alert('You dont have access this function!');
+        return;
+      }
     this.logService.logAction('menu/transferItemsGroup', this.id);
     this.router
       .navigate(['menu/transferItemsGroup'], { queryParams: { id: this.id } })
@@ -1366,6 +1399,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   transferLog() {
+     if (this.accessRight['transferLog'] !== true) {
+        alert('You dont have access this function!');
+        return;
+      }
     this.logService.logAction('Popup transfer Log', this.id);
     const modalRef = this.modalService.open(TransferLogComponent, {
       size: 'xl',
@@ -1373,12 +1410,21 @@ export class MenuComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.cartId = this.id;
   }
   mergerLog() {
-    this.logService.logAction('Popup transfer Log', this.id);
+     if (this.accessRight['mergerLog'] !== true) {
+        alert('You dont have access this function!');
+        return;
+      }
+    this.logService.logAction('Popup merger Log', this.id);
     const modalRef = this.modalService.open(MergerLogComponent, { size: 'lg' });
     modalRef.componentInstance.cartId = this.id;
   }
 
   takeOut() {
+      if (this.accessRight['takeOut'] !== true) {
+        alert('You dont have access this function!');
+        return;
+      }
+
     this.isChecked = false;
     // bisa buatkan coding untuk mengecek apakah ada item yang di-check dan anak modifiernya juga di-check
     this.checkIfAnyItemChecked();
@@ -1440,8 +1486,15 @@ export class MenuComponent implements OnInit, OnDestroy {
         },
       );
   }
-
+  openChangeTable(content: any) {
+     if(this.accessRight['changeTable'] !== true){
+      alert('You dont have access this function!');
+      return;
+    }
+    this.modalService.open(content, { size: 'xl' });
+  }
   openTables(content: any) {
+     
     this.modalService.open(content, { size: 'xl' });
   }
   onMap(index: number) {
@@ -1495,6 +1548,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   changeTable(x: any) {
+    if (this.accessRight['changeTable'] !== true) {
+      alert('You dont have access this function!');
+      return;
+    }
     console.log('changeTable', x);
 
     if (x.cardId == '' && x.tableMapStatusId == '1') {
@@ -1541,7 +1598,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  fnDeleteItems(item: any) {}
+ 
 
   checkIfAnyItemChecked() {
     // Checks if any item or its modifiers are checked in cart
@@ -1570,6 +1627,10 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onVoidItem() {
+    if(this.accessRight['voidItem'] !== true) {
+      alert('You dont have access this function!');
+      return;
+    }
     this.router.navigate(['menu/voidItem'], { queryParams: { id: this.id } });
   }
 }
