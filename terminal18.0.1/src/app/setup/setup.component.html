@@ -39,7 +39,7 @@
                                 Connection</a>
                         </div>
                         <div class="col-6  d-grid">
-                            <a href="javascript:;" [routerLink]="['/login']" class="btn btn-primary py-3">LOG IN</a>
+                            <a href="javascript:;" (click)="login()"  class="btn btn-primary py-3">LOG IN</a>
                         </div>
                     </div>
                 </div>  <div class="text-center my-3" [hidden]="!savingData">Saving language data...</div>

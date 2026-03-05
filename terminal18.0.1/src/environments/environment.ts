@@ -6,7 +6,7 @@ declare var lisence: string;
 export const environment = {
     ver: version.version + '-' + version.buildTime,
     production: true,
-    api : api,
+    api : api+'terminal/',
     server : server,
     client : lisence
 };

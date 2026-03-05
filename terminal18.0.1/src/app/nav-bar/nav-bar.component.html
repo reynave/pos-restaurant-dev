@@ -1,0 +1,190 @@
+<!-- ========== TOP HEADER BAR ========== -->
+<div class="menu-header bg-dark text-white px-3 py-2 d-flex align-items-center justify-content-between shadow-sm sticky-top">
+   <div class="d-flex align-items-center gap-3">
+      <span class="fw-bold fs-5"><i class="bi bi-display me-2"></i>{{lang.get('POS')}}</span>
+      <span class="badge bg-secondary">{{lang.get('Ver')}} {{ver}}</span>
+   </div>
+   <div class="d-flex align-items-center gap-3">
+      <span class="text-white-50 small">
+         <i class="bi bi-person-circle me-1"></i>{{getTokenJson['name']}}
+         <span class="badge bg-info text-dark ms-1">{{getTokenJson['authlevel']}}</span>
+      </span>
+      <span class="text-white-50 small">
+         <i class="bi bi-hdd-network me-1"></i>{{lang.get('Terminal ID')}}: {{terminalId}}
+      </span>
+      <span class="text-white-50 small">
+         <i class="bi bi-calendar-check me-1"></i>{{dataHeader['startDate'] | date:'mediumDate'}}
+      </span>
+      <a class="btn btn-light btn-sm ms-2" (click)="signOff();" [attr.title]="lang.get('Sign Off')">
+         <i class="bi bi-box-arrow-left me-1"></i>{{lang.get('Sign Off')}}
+      </a>
+   </div>
+</div>
+
+<!-- ========== MAIN MENU GRID ========== -->
+<div class="menu-container p-3">
+
+   <!-- Section: General -->
+   <div class="mb-4">
+      <h6 class="menu-section-title text-uppercase text-muted fw-bold mb-3 ps-1">
+         <i class="bi bi-grid me-1"></i> {{lang.get('General')}}
+      </h6>
+      <div class="row g-3">
+
+         <!-- Tables -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-primary" [attr.title]="lang.get('Tables')"
+               (click)="logService.logAction('Click Tables');" [routerLink]="['/tables']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-map"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Tables')}}</div>
+            </a>
+         </div>
+
+         <!-- Print Queue -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-info" [attr.title]="lang.get('Print Queue')"
+               (click)="logService.logAction('Click Print Queue');" [routerLink]="['/printQueue']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-list-check"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Print Queue')}}</div>
+            </a>
+         </div>
+
+         <!-- Setting -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-secondary" [attr.title]="lang.get('Setting')"
+               (click)="logService.logAction('click setting');" [routerLink]="['/setting']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-gear"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Setting')}}</div>
+            </a>
+         </div>
+
+         <!-- Adjust Item -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-teal" [attr.title]="lang.get('Adjust Item')"
+               (click)="logService.logAction('click Adjustment Item');" [routerLink]="['/items/']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-bag-plus"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Adjust Item')}}</div>
+            </a>
+         </div>
+
+         <!-- Customer Display -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-purple" (click)="openInNewTab('/customerDisplay')"
+               [attr.title]="lang.get('Customer Display')">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-display"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Customer Display')}}</div>
+            </a>
+         </div>
+
+      </div>
+   </div>
+
+   <!-- Section: Operations -->
+   <div class="mb-4">
+      <h6 class="menu-section-title text-uppercase text-muted fw-bold mb-3 ps-1">
+         <i class="bi bi-bar-chart me-1"></i> {{lang.get('Operation')}}
+      </h6>
+      <div class="row g-3">
+
+         <!-- Report -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-warning" [attr.title]="lang.get('Report')"
+               (click)="offcanvasService.dismiss();logService.logAction('click Report')"
+               [routerLink]="['/transaction']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-receipt"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Transaction')}}</div>
+            </a>
+         </div>
+
+         <!-- Reports (new) -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-orange" [attr.title]="lang.get('Reports')"
+               (click)="offcanvasService.dismiss();"
+               [routerLink]="['/reports']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-file-earmark-bar-graph"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Reports')}} </div>
+            </a>
+         </div>
+
+         <!-- Cash -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-success" [attr.title]="lang.get('Cash')"
+               (click)="offcanvasService.dismiss();logService.logAction('click daily/cashBalance')"
+               [routerLink]="['/daily/cashBalance']">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-cash-coin"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Cash')}}</div>
+            </a>
+         </div>
+
+         <!-- User Logs -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-indigo" [attr.title]="lang.get('User Logs')"
+               (click)="offcanvasService.dismiss();logService.logAction('click User logs')"
+               [routerLink]="['/userLogs']" routerLinkActive="router-link-active">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-person-exclamation"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('User Logs')}}</div>
+            </a>
+         </div>
+
+      </div>
+   </div>
+
+   <!-- Section: System -->
+   <div class="mb-4">
+      <h6 class="menu-section-title text-uppercase text-muted fw-bold mb-3 ps-1">
+         <i class="bi bi-shield-lock me-1"></i> System
+      </h6>
+      <div class="row g-3">
+
+         <!-- Sign Off -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-danger" [attr.title]="lang.get('Sign Off')" (click)=" signOff(); ">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-box-arrow-left"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Sign Off')}}</div>
+            </a>
+         </div>
+
+         <!-- Daily Close -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-dark" [attr.title]="lang.get('Daily Close')" (click)="dailyClose();">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-key"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Daily Close')}}</div>
+            </a>
+         </div>
+
+         <!-- Log Off -->
+         <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+            <a class="menu-tile menu-tile-logout" (click)="logOff(); logService.logAction('logOff')">
+               <div class="menu-tile-icon">
+                  <i class="bi bi-power"></i>
+               </div>
+               <div class="menu-tile-label">{{lang.get('Log Off')}}</div>
+            </a>
+         </div>
+
+      </div>
+   </div>
+
+</div>

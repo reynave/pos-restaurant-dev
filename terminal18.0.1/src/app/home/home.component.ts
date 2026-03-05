@@ -64,7 +64,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.configService.getLogin() == '1') {
-      this.router.navigate(['tables']);
+      this.router.navigate(['navBar']);
     }
     var self = this;
     this.intervalId = setInterval(function () {
@@ -111,7 +111,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.warning = '';
           this.modalService.dismissAll();
           this.configService.isLogin();
-          this.router.navigate(['tables']);
+          this.router.navigate(['navBar']).then(() => {
+           setTimeout(() => {
+              this.router.navigate(['tables']);
+            }, 300);
+          });
           this.logService.logAction('Log In Success');
           const a = data as any;
           const dailyCheck : any = a['dailyCheck'][0]['id'] || '';

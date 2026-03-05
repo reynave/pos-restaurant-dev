@@ -245,6 +245,9 @@ export class TablesComponent implements OnInit, OnDestroy {
       );
   }
 
+  back(){
+    history.back();
+  }
   reload() {
     this.httpGet();
     this.sendMessage();

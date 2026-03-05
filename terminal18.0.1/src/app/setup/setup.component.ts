@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ConfigService } from '../service/config.service';
@@ -22,7 +22,10 @@ export class SetupComponent implements OnInit {
 
   api: string = '';
   server: string = '';
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private router: Router
+  ) {}
   savingData: boolean = false;
   ngOnInit(): void {
     this.loading = true;
@@ -81,6 +84,13 @@ export class SetupComponent implements OnInit {
         this.response = error;
         this.loading = false;
       },
+    });
+  }
+
+
+  login(){
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload();
     });
   }
   ngAfterViewInit(): void {

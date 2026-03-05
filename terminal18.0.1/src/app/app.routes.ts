@@ -37,6 +37,7 @@ import { MenuVoidItemComponent } from './pos/menu/menu-void-item/menu-void-item.
 import { VoidComponent } from './pos/void/void.component';
 import { ReceiptComponent } from './pos/receipt/receipt.component';
 import { ReportsComponent } from './reports/reports.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
  
 export const routes: Routes = [
     { path: '', component: SetupComponent },
@@ -50,6 +51,7 @@ export const routes: Routes = [
     { path: 'login/terminal', component: TerminalLoginComponent },
     { path: 'customerDisplay', component: CustomerDisplayComponent },
 
+    { path: 'navBar', component: NavBarComponent, canActivate: [authGuard, loginGuard] },
     { path: 'setting', component: SettingComponent, canActivate: [authGuard, loginGuard] },
 
     { path: 'cashier', component: CashierComponent, canActivate: [authGuard, dailyStartGuard,terminalGuard, loginGuard] },

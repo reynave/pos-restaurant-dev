@@ -12,7 +12,7 @@ export class Actor {
   constructor(
     public username: string,
     public password: string,
-    public outletId: number
+    public outletId: string
   ) {}
 }
 
@@ -31,7 +31,7 @@ export class Actor {
 })
 export class LoginComponent implements OnInit {
   error: string = '';
-  model: any = new Actor('', '', 0);
+  model: any = new Actor('', '', '');
   loading: boolean = false;
   ver: string = environment.ver;
   outletSelect: any = [];
@@ -48,12 +48,21 @@ export class LoginComponent implements OnInit {
   ngOnDestroy(): void {}
 
   ngOnInit(): void {
+  
     this.api = this.config.getApiUrl();
     this.httpGet();
+
 
     if (this.config.getConfigJson() !== null) {
       this.router.navigate(['tables']);
     }
+
+     
+  }
+
+  saveOutlet(){
+    console.log(this.model.outletId);
+    localStorage.setItem('pos3.outlet.mitralink', this.model.outletId);
   }
 
   httpGet() {
@@ -64,8 +73,11 @@ export class LoginComponent implements OnInit {
         console.log(data);
         this.loading = false;
         this.outletSelect = data['outletSelect'];
-        this.employeeSelect = data['employeeSelect'];
-        this.model.outletId = data['outletSelect'][0]['id'];
+        this.employeeSelect = data['employeeSelect']; 
+
+         this.model.outletId = localStorage.getItem('pos3.outlet.mitralink')?.toString() || data['outletSelect'][0]['id'];
+
+        console.log('Outlet ID from localStorage:', this.model.outletId);
       },
       (error) => {
         console.log(error);
@@ -74,6 +86,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
+  localStorage.setItem('pos3.outlet.mitralink', this.model.outletId);
     this.error = '';
     const getIndexById = this.outletSelect.findIndex(
       (obj: { id: any }) => obj.id === parseInt(this.model.outletId)
@@ -118,7 +131,7 @@ export class LoginComponent implements OnInit {
             if (outlet['posMode'] == 'cashier') {
               this.router.navigate(['/cashier']);
             } else {
-              this.router.navigate(['/tables']);
+              this.router.navigate(['/navBar']);
             }
           }
         });
