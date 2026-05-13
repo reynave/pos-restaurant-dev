@@ -528,9 +528,6 @@ Fitur yang paling relevan:
 6. Merger table.
 7. Bill - payment - receipt.
 
-Pesan sales:
-1. Sistem menjaga layanan meja tetap cepat tanpa mengorbankan kontrol transaksi.
-
 ### 13.2 Cafe dengan Perubahan Order Cepat
 
 Karakter kebutuhan:
@@ -544,9 +541,6 @@ Fitur yang paling relevan:
 4. Print queue monitoring.
 5. Transaction lookup.
 
-Pesan sales:
-1. Sistem membantu tim tetap cepat di jam sibuk sambil menjaga jejak koreksi.
-
 ### 13.3 Food Court
 
 Karakter kebutuhan:
@@ -558,9 +552,6 @@ Fitur yang paling relevan:
 2. Payment dan receipt cepat.
 3. Print queue.
 4. Cash module.
-
-Pesan sales:
-1. Sistem memperkuat pengalaman transaksi langsung dan kecepatan pelayanan.
 
 ### 13.4 Multi-Shift Outlet
 
@@ -574,44 +565,4 @@ Fitur yang paling relevan:
 3. Log off / sign off sesuai kebutuhan shift.
 4. User logs untuk jejak aktivitas.
 
-Pesan sales:
-1. Sistem menjaga kesinambungan operasional antar shift dengan jejak data yang jelas.
-
----
-
-## 14. Paket Demo 20 Menit untuk Presentasi Client
-
-### Menit 1-3: Framing
-
-1. Jelaskan tantangan umum outlet: kecepatan, akurasi, dan kontrol.
-2. Posisikan Terminal POS sebagai solusi operasional end-to-end.
-
-### Menit 4-8: Core Transaction
-
-1. Setup dan login singkat.
-2. Tables -> new order -> menu -> modifier/discount -> send order.
-
-### Menit 9-12: Closing Transaction
-
-1. Bill -> print bill -> payment -> receipt.
-2. Tunjukkan bahwa alur penutupan transaksi disiplin dan jelas.
-
-### Menit 13-16: Advanced Operation
-
-1. Transfer items.
-2. Change table.
-3. Merger.
-4. Void item dengan alasan.
-
-### Menit 17-19: Control & Insight
-
-1. Transaction.
-2. Reports.
-3. Cash.
-4. User logs.
-
-### Menit 20: Closing Value
-
-1. Rangkum value: cepat, fleksibel, terkontrol.
-2. Tautkan ke kebutuhan outlet client yang sedang dipresentasikan.
  
