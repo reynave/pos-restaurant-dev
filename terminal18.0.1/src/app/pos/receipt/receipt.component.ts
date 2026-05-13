@@ -196,8 +196,11 @@ export class ReceiptComponent implements OnInit, OnDestroy, AfterViewInit {
     //  history.back();
     if(this.isReturn == 'transaction'){
        history.back();
-    }else{
-      this.router.navigate(['tables']);
+    }
+    else{
+      this.router.navigate(['navBar']).then(() => {
+       this.router.navigate(['tables'] );
+      });
     }
   
   }

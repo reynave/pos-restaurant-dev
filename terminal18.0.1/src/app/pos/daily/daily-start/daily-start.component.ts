@@ -59,7 +59,7 @@ export class DailyStartComponent implements OnInit {
       data => {
         console.log(data);
         localStorage.setItem("pos3.dailyCheck.mitralink", data['insertId']);
-        this.router.navigate(['tables'])
+        this.router.navigate(['navBar'])
       },
       error => {
         console.log(error);

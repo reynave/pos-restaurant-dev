@@ -120,11 +120,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
         }
       );
   }
-  logOff() {
-    this.logService.logAction('logOff');
-    this.configService.isLogoff();
-    this.offcanvasService.dismiss();
-    this.router.navigate(['/']);
+  logOff() {  
+    this.offcanvasService.dismiss(); 
+
+     this.configService.isLogoff();
+    this.router.navigate(['/home']);
+    this.logService.logAction('Log Off');
   }
 
   openInNewTab(route: string) {
