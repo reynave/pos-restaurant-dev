@@ -1,32 +1,29 @@
-# FEATURE TERMINAL POS - SALES DEMO GUIDE
+# FEATURE TERMINAL POS
 
-Dokumen ini dirancang khusus untuk tim sales saat presentasi ke calon client baru.
-Fokus utamanya adalah memperlihatkan kekuatan sistem POS Terminal dari sisi operasional restoran yang nyata, mudah dipahami, dan meyakinkan dari awal sampai akhir transaksi.
-
-Dokumen ini menampilkan dua nilai besar:
-1. Nilai bisnis: sistem membantu restoran bekerja lebih cepat, lebih rapi, dan lebih aman.
-2. Nilai operasional: alur kasir dan pelayanan berjalan terstruktur dari login sampai payment dan receipt.
+Dokumen ini menampilkan dua point:
+1. Fitur: sistem membantu restoran bekerja lebih cepat, lebih rapi, dan lebih aman.
+2. Operasional: alur kasir dan pelayanan berjalan terstruktur dari login sampai payment dan receipt.
 
 ---
 
-## 1. Cerita Besar Produk untuk Sales
+## 1. Gambaran Umum Sistem
 
-Saat demo, sampaikan bahwa Terminal POS ini bukan hanya aplikasi kasir biasa. Sistem ini adalah pusat kontrol operasional outlet yang menghubungkan meja, order, kitchen, billing, payment, reporting, dan audit aktivitas user dalam satu alur yang konsisten.
+Terminal POS ini bukan hanya aplikasi kasir biasa. Sistem ini adalah pusat kontrol operasional outlet yang menghubungkan meja, order, kitchen, billing, payment, reporting, dan audit aktivitas user dalam satu alur yang konsisten.
 
-Narasi yang bisa digunakan:
+Alur operasional umum:
 1. Outlet memulai hari dengan setup terminal dan login user.
 2. Kasir atau waiter membuka transaksi per meja.
 3. Order diproses melalui pemilihan menu, modifier, discount, lalu dikirim ke kitchen.
 4. Tagihan ditutup melalui bill, payment, lalu receipt.
 5. Semua aktivitas memiliki jejak data, bisa dilacak, dan bisa dikontrol melalui fitur log serta flow pembatalan dengan alasan.
 
-Dengan narasi ini, client melihat bahwa sistem bukan hanya menjual transaksi, tetapi juga menjual disiplin operasional.
+Alur ini menunjukkan bahwa sistem tidak hanya memproses transaksi, tetapi juga membangun disiplin operasional.
 
 ---
 
 ## 2. End-to-End Flow Sesuai Flowchart
 
-Alur demo ini diambil dari flow utama pada file drawio:
+Alur ini diambil dari flow utama pada file drawio:
 1. Terminal Setup
 2. Login
 3. Daily Start decision
@@ -52,7 +49,7 @@ Ini penting dijelaskan sebagai satu perjalanan kerja yang utuh, bukan fitur yang
 
 Pada fase ini, sistem memastikan terminal siap dipakai untuk operasi harian.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Terminal baru bisa diaktifkan dengan proses setup yang terarah.
 2. Outlet bisa menyiapkan environment sesuai kebutuhan cabang.
 3. Risiko salah koneksi berkurang karena proses awal dibuat jelas.
@@ -63,7 +60,7 @@ Nilai jual ke client:
 
 Login menjadi pintu kontrol siapa yang menggunakan terminal pada shift berjalan.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Akses transaksi dimulai dari identitas user.
 2. Aktivitas user bisa ditelusuri melalui log.
 3. Supervisi operasional menjadi lebih disiplin.
@@ -74,7 +71,7 @@ Nilai jual ke client:
 
 Daily Start memperkuat konsep bahwa operasional harian dimulai secara formal.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Shift harian menjadi terukur.
 2. Tim operasional tidak langsung lompat ke transaksi tanpa konteks hari kerja.
 3. Kontrol pembukaan operasi lebih rapi.
@@ -87,7 +84,7 @@ Nilai jual ke client:
 
 Main Menu adalah pusat navigasi yang menggabungkan fungsi frontliner dan kontrol outlet.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Semua kebutuhan utama ada dalam satu layar pusat.
 2. User tidak bingung pindah-pindah modul.
 3. Onboarding staff baru lebih cepat.
@@ -196,9 +193,9 @@ Nilai bisnis:
 
 ---
 
-## 5. Core Transaction Journey untuk Demo
+## 5. Alur Transaksi Inti
 
-Bagian ini adalah jantung presentasi sales. Tunjukkan dengan tempo pelan, jelas, dan meyakinkan.
+Bagian ini adalah inti alur transaksi harian dari pembukaan meja hingga transaksi selesai.
 
 ### 5.1 Masuk ke Tables
 
@@ -219,7 +216,7 @@ Order dibangun melalui tiga lapisan:
 2. Pilih modifier sesuai preferensi customer.
 3. Pilih discount jika tersedia.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Pengambilan order lebih presisi.
 2. Kustomisasi pesanan tercatat rapi.
 3. Mengurangi miskomunikasi antara kasir dan kitchen.
@@ -236,7 +233,7 @@ Nilai jual ke client:
 
 Fitur ini mengirim order dari front ke kitchen flow.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Mengurangi jeda komunikasi manual.
 2. Order lebih cepat diproses.
 3. Meminimalkan risiko order terlewat.
@@ -251,7 +248,7 @@ Penutupan transaksi dilakukan berurutan:
 3. Payment.
 4. Receipt.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Alur penagihan jelas.
 2. Proses kasir lebih disiplin.
 3. Bukti transaksi customer tersedia langsung.
@@ -362,43 +359,14 @@ Nilai bisnis:
 
 Flow pembatalan transaksi yang sudah terjadi dapat dilakukan dari modul Transaction pada detail receipt melalui aksi Void Payment dan pengisian alasan.
 
-Nilai jual ke client:
+Nilai operasional:
 1. Koreksi transaksi tersedia secara terkontrol.
 2. Ada jejak alasan untuk kepentingan audit.
 3. Membantu manajemen risiko operasional.
 
 ---
 
-## 8. Script Demo untuk Tim Sales
-
-### 8.1 Opening Pitch
-
-Kalimat pembuka yang bisa dipakai:
-1. Sistem ini dirancang untuk mempercepat layanan sekaligus menjaga kontrol operasional outlet.
-2. Kami tidak hanya menunjukkan input transaksi, tetapi keseluruhan life cycle order sampai audit.
-3. Dalam demo ini, Bapak/Ibu akan melihat bagaimana tim outlet bisa bekerja cepat, rapi, dan tetap terkontrol.
-
-### 8.2 Demo Storyline 15 Menit
-
-Urutan demo:
-1. Tunjukkan setup dan login sebagai gerbang kontrol penggunaan.
-2. Masuk main menu dan jelaskan command center.
-3. Buka tables, ambil order, pilih menu, modifier, dan discount.
-4. Kirim order ke kitchen flow.
-5. Tutup transaksi dari bill, print bill, payment, sampai receipt.
-6. Tunjukkan menu function advanced sebagai bukti kesiapan untuk kondisi outlet sibuk.
-7. Tutup dengan transaction, reports, cash, dan user logs untuk menegaskan aspek kontrol bisnis.
-
-### 8.3 Closing Pitch
-
-Kalimat penutup yang bisa dipakai:
-1. Dengan alur ini, outlet bukan hanya bertransaksi, tetapi menjalankan operasi yang terukur.
-2. Sistem membantu tim frontliner tetap cepat saat jam sibuk, sambil tetap menjaga kontrol manajerial.
-3. Hasil akhirnya adalah service yang konsisten, data yang rapi, dan keputusan bisnis yang lebih percaya diri.
-
----
-
-## 9. Keunggulan yang Bisa Ditekankan ke Client
+## 8. Keunggulan Sistem
 
 1. End-to-end flow jelas dari awal shift sampai penutupan transaksi.
 2. Visual table-based operation cocok untuk restoran dine-in.
@@ -409,80 +377,18 @@ Kalimat penutup yang bisa dipakai:
 
 ---
 
-## 10. Ringkasan untuk Proposal Sales
+## 9. Ringkasan Sistem
 
 Terminal POS ini menonjol karena menggabungkan tiga kekuatan sekaligus:
 1. Kecepatan layanan di front counter dan area meja.
 2. Fleksibilitas operasional saat kondisi lapangan berubah cepat.
 3. Kontrol bisnis yang dapat dipertanggungjawabkan melalui jejak aktivitas dan alur pembatalan terstruktur.
 
-Untuk client baru, pesan yang paling kuat adalah bahwa sistem ini siap dipakai bukan hanya saat kondisi ideal, tetapi juga saat outlet ramai, dinamis, dan penuh perubahan order. Inilah nilai praktis yang membuat implementasi POS tidak berhenti di kasir, tetapi menjadi fondasi operasi restoran yang profesional.
+Sistem ini siap dipakai bukan hanya saat kondisi ideal, tetapi juga saat outlet ramai, dinamis, dan penuh perubahan order. Nilai praktisnya membuat implementasi POS tidak berhenti di kasir, tetapi menjadi fondasi operasi restoran yang profesional.
 
 ---
 
-## 11. Objection Handling untuk Tim Sales
-
-Bagian ini membantu tim sales menjawab pertanyaan kritis dari client saat demo atau negosiasi.
-
-### 11.1 Objection: "Kasir kami tidak terlalu tech-savvy"
-
-Jawaban yang disarankan:
-1. UI terminal dibuat berbasis alur kerja lapangan, bukan alur teknis.
-2. Proses inti sangat sederhana: pilih meja, pilih menu, kirim order, bill, payment.
-3. Sistem mendukung onboarding bertahap, termasuk mode training yang mudah diikuti.
-4. Struktur Main Menu dibuat sebagai command center agar user tidak tersesat ke modul yang tidak diperlukan.
-
-Nilai yang perlu ditekankan:
-1. Sistem ini dibuat untuk operator harian, bukan untuk pengguna teknis.
-2. Waktu adaptasi user baru bisa dipercepat karena navigasi berbasis tugas.
-
-### 11.2 Objection: "Kalau outlet sedang ramai, apakah tetap aman?"
-
-Jawaban yang disarankan:
-1. Sistem menyediakan fitur advanced untuk kondisi ramai, seperti transfer items, change table, merger, dan log perubahannya.
-2. Print queue memberikan visibilitas atas status antrian print, sehingga hambatan bisa dideteksi cepat.
-3. User logs dan alasan void membantu manajemen menjaga disiplin operasional saat tekanan tinggi.
-
-Nilai yang perlu ditekankan:
-1. POS ini bukan hanya untuk kondisi normal, tetapi juga siap untuk skenario peak hour.
-2. Fleksibilitas operasional tetap berjalan tanpa kehilangan kontrol data.
-
-### 11.3 Objection: "Bagaimana kalau banyak koreksi transaksi?"
-
-Jawaban yang disarankan:
-1. Koreksi item bisa dilakukan lewat Void Item dengan alasan wajib.
-2. Koreksi transaksi yang sudah terjadi dapat dikelola dari modul Transaction melalui Void Payment.
-3. Histori dan log membantu proses audit internal.
-
-Nilai yang perlu ditekankan:
-1. Koreksi transaksi tersedia, tetapi tetap terkontrol.
-2. Manajemen mendapatkan jejak keputusan, bukan perubahan tanpa catatan.
-
-### 11.4 Objection: "Kami butuh data, bukan hanya kasir"
-
-Jawaban yang disarankan:
-1. Modul Reports memberi ringkasan operasional yang relevan untuk evaluasi.
-2. Modul Cash membantu disiplin pencatatan aliran kas.
-3. User Logs memberi transparansi aktivitas tim.
-
-Nilai yang perlu ditekankan:
-1. Terminal POS ini mendukung keputusan operasional harian.
-2. Data tidak berhenti di receipt, tetapi naik menjadi insight manajerial.
-
-### 11.5 Objection: "Kalau proses print bermasalah bagaimana?"
-
-Jawaban yang disarankan:
-1. Sistem memisahkan kontrol print melalui print queue, sehingga status pending dapat dipantau.
-2. Pengaturan printer tersedia di modul setting untuk menyesuaikan skenario outlet.
-3. Struktur proses print membantu tim outlet menelusuri titik gangguan lebih cepat.
-
-Nilai yang perlu ditekankan:
-1. Sistem dirancang dengan visibilitas operasional, bukan black box.
-2. Tim outlet bisa bertindak cepat sebelum gangguan membesar.
-
----
-
-## 12. Before vs After Implementasi Terminal POS
+## 10. Before vs After Implementasi Terminal POS
 
 ### 12.1 Sebelum Implementasi
 
@@ -502,7 +408,7 @@ Perubahan yang terlihat:
 4. Void item dan void payment memiliki alasan serta jejak aktivitas.
 5. Laporan, cash, dan log membuat kontrol outlet lebih kuat.
 
-### 12.3 Dampak Bisnis yang Bisa Dijual
+### 10.3 Dampak Bisnis
 
 1. Kecepatan layanan meningkat karena alur kerja jelas.
 2. Kesalahan operasional menurun karena sistem memandu langkah.
@@ -511,7 +417,7 @@ Perubahan yang terlihat:
 
 ---
 
-## 13. Use Case per Tipe Outlet
+## 11. Use Case per Tipe Outlet
 
 ### 13.1 Restoran Dine-In
 
