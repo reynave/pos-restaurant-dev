@@ -614,11 +614,4 @@ Pesan sales:
 
 1. Rangkum value: cepat, fleksibel, terkontrol.
 2. Tautkan ke kebutuhan outlet client yang sedang dipresentasikan.
-
----
-
-## 15. Closing Statement Siap Pakai untuk Sales
-
-Kalimat penutup yang bisa langsung dipakai:
-
-"Melalui Terminal POS ini, outlet Bapak/Ibu tidak hanya mendapatkan sistem kasir, tetapi mendapatkan alur operasi yang lengkap dari awal layanan sampai audit aktivitas. Pada saat outlet ramai, sistem tetap menjaga kecepatan pelayanan. Pada saat manajemen butuh kontrol, sistem menyediakan data dan jejak aktivitas yang jelas. Kombinasi inilah yang membuat implementasi POS bukan sekadar digitalisasi transaksi, melainkan peningkatan kualitas operasi bisnis secara menyeluruh."
+ 
