@@ -48,6 +48,7 @@ import { OutletTipsPoolComponent } from './module/outlet/outlet-tips-pool/outlet
 import { OutletMixAndMatchComponent } from './module/outlet/outlet-mix-and-match/outlet-mix-and-match.component';
 import { OutletBonusRulesComponent } from './module/outlet/outlet-bonus-rules/outlet-bonus-rules.component';
 import { OutletFuncAuthorityComponent } from './module/outlet/outlet-func-authority/outlet-func-authority.component';
+import { OutletOrderLevelComponent } from './module/outlet/outlet-order-level/outlet-order-level.component';
 import { MenuItemComponent } from './module/menu/menu-item/menu-item.component';
 import { MenuDeptComponent } from './module/menu/menu-dept/menu-dept.component';
 import { MenuCategoryComponent } from './module/menu/menu-category/menu-category.component';
@@ -98,7 +99,6 @@ export const routes: Routes = [
   { path: 'payment/icCard', component: IcCardComponent },
 
   { path: 'discount/discGroup', component: DiscGroupComponent },
-  { path: 'discount/discGroup', component: DiscGroupComponent },
   { path: 'discount', component: DiscountComponent },
 
   { path: 'other/voidCode', component: VoidCodeComponent },
@@ -143,8 +143,7 @@ export const routes: Routes = [
   { path: 'outlet/bonusRules', component: OutletBonusRulesComponent },
 
   { path: 'outlet/funcAuthority', component: OutletFuncAuthorityComponent },
-  { path: 'outlet/orderLevel', component: OutletBonusRulesComponent },
-  { path: 'outlet/specialHour', component: OutletSpecialHourComponent },
+  { path: 'outlet/orderLevel', component: OutletOrderLevelComponent },
 
   { path: 'menu/item', component: MenuItemComponent },
   { path: 'menu/department', component: MenuDeptComponent },

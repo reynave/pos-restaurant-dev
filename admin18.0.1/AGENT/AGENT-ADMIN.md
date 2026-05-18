@@ -62,7 +62,9 @@ All routes accessible after root-level token validation. No per-route guards; na
 | `/discount/discGroup` | DiscGroupComponent | Discount groups (bundled rules) |
 | `/discount` | DiscountComponent | Individual discount rules |
 
-### 2.5 Others (Void, Pantry, Function Authority)
+### 2.5 Others (Legacy - Not Used in Current Real Case)
+
+Status: menu/flow for this group is no longer used in current operations. Routes may still exist in Angular router for compatibility.
 
 | Path | Component | Purpose |
 |---|---|---|
@@ -72,7 +74,9 @@ All routes accessible after root-level token validation. No per-route guards; na
 | `/other/functionList` | FunctionListComponent | List of available functions |
 | `/other/functionShortCuts` | FunctionShortCutsComponent | Function keyboard shortcuts |
 
-### 2.6 Member Management
+### 2.6 Member Management (Legacy - Not Used in Current Real Case)
+
+Status: menu/flow for this group is no longer used in current operations. Routes may still exist in Angular router for compatibility.
 
 | Path | Component | Purpose |
 |---|---|---|
@@ -83,21 +87,27 @@ All routes accessible after root-level token validation. No per-route guards; na
 | `/member/accountHolder` | MemberAccountHolderComponent | Account holder info |
 | `/member/costCentre` | CostCentreComponent | Cost centre mapping |
 
-### 2.7 Complaint Management
+### 2.7 Complaint Management (Legacy - Not Used in Current Real Case)
+
+Status: menu/flow for this group is no longer used in current operations. Routes may still exist in Angular router for compatibility.
 
 | Path | Component | Purpose |
 |---|---|---|
 | `/complaint/category` | ComplaintCategoryComponent | Complaint categories |
 | `/complaint/type` | ComplaintTypeComponent | Complaint types within category |
 
-### 2.8 Customer Management
+### 2.8 Customer Management (Legacy - Not Used in Current Real Case)
+
+Status: menu/flow for this group is no longer used in current operations. Routes may still exist in Angular router for compatibility.
 
 | Path | Component | Purpose |
 |---|---|---|
 | `/customer/info` | CustomerInfoComponent | Customer info records |
 | `/customer/grp` | CustomerGrpComponent | Customer groupings |
 
-### 2.9 Templates
+### 2.9 Templates (Legacy - Not Used in Current Real Case)
+
+Status: menu/flow for this group is no longer used in current operations. Routes may still exist in Angular router for compatibility.
 
 | Path | Component | Purpose |
 |---|---|---|
@@ -111,23 +121,24 @@ All routes accessible after root-level token validation. No per-route guards; na
 | `/workStation/printer` | PrinterComponent | Printer device configuration |
 | `/workStation/printerGroup` | PrinterGroupComponent | Printer groups for routing |
 | `/workStation/terminal` | TerminalComponent | POS terminal registration & license |
-| `/workStation/pantryStation` | PantryStationComponent | Kitchen station configuration |
-| `/workStation/printQueue` | PantryStationQueueComponent | Print queue monitoring |
-| `/workStation/stationTaxRun` | StationTaxRunComponent | Tax run scheduling per station |
+| `/workStation/pantryStation` (Legacy - Not Used in Current Real Case) | PantryStationComponent | Kitchen station configuration |
+| `/workStation/printQueue` (Legacy - Not Used in Current Real Case)| PantryStationQueueComponent | Print queue monitoring |
+| `/workStation/stationTaxRun` (Legacy - Not Used in Current Real Case)| StationTaxRunComponent | Tax run scheduling per station |
 
 ### 2.11 Outlet Management
 
 | Path | Component | Purpose |
 |---|---|---|
 | `/outlet` | OutletComponent | Restaurant outlet/branch master |
-| `/outlet/payment` | OutletPaymentComponent | Payment methods per outlet |
-| `/outlet/cashType` | OutletCashTypeComponent | Cash types per outlet |
-| `/outlet/discount` | OutletDiscountComponent | Outlet-specific discounts |
-| `/outlet/specialHour` | OutletSpecialHourComponent | Special hours per outlet |
-| `/outlet/tipsPool` | OutletTipsPoolComponent | Tip pooling rules per outlet |
-| `/outlet/mixAndMatch` | OutletMixAndMatchComponent | Mix & match combo rules |
-| `/outlet/bonusRules` | OutletBonusRulesComponent | Bonus/incentive rules |
-| `/outlet/funcAuthority` | OutletFuncAuthorityComponent | Function authority per outlet |
+| `/outlet/payment` (Legacy - Not Used in Current Real Case) | OutletPaymentComponent | Payment methods per outlet |
+| `/outlet/cashType` (Legacy - Not Used in Current Real Case)| OutletCashTypeComponent | Cash types per outlet |
+| `/outlet/discount` (Legacy - Not Used in Current Real Case)| OutletDiscountComponent | Outlet-specific discounts |
+| `/outlet/specialHour` (Legacy - Not Used in Current Real Case)| OutletSpecialHourComponent | Special hours per outlet |
+| `/outlet/tipsPool` (Legacy - Not Used in Current Real Case)| OutletTipsPoolComponent | Tip pooling rules per outlet |
+| `/outlet/mixAndMatch` (Legacy - Not Used in Current Real Case)| OutletMixAndMatchComponent | Mix & match combo rules |
+| `/outlet/bonusRules` (Legacy - Not Used in Current Real Case)| OutletBonusRulesComponent | Bonus/incentive rules |
+| `/outlet/orderLevel` (Legacy - Not Used in Current Real Case)| OutletOrderLevelComponent | Outlet order authorization levels |
+| `/outlet/funcAuthority` (Legacy - Not Used in Current Real Case)| OutletFuncAuthorityComponent | Function authority per outlet |
 
 ### 2.12 Menu Configuration
 
@@ -190,7 +201,7 @@ Unlike terminal app, admin app does **not** use per-route guards. All authentica
 | Key | Purpose | Set by | Removed by |
 |---|---|---|---|
 | `admin.tokenKey.mitralink` | Employee access token | login success | logout |
-| `admin.config.mitralink` | Session config (currently unused) | login success | logout |
+| `admin.config.mitralink` | Session config (currently unused) | login success | currently not removed by `removeToken()` |
 | `pos3.admin.tab` | Last selected tab index | tab navigation | - |
 
 ### 3.2 Root-Level Token Check (app.component)
@@ -198,13 +209,24 @@ Unlike terminal app, admin app does **not** use per-route guards. All authentica
 ```
 1. App initializes → checkLogin() called
 2. ConfigService.checkToken() reads localStorage['admin.tokenKey.mitralink']
-3. If token missing → router.navigate(['/login'])
+3. If token missing → `router.navigate(['login'])` is called
 4. If token exists → set login = true, load menu via httpGet()
 ```
 
+Notes:
+- Current router config does not define `/login` route.
+- Login UI is rendered directly by `app.component.html` when `login == false`.
+
 ### 3.3 Login Flow (not visible in attached files, but implied)
 
-Assumed flow (based on terminal app pattern):
+Observed flow in current codebase:
+1. User opens app
+2. App checks token in `checkLogin()`
+3. If token missing, root component renders `<app-login>`
+4. If token exists, app loads menu from `global/menu`
+5. Navigation occurs through menu tree `onEvent()`
+
+Legacy/route-based login flow assumption (from terminal app pattern):
 1. User opens app, root redirects to `/login` if no token
 2. User submits credentials
 3. Backend returns token + menu structure
@@ -303,7 +325,7 @@ headers() {
 3. **Tree menu navigation** — routes driven by backend-supplied menu structure, not hardcoded.
 4. **Token header format** — `Token:` instead of `Authorization: Bearer` (backend may need to support both or check config).
 5. **No Socket.IO** — no real-time reload/broadcast like terminal app.
-6. **Simpler logout** — just `removeToken()` + `window.location.reload()`, no graceful navigation.
+6. **Simpler logout** — `removeToken()` clears token then `window.location.reload()`; no graceful navigation.
 
 ---
 
@@ -382,7 +404,7 @@ When editing admin18.0.1, follow these rules:
 
 1. If redirected to login unexpectedly, token may have expired; check localStorage.
 2. Verify `checkToken()` logic: should return true only if `admin.tokenKey.mitralink` is present and non-null.
-3. After logout, ensure `localStorage.removeItem()` removes both token and config keys.
+3. Current behavior removes token key only. If config cleanup is required, add `removeItem('admin.config.mitralink')` in `removeToken()`.
 
 ---
 
