@@ -4,6 +4,50 @@ Dokumen ini menampilkan dua point:
 1. Fitur: sistem membantu restoran bekerja lebih cepat, lebih rapi, dan lebih aman.
 2. Operasional: alur kasir dan pelayanan berjalan terstruktur dari login sampai payment dan receipt.
 
+## Daftar Isi
+
+1. [1. Gambaran Umum Sistem](#1-gambaran-umum-sistem)
+2. [2. End-to-End Flow Sesuai Flowchart](#2-end-to-end-flow-sesuai-flowchart)
+3. [3. Fase Persiapan Operasional](#3-fase-persiapan-operasional)
+4. [4. Main Menu sebagai Command Center](#4-main-menu-sebagai-command-center)
+5. [5. Alur Transaksi Inti](#5-alur-transaksi-inti)
+6. [6. Menu Function sebagai Fitur Advanced Outlet](#6-menu-function-sebagai-fitur-advanced-outlet)
+7. [7. Void Transaction dari Transaction Module](#7-void-transaction-dari-transaction-module)
+8. [8. Keunggulan Sistem](#8-keunggulan-sistem)
+9. [9. Ringkasan Sistem](#9-ringkasan-sistem)
+10. [10. Before vs After Implementasi Terminal POS](#10-before-vs-after-implementasi-terminal-pos)
+11. [11. Use Case per Tipe Outlet](#11-use-case-per-tipe-outlet)
+
+### Subbagian
+
+- [3.1 Terminal Setup](#31-terminal-setup)
+- [3.2 Login](#32-login)
+- [3.3 Daily Start](#33-daily-start)
+- [4.1 General Features](#41-general-features)
+- [4.2 Operation Features](#42-operation-features)
+- [4.3 System Features](#43-system-features)
+- [5.1 Masuk ke Tables](#51-masuk-ke-tables)
+- [5.2 New Order](#52-new-order)
+- [5.3 Menu Selection Experience](#53-menu-selection-experience)
+- [5.4 Send Order](#54-send-order)
+- [5.5 Bill hingga Payment](#55-bill-hingga-payment)
+- [6.1 Transfer Items](#61-transfer-items)
+- [6.2 Transfer Log](#62-transfer-log)
+- [6.3 Change Table](#63-change-table)
+- [6.4 Take Out](#64-take-out)
+- [6.5 Exit Without Order](#65-exit-without-order)
+- [6.6 Void Item](#66-void-item)
+- [6.7 Change Cover](#67-change-cover)
+- [6.8 Merger dan Merger Log](#68-merger-dan-merger-log)
+- [6.9 Bill dan Payment Gate](#69-bill-dan-payment-gate)
+- [12.1 Sebelum Implementasi](#121-sebelum-implementasi)
+- [12.2 Sesudah Implementasi](#122-sesudah-implementasi)
+- [10.3 Dampak Bisnis](#103-dampak-bisnis)
+- [13.1 Restoran Dine-In](#131-restoran-dine-in)
+- [13.2 Cafe dengan Perubahan Order Cepat](#132-cafe-dengan-perubahan-order-cepat)
+- [13.3 Food Court](#133-food-court)
+- [13.4 Multi-Shift Outlet](#134-multi-shift-outlet)
+
 ---
 
 ## 1. Gambaran Umum Sistem
