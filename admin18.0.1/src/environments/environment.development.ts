@@ -6,5 +6,5 @@ export const environment = {
     production: false,
     //api : 'http://localhost:3000/',
    //api : api,
-    api : 'https://fnb.mitralinksolusi.com/api/',
+    api : 'https://fnb.mitralinksolusi.com/',
 };
