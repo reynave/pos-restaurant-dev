@@ -37,7 +37,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../../pos-restaurant-18.0.1/service/pos/terminal",
+            "outputPath": "../dist/terminal",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [

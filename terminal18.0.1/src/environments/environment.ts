@@ -6,7 +6,7 @@ declare var lisence: string;
 export const environment = {
     ver: version.version + '-' + version.buildTime,
     production: true,
-    api : api+'terminal/',
-    server : server,
+    api : 'http://localhost:3000/api/'+'terminal/',
+    server : 'https://fnb.mitralinksolusi.com/',
     client : lisence
 };
