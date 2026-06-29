@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { ModalDismissReasons, NgbDatepickerModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { FormsModule } from '@angular/forms';
 export class Actor {
   constructor(
